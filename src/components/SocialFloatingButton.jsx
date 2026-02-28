@@ -17,7 +17,7 @@ const SocialFloatingButton = () => {
     { 
       icon: <MessageCircle size={22} />, 
       label: 'WhatsApp', 
-      href: 'https://wa.me/201204040156', 
+      href: 'https://wa.me/201023524477', 
       color: 'bg-[#25D366]',
       hover: 'shadow-[0_0_20px_rgba(37,211,102,0.4)]',
       angle: -55

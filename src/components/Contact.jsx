@@ -11,7 +11,7 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const whatsappNumber = "+20123524477";
+    const whatsappNumber = "201023524477";
     const text = `*Portfolio Inquiry*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Message:* ${formData.message}`;
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
   };
@@ -64,7 +64,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="text-[10px] uppercase font-bold text-secondary tracking-widest mb-1">Direct Relay</p>
-                      <p className="text-lg font-black italic text-white">+20 123 524477</p>
+                      <p className="text-lg font-black italic text-white">+20 102 352 4477</p>
                     </div>
                  </div>
                </div>
