@@ -81,31 +81,65 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="md:hidden fixed top-24 left-1/2 -translate-x-1/2 w-[90%] glass-card p-8 flex flex-col gap-4 z-50 border-primary/20 shadow-2xl"
-          >
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="flex items-center justify-center gap-3 text-lg font-black uppercase tracking-widest py-4 border-b border-white/5 last:border-0"
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+            />
+            
+            {/* Sidebar */}
+            <motion.div 
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="md:hidden fixed top-0 right-0 h-screen w-[300px] bg-[#030014]/90 backdrop-blur-2xl border-l border-white/10 p-8 flex flex-col z-[70] shadow-[-10px_0_40px_rgba(0,0,0,0.5)]"
+            >
+              <div className="flex items-center justify-between mb-12">
+                <span className="text-xl font-black tracking-tighter uppercase text-white">
+                  Menu<span className="text-primary italic">.</span>
+                </span>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 bg-white/5 rounded-full text-white hover:bg-white/10 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {navLinks.map((link, idx) => (
+                  <motion.a
+                    key={link.name}
+                    href={link.href}
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 + idx * 0.1 }}
+                    className="flex items-center gap-4 text-sm font-black uppercase tracking-[0.2em] py-5 border-b border-white/5 text-secondary hover:text-white group transition-all"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span className="text-primary/50 group-hover:text-primary transition-colors">{link.icon}</span>
+                    {link.name}
+                  </motion.a>
+                ))}
+              </div>
+
+              <motion.a
+                href="#contact"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="mt-auto bg-primary text-white py-5 rounded-2xl text-center font-black uppercase tracking-[0.3em] shadow-[0_10px_30px_rgba(124,58,237,0.3)] hover:shadow-[0_15px_40px_rgba(124,58,237,0.5)] transition-all"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="text-primary">{link.icon}</span>
-                {link.name}
-              </a>
-            ))}
-            <a
-              href="#contact"
-              className="bg-primary text-white py-5 rounded-2xl text-center font-black uppercase tracking-[0.3em] mt-4"
-              onClick={() => setIsOpen(false)}
-            >
-              HIRE ME
-            </a>
-          </motion.div>
+                HIRE ME
+              </motion.a>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>

@@ -7,28 +7,20 @@ const SocialFloatingButton = () => {
 
   const socials = [
     { 
-      icon: <MessageCircle size={22} />, 
-      label: 'WhatsApp', 
-      href: 'https://wa.me/201204040156', 
-      color: 'bg-[#25D366]',
-      hover: 'shadow-[0_0_20px_rgba(37,211,102,0.4)]',
-      angle: -90 // Top
-    },
-    { 
       icon: <Linkedin size={22} />, 
       label: 'LinkedIn', 
       href: 'https://www.linkedin.com/in/amir-elrefai-658b16260/', 
       color: 'bg-[#0077B5]',
       hover: 'shadow-[0_0_20px_rgba(0,119,181,0.4)]',
-      angle: -45 // Top-Right
+      angle: -20
     },
     { 
-      icon: <Github size={22} />, 
-      label: 'GitHub', 
-      href: 'https://github.com/amirelrefai', 
-      color: 'bg-[#333]',
-      hover: 'shadow-[0_0_20px_rgba(51,51,51,0.4)]',
-      angle: 0 // Right
+      icon: <MessageCircle size={22} />, 
+      label: 'WhatsApp', 
+      href: 'https://wa.me/201204040156', 
+      color: 'bg-[#25D366]',
+      hover: 'shadow-[0_0_20px_rgba(37,211,102,0.4)]',
+      angle: -55
     },
     { 
       icon: <Send size={22} />, 
@@ -36,11 +28,19 @@ const SocialFloatingButton = () => {
       href: 'https://t.me/amirelrefai', 
       color: 'bg-[#0088cc]',
       hover: 'shadow-[0_0_20px_rgba(0,136,204,0.4)]',
-      angle: -135 // Top-Left
+      angle: -90
+    },
+    { 
+      icon: <Github size={22} />, 
+      label: 'GitHub', 
+      href: 'https://github.com/amirelrefai', 
+      color: 'bg-[#333]',
+      hover: 'shadow-[0_0_20px_rgba(51,51,51,0.4)]',
+      angle: 15
     },
   ];
 
-  const radius = 90; // Distance from center
+  const radius = 115; // Distance from center
 
   return (
     <div className="fixed bottom-8 left-8 z-50">
