@@ -1,6 +1,5 @@
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Education from './components/Education';
@@ -12,12 +11,11 @@ import GlobalBackground from './components/GlobalBackground';
 
 function App() {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden  ">
       <GlobalBackground />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
-        <About />
         <Skills />
         <Projects />
         <Education />

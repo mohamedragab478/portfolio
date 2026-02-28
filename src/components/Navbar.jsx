@@ -26,43 +26,50 @@ const Navbar = () => {
       <motion.div 
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "circOut" }}
-        className={`flex items-center justify-between px-8 py-3 rounded-full border transition-all duration-500 ${
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        className={`flex items-center justify-between px-10 py-4 rounded-full border transition-all duration-700 ${
           scrolled 
-            ? 'bg-black/60 backdrop-blur-xl w-[90%] md:w-[65%] border-primary/40 shadow-[0_0_30px_rgba(124,58,237,0.15)] ring-1 ring-white/5' 
+            ? 'bg-[#030014]/40 backdrop-blur-2xl w-[92%] md:w-[70%] border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] ring-1 ring-white/5' 
             : 'bg-transparent w-[95%] border-transparent'
         }`}
       >
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-all">
-            <Zap className="w-5 h-5 text-primary" />
-          </div>
-          <span className="text-xl font-black tracking-tighter uppercase text-white">
-            Amir<span className="text-primary italic">.Aura</span>
+        <a href="#" className="flex items-center gap-3 group relative">
+          <motion.div 
+            whileHover={{ rotate: 180 }}
+            className="p-2 bg-primary/10 rounded-xl group-hover:bg-primary transition-all duration-500"
+          >
+            <Zap className="w-5 h-5 text-primary group-hover:text-white" />
+          </motion.div>
+          <span className="text-2xl font-black tracking-tighter uppercase text-white group-hover:text-primary transition-colors duration-500">
+            Amir<span className="text-primary italic group-hover:text-white">.Aura</span>
           </span>
+          <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-500 opacity-50" />
         </a>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-secondary hover:text-white transition-all py-2"
+              className="group flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.25em] text-secondary hover:text-white transition-all py-2 relative"
             >
-              <span className="text-primary/50 group-hover:text-primary transition-colors">
+              <span className="text-primary/40 group-hover:text-primary transition-all duration-300 transform group-hover:scale-110">
                 {link.icon}
               </span>
               {link.name}
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-primary group-hover:w-full transition-all duration-300" />
             </a>
           ))}
           <div className="h-6 w-[1px] bg-white/10 mx-2" />
-          <a
+          <motion.a
             href="#contact"
-            className="px-6 py-2 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-widest hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-3 rounded-full bg-primary text-white text-[11px] font-black uppercase tracking-widest shadow-[0_5px_20px_rgba(124,58,237,0.3)] hover:shadow-[0_8px_25px_rgba(124,58,237,0.5)] transition-all"
           >
             Connect
-          </a>
+          </motion.a>
         </div>
 
         {/* Mobile Toggle */}
