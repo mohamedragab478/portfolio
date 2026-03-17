@@ -25,7 +25,7 @@ const SocialFloatingButton = () => {
     { 
       icon: <Send size={22} />, 
       label: 'Telegram', 
-      href: 'https://t.me/amirelrefai', 
+      href: 'https://t.me/Amirelfalw', 
       color: 'bg-[#0088cc]',
       hover: 'shadow-[0_0_20px_rgba(0,136,204,0.4)]',
       angle: -90
@@ -33,7 +33,7 @@ const SocialFloatingButton = () => {
     { 
       icon: <Github size={22} />, 
       label: 'GitHub', 
-      href: 'https://github.com/amirelrefai', 
+      href: 'https://github.com/amerelfalwo', 
       color: 'bg-[#333]',
       hover: 'shadow-[0_0_20px_rgba(51,51,51,0.4)]',
       angle: 15

@@ -2,10 +2,23 @@ import { motion } from 'framer-motion';
 import { Zap } from 'lucide-react';
 
 const Skills = () => {
-  const row1 = [
+  const technicalSkills = [
+    { name: "EDA", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/pandas/pandas-original.svg" },
+    { name: "Machine Learning", icon: "https://cdn.simpleicons.org/scikitlearn/white" },
+    { name: "Deep Learning", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/pytorch/pytorch-original.svg" },
+    { name: "Computer Vision", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/opencv/opencv-original.svg" },
+    { name: "NLP", icon: "https://cdn.simpleicons.org/langchain/white" },
+    { name: "Data Analysis", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/numpy/numpy-original.svg" },
+    { name: "Model Deployment", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/fastapi/fastapi-original.svg" }
+  ];
+
+  const toolsLibraries = [
+    { name: "Python", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" },
     { name: "PyTorch", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/pytorch/pytorch-original.svg" },
     { name: "TensorFlow", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/tensorflow/tensorflow-original.svg" },
-    { name: "OpenCV", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/opencv/opencv-original.svg" },
+    { name: "Docker", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" },
+    { name: "VS Code", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/vscode/vscode-original.svg" },
+    { name: "Git", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/git/git-original.svg" },
     { name: "YOLO", icon: "https://cdn.simpleicons.org/ultralytics/white" },
     { name: "LangChain", icon: "https://cdn.simpleicons.org/langchain/white" },
     { name: "NumPy", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/numpy/numpy-original.svg" },
@@ -62,7 +75,7 @@ const Skills = () => {
     <section id="skills" className="py-16 bg-transparent relative">
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       
-      <div className="max-w-7xl mx-auto px-6 mb-20 text-center">
+      <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
            <Zap className="w-4 h-4 text-primary" />
            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Technical Arsenal</span>
@@ -72,9 +85,9 @@ const Skills = () => {
         </h2>
       </div>
 
-      <div className="relative flex flex-col gap-8 w-full max-w-[100vw]">
-        <MarqueeRow items={row1} direction={1} />
-        <MarqueeRow items={row2} direction={-1} />
+      <div className="relative flex flex-col w-full max-w-[100vw]">
+        <MarqueeRow items={technicalSkills} direction={1} title="// Technical Skills" />
+        <MarqueeRow items={toolsLibraries} direction={-1} title="// Tools & Libraries" />
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />

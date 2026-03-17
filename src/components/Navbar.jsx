@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Zap, User, Code2, Briefcase, Mail } from 'lucide-react';
+import { Menu, X, Zap, Briefcase, Layers, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
@@ -15,10 +15,9 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'About', href: '#about', icon: <User size={14} /> },
-    { name: 'Skills', href: '#skills', icon: <Code2 size={14} /> },
+    { name: 'Services', href: '#services', icon: <Layers size={14} /> },
     { name: 'Projects', href: '#projects', icon: <Briefcase size={14} /> },
-    { name: 'Contact', href: '#contact', icon: <Mail size={14} /> },
+    { name: 'Certifications', href: '#certifications', icon: <Award size={14} /> },
   ];
 
   return (

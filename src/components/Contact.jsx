@@ -1,24 +1,49 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, MessageSquare, Phone, Github, Linkedin, Mail, ArrowUpRight, Zap } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+import { Send, MessageSquare, Phone, Github, Linkedin, Mail, ArrowUpRight, Zap, Briefcase, Facebook, Instagram } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    subject: '',
     message: ''
   });
+  const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const whatsappNumber = "201023524477";
-    const text = `*Portfolio Inquiry*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Message:* ${formData.message}`;
-    window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
+    setStatus({ loading: true, success: false, error: '' });
+    
+    try {
+      const serviceId = 'service_56yumbr';
+      const templateId = 'template_x3o6b5j';
+      const publicKey = '7-XBK1lVY6QkeCYLr';
+
+      const templateParams = {
+        name: formData.name,
+        email: formData.email,
+        title: formData.subject,
+        message: formData.message,
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      
+      setStatus({ loading: false, success: true, error: '' });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      setStatus({ loading: false, success: false, error: 'Failed to send payload. Please try again later.' });
+      console.error(err);
+    }
   };
 
   const socials = [
+    { name: "Facebook", icon: <Facebook size={20} />, href: "https://www.facebook.com/amir.elref3i", color: "hover:text-blue-500" },
+    { name: "Instagram", icon: <Instagram size={20} />, href: "https://www.instagram.com/amir.elref3i/", color: "hover:text-pink-500" },
     { name: "GitHub", icon: <Github size={20} />, href: "https://github.com/amerelfalwo", color: "hover:text-white" },
     { name: "LinkedIn", icon: <Linkedin size={20} />, href: "https://www.linkedin.com/in/amir-elfalw-b3a3212b8/", color: "hover:text-blue-400" },
+    { name: "Khamsat", icon: <Briefcase size={20} />, href: "https://khamsat.com/user/amir_elrefai", color: "hover:text-green-400" },
     { name: "X", icon: <MessageSquare size={20} />, href: "https://x.com/Amirelfalw", color: "hover:text-cyan-400" },
   ];
 
@@ -123,10 +148,23 @@ const Contact = () => {
               </div>
               
               <div className="space-y-3">
+                <label className="text-[10px] uppercase font-black text-secondary/60 tracking-widest ml-2">Objective / Subject</label>
+                <input 
+                  type="text" 
+                  required
+                  value={formData.subject}
+                  placeholder="Enter objective"
+                  className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-8 py-5 focus:border-primary focus:outline-none transition-all font-bold text-white placeholder:text-white/20"
+                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                />
+              </div>
+
+              <div className="space-y-3">
                 <label className="text-[10px] uppercase font-black text-secondary/60 tracking-widest ml-2">Proposed Payload</label>
                 <textarea 
                   rows="4"
                   required
+                  value={formData.message}
                   placeholder="Describe your vision or inquiry..."
                   className="w-full bg-white/5 border-2 border-white/10 rounded-3xl px-8 py-6 focus:border-primary focus:outline-none transition-all font-bold text-white placeholder:text-white/20 resize-none"
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
@@ -135,10 +173,21 @@ const Contact = () => {
 
               <button 
                 type="submit"
-                className="w-full py-6 bg-primary text-white font-black uppercase tracking-[0.4em] rounded-[2rem] hover:shadow-[0_0_50px_rgba(124,58,237,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 group"
+                disabled={status.loading}
+                className={`w-full py-6 text-white font-black uppercase tracking-[0.4em] rounded-[2rem] transition-all flex items-center justify-center gap-4 group ${
+                  status.loading ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:shadow-[0_0_50px_rgba(124,58,237,0.4)] hover:scale-[1.02] active:scale-[0.98]'
+                }`}
               >
-                Initiate Contact <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                {status.loading ? 'Sending...' : 'Send Message'}
+                {!status.loading && <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
               </button>
+
+              {status.success && (
+                <p className="text-green-400 text-xs font-bold uppercase tracking-widest text-center mt-4">Payload successfully transmitted.</p>
+              )}
+              {status.error && (
+                <p className="text-red-400 text-xs font-bold uppercase tracking-widest text-center mt-4">{status.error}</p>
+              )}
             </motion.form>
           </div>
         </div>

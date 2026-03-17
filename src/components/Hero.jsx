@@ -39,7 +39,7 @@ const Hero = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white/80 text-[11px] font-black uppercase tracking-[0.3em] mb-6"
           >
             <Sparkles size={14} className="text-white/60" />
-            AI Research & Innovation <ChevronRight size={14} className="text-white/40" />
+            Deep Learning Engineer <ChevronRight size={14} className="text-white/40" />
           </motion.div>
 
           <motion.h1 
@@ -58,59 +58,59 @@ const Hero = () => {
             className="flex items-center gap-3 md:gap-5 mb-10 w-full"
           >
             <h2 className="text-xs md:text-base lg:text-lg font-bold tracking-[0.2em] md:tracking-[0.4em] lg:tracking-[0.5em] text-secondary/60 uppercase whitespace-nowrap">
-              AI ARCHITECT & RESEARCHER
+              AI ENGINEER
             </h2>
           </motion.div>
 
           <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="max-w-lg text-secondary/80 text-lg md:text-xl mb-12 font-medium leading-relaxed tracking-tight"
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ duration: 1, delay: 0.4 }}
+             className="max-w-lg text-secondary/80 text-lg md:text-xl mb-12 font-medium leading-relaxed tracking-tight"
           >
-            Architecting the next generation of <span className="text-white">autonomous intelligence</span>. Specializing in high-performance neural infrastructures and production-scale <span className="text-primary font-bold">AI ecosystems</span>.
+             Passionate AI Engineer specializing in Deep Learning, Computer Vision, and Generative AI. Focused on architecting intelligent AI Agents, building robust RAG systems, and deploying production-ready models to solve complex, real-world challenges.
           </motion.p>
 
           <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto">
             <motion.a 
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(124,58,237,0.4)" }}
               whileTap={{ scale: 0.95 }}
-              href="#contact" 
+              href="https://drive.google.com/file/d/1vdfjkWTQ_1l7Jugs-vbgyxbe_0DTe4pk/view?usp=sharing" target="_blank" rel="noopener noreferrer"
               className="w-full sm:w-auto px-10 py-5 bg-primary text-white font-black rounded-2xl border-2 border-white/10 shadow-xl transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] text-[11px]"
             >
-              Start Project <ArrowRight size={18} />
+              Download CV <ArrowRight size={18} />
             </motion.a>
             <motion.a 
               whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.05)", borderColor: "rgba(124,58,237,0.4)" }}
               whileTap={{ scale: 0.95 }}
-              href="#projects" 
+              href="https://github.com/amerelfalwo" target="_blank" rel="noopener noreferrer"
               className="w-full sm:w-auto px-10 py-5 glass-card font-black border-2 border-white/10 text-white transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] text-[11px]"
             >
-              Browse Work <Globe size={18} />
+              View GitHub <Code size={18} />
             </motion.a>
           </div>
 
-          {/* Micro Stats/Quick Expertise */}
-          <div className="mt-12 grid grid-cols-2 gap-6 border-t border-white/5 pt-6 w-full max-w-md">
-            <div className="flex items-start gap-4">
-              <div className="p-2.5 bg-primary/10 rounded-lg border border-primary/20">
-                <Cpu className="text-primary w-4 h-4" />
-              </div>
-              <div>
-                <h4 className="text-white font-black text-[11px] uppercase tracking-tighter">Inference</h4>
-                <p className="text-secondary text-[10px] font-bold">Latency Focused</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="p-2.5 bg-primary/10 rounded-lg border border-primary/20">
-                <Zap className="text-primary w-4 h-4" />
-              </div>
-              <div>
-                <h4 className="text-white font-black text-[11px] uppercase tracking-tighter">Scalability</h4>
-                <p className="text-secondary text-[10px] font-bold">Cloud-Ready</p>
-              </div>
-            </div>
-          </div>
+           {/* Micro Stats/Quick Expertise */}
+           <div className="mt-12 grid grid-cols-2 gap-6 border-t border-white/5 pt-6 w-full max-w-md">
+             <div className="flex items-start gap-4">
+               <div className="p-2.5 bg-primary/10 rounded-lg border border-primary/20">
+                 <Terminal className="text-primary w-4 h-4" />
+               </div>
+               <div>
+                 <h4 className="text-white font-black text-[13px] uppercase tracking-tighter">1+ Year</h4>
+                 <p className="text-secondary text-[11px] font-bold">AI & CV Experience</p>
+               </div>
+             </div>
+             <div className="flex items-start gap-4">
+               <div className="p-2.5 bg-primary/10 rounded-lg border border-primary/20">
+                 <Database className="text-primary w-4 h-4" />
+               </div>
+               <div>
+                 <h4 className="text-white font-black text-[13px] uppercase tracking-tighter">6+</h4>
+                 <p className="text-secondary text-[11px] font-bold">Professional Certifications</p>
+               </div>
+             </div>
+           </div>
         </motion.div>
 
         {/* Right Side: Architectural Image Container with 3D Parallax */}

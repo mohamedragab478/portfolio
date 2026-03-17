@@ -1,6 +1,6 @@
 export const projectsData = [
   {
-    title: "ThyraX - Medical Diagnostic System",
+    title: "ThyraX - Thyroid Cancer Analysis",
     category: "Graduation Project / AI Lead",
     image: "/project_img/5.png",
     color: "from-violet-500/20 to-purple-500/20",
@@ -16,7 +16,7 @@ export const projectsData = [
       "Scalable Deployment on Render for real-time inference"
     ],
     tags: ["PyTorch", "UNet++", "LangChain", "Pinecone", "FastAPI"],
-    github: "https://github.com/amirelrefai",
+    github: "https://github.com/amerelfalwo/ThyraX",
     link: "#"
   },
   {
@@ -36,7 +36,7 @@ export const projectsData = [
       "Core visual analysis engine for ThyraX system"
     ],
     tags: ["UNet++", "TensorFlow", "Python", "OpenCV"],
-    github: "https://github.com/amirelrefai",
+    github: "https://github.com/amerelfalwo/Medical-Segmentation",
     link: "#"
   },
   {
@@ -56,7 +56,7 @@ export const projectsData = [
       "Interactive UI with real-time analysis & 99.90% confidence"
     ],
     tags: ["TensorFlow", "ResNet50", "FastAPI", "Python", "ngrok"],
-    github: "https://github.com/amirelrefai",
+    github: "https://github.com/amerelfalwo/Driver-Behavior",
     link: "#"
   },
   {
@@ -67,36 +67,36 @@ export const projectsData = [
     accent: "text-rose-400",
     border: "border-white/10 hover:border-primary/50",
     glow: "shadow-rose-500/10",
-    description: "Chest X-ray classification into COVID-19 positive and normal cases using Transfer Learning.",
-    fullDescription: "Developed a robust Deep Learning model to classify chest X-ray images into COVID-19 positive and normal cases. The project aimed to demonstrate the efficiency of Transfer Learning in medical diagnostics.",
+    description: "Classification of chest X-rays using Transfer Learning and advanced Data Augmentation.",
+    fullDescription: "Developed a robust Deep Learning model to classify chest X-ray images into COVID-19 positive and normal cases. Implemented advanced Data Augmentation (rotation, zooming, flipping) to improve generalization and robustness of the Transfer Learning backbone.",
     highlights: [
-      "VGG16 architecture as a feature extractor backbone",
-      "Custom-designed top layers for binary classification",
-      "Advanced data augmentation (rotation, zoom, flip)",
-      "Fine-tuned weights for specific medical feature capture"
+      "VGG16 architecture applied for Transfer Learning",
+      "Advanced image augmentation techniques",
+      "Improved generalization and prediction robustness",
+      "High-accuracy binary classification setup"
     ],
-    tags: ["VGG16", "TensorFlow", "Deep Learning", "Python"],
-    github: "https://github.com/amirelrefai",
+    tags: ["VGG16", "Transfer Learning", "Keras", "Python"],
+    github: "https://github.com/amerelfalwo/COVID-Detection",
     link: "#"
   },
   {
     title: "Sentiment Analysis Web App",
-    category: "NLP / Web Application",
+    category: "Natural Language Processing",
     image: "/project_img/2.jpeg",
     color: "from-emerald-500/20 to-teal-500/20",
     accent: "text-emerald-400",
     border: "border-white/10 hover:border-primary/50",
     glow: "shadow-emerald-500/10",
-    description: "End-to-end NLP pipeline classifying customer reviews into Positive or Negative sentiments with Gradio.",
-    fullDescription: "Build an end-to-end NLP pipeline to classify customer reviews into Positive or Negative sentiments. The project features full text preprocessing and real-time interactive testing.",
+    description: "End-to-end NLP pipeline for customer review classification using Naive Bayes.",
+    fullDescription: "Built an end-to-end NLP pipeline designed for analyzing and classifying customer reviews. The project features robust text preprocessing pipelines (Stemming, Lemmatization) feeding directly into a Multinomial Naive Bayes classifier deployed via a Gradio interface.",
     highlights: [
-      "Stemming (PorterStemmer) & Lemmatization processing",
-      "Multinomial Naive Bayes for efficient classification",
-      "Interactive Gradio UI for real-time model testing",
-      "Insightful WordCloud visualizations of sentiment data"
+      "Built custom text preprocessing pipelines",
+      "Trained Multinomial Naive Bayes classifier",
+      "Deployed interactive frontend via Gradio",
+      "Real-time sentiment inference capabilities"
     ],
-    tags: ["NLTK", "Scikit-learn", "Gradio", "WordCloud"],
-    github: "https://github.com/amirelrefai",
+    tags: ["NLTK", "Scikit-learn", "Gradio", "Python"],
+    github: "https://github.com/amerelfalwo/Sentiment-Analysis",
     link: "#"
   }
 ];
