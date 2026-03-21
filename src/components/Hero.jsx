@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { m, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ChevronRight, Sparkles, Code, Terminal, Database, Award, Briefcase, Zap, Brain, Star, User } from 'lucide-react';
 import { useState, useEffect, useMemo, memo } from 'react';
 import { db } from '../firebase';
@@ -105,30 +105,30 @@ const Hero = memo(() => {
       <div className="relative z-10 w-full max-w-7xl px-6 md:px-12 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
 
         {/* Left Side: Text Content */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className="flex flex-col items-start text-left"
         >
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 glass-card text-secondary text-[10px] font-black uppercase tracking-[0.3em] mb-6"
           >
             <Sparkles size={14} className="text-secondary animate-pulse" />
             Deep Learning Engineer <ChevronRight size={14} className="text-secondary/60" />
-          </motion.div>
+          </m.div>
 
-          <motion.h1 
+          <m.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-7xl lg:text-[85px] font-black mb-4 tracking-tighter uppercase leading-[0.9] text-white whitespace-nowrap"
           >
             {displayName} <span style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundImage: 'linear-gradient(to right, #7c3aed, #d8b4fe)' }}>{displayLastName}</span>
-          </motion.h1>
+          </m.h1>
           
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -137,38 +137,38 @@ const Hero = memo(() => {
             <h2 className="text-xs md:text-base lg:text-lg font-bold tracking-[0.4em] lg:tracking-[0.5em] text-white uppercase whitespace-nowrap">
               {displayTitle}
             </h2>
-          </motion.div>
+          </m.div>
 
-          <motion.p 
+          <m.p 
              initial={{ opacity: 0 }}
              animate={{ opacity: 1 }}
              transition={{ duration: 1, delay: 0.4 }}
              className="max-w-lg text-muted/80 text-lg md:text-xl mb-12 font-medium leading-relaxed tracking-tight"
           >
              {displayBio}
-          </motion.p>
+          </m.p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-            <motion.a 
+            <m.a 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href={cvUrl} target="_blank" rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 bg-[#7c3aed] text-white hover:bg-white hover:text-[#7c3aed] rounded-2xl font-black transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] text-[10px] shadow-lg shadow-[#7c3aed]/20"
             >
               Download CV <ArrowRight size={16} />
-            </motion.a>
-            <motion.a 
+            </m.a>
+            <m.a 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href={githubUrl} target="_blank" rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-2xl font-black border border-white/20 text-white transition-all flex items-center justify-center gap-3 uppercase tracking-[0.2em] text-[10px] hover:bg-white/5"
             >
               View GitHub <Code size={16} />
-            </motion.a>
+            </m.a>
           </div>
 
            {/* Dynamic Stats Cards */}
-           <motion.div 
+           <m.div 
              variants={containerVariants}
              initial="hidden"
              animate="visible"
@@ -183,7 +183,7 @@ const Hero = memo(() => {
                const colorClass = colors[i % colors.length];
                const iconColor = i % 2 === 0 ? "text-[#06b6d4]" : "text-[#ec4899]";
                return (
-                 <motion.div
+                 <m.div
                    key={i}
                    variants={itemVariants}
                    className="flex flex-col xl:flex-row items-start xl:items-center gap-4 py-4 pr-6 border border-white/5 rounded-2xl group/stat glow-aura bg-surface hover:bg-surface/60 transition-colors"
@@ -195,14 +195,14 @@ const Hero = memo(() => {
                      <h4 className="text-white font-black text-[13px] uppercase tracking-widest">{stat.title}</h4>
                      <p className="text-secondary text-[8px] font-bold uppercase tracking-widest mt-1">{stat.description}</p>
                    </div>
-                 </motion.div>
+                 </m.div>
                );
              })}
-           </motion.div>
-        </motion.div>
+           </m.div>
+        </m.div>
 
         {/* Right Side: Profile Image with 3D Parallax */}
-        <motion.div
+        <m.div
           style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -215,7 +215,7 @@ const Hero = memo(() => {
           {/* Refined Image Container - No borders, smooth fade using CSS Mask */}
           <div className="relative z-10 w-full max-w-[600px] aspect-[4/5] flex items-end justify-center">
             {profileImage && (
-              <motion.img 
+              <m.img 
                 src={profileImage}
                 alt={`${displayName} ${displayLastName}`}
                 className="w-full h-full object-cover object-top drop-shadow-2xl transition-all duration-700 pointer-events-none"
@@ -229,7 +229,7 @@ const Hero = memo(() => {
               />
             )}
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

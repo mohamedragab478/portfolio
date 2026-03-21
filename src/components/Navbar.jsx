@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Zap, Briefcase, Layers, Award, User } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
@@ -23,7 +23,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed w-full z-50 flex justify-center pt-6 transition-all duration-500">
-      <motion.div 
+      <m.div 
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -54,28 +54,28 @@ const Navbar = () => {
               {link.name}
             </a>
           ))}
-          <motion.a
+          <m.a
             href="#contact"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 rounded-full bg-[#7c3aed] text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all ml-4 hover:brightness-110 shadow-lg shadow-[#7c3aed]/20"
           >
             Connect
-          </motion.a>
+          </m.a>
         </div>
 
         {/* Mobile Toggle */}
         <button className="md:hidden text-accent p-2" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-      </motion.div>
+      </m.div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <>
             {/* Backdrop */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -84,7 +84,7 @@ const Navbar = () => {
             />
             
             {/* Sidebar */}
-            <motion.div 
+            <m.div 
               initial={{ x: "100%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
@@ -108,7 +108,7 @@ const Navbar = () => {
 
               <div className="flex flex-col gap-2">
                 {navLinks.map((link, idx) => (
-                  <motion.a
+                  <m.a
                     key={link.name}
                     href={link.href}
                     initial={{ x: 20, opacity: 0 }}
@@ -119,11 +119,11 @@ const Navbar = () => {
                   >
                     <span className="text-accent/50 group-hover:text-accent transition-colors">{link.icon}</span>
                     {link.name}
-                  </motion.a>
+                  </m.a>
                 ))}
               </div>
 
-              <motion.a
+              <m.a
                 href="#contact"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -132,8 +132,8 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 HIRE ME
-              </motion.a>
-            </motion.div>
+              </m.a>
+            </m.div>
           </>
         )}
       </AnimatePresence>

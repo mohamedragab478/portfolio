@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 
 const GlobalBackground = () => {
@@ -8,22 +8,22 @@ const GlobalBackground = () => {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none transition-colors duration-500" style={{ backgroundColor: 'var(--darkNav)' }}>
       {/* Dynamic Luminous Glows */}
-      <motion.div
+      <m.div
         animate={{ scale: [1, 1.3, 1], opacity: [0.15, 0.35, 0.15] }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         className="absolute top-[0%] left-[-10%] w-[50%] h-[50%] bg-[#7c3aed]/30 rounded-full blur-[150px]"
       />
-      <motion.div
+      <m.div
         animate={{ scale: [1.2, 1, 1.2], opacity: [0.15, 0.3, 0.15], x: [0, 30, 0] }}
         transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
         className="absolute bottom-[10%] right-[-10%] w-[60%] h-[60%] bg-[#06b6d4]/20 rounded-full blur-[150px]"
       />
-      <motion.div
+      <m.div
         animate={{ scale: [1.1, 1.4, 1.1], opacity: [0.1, 0.25, 0.1], y: [0, -30, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
         className="absolute top-[40%] right-[10%] w-[40%] h-[40%] bg-[#ec4899]/20 rounded-full blur-[150px]"
       />
-      <motion.div
+      <m.div
         animate={{ scale: [1.3, 1.1, 1.3], opacity: [0.1, 0.2, 0.1], x: [0, -40, 0] }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
         className="absolute bottom-[30%] left-[10%] w-[45%] h-[45%] bg-[#10b981]/20 rounded-full blur-[150px]"
@@ -40,7 +40,7 @@ const GlobalBackground = () => {
       {/* Subtle Floating Essence */}
       <div className="absolute inset-0">
         {[...Array(15)].map((_, i) => (
-          <motion.div
+          <m.div
             key={i}
             className="absolute w-[2px] h-[2px] bg-accent/20 rounded-full"
             initial={{ 

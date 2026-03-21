@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Brain, Code, Wifi, Settings, ExternalLink, Briefcase, Eye, Database, Clock, Calendar, CheckCircle2 } from 'lucide-react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -40,7 +40,7 @@ const ProfessionalDevelopment = memo(() => {
     <section id="professional-development" className="py-24 relative z-10">
       <div className="max-w-4xl mx-auto px-6">
         <div className="mb-20 text-center">
-          <motion.div 
+          <m.div 
              initial={{ opacity: 0, y: -20 }}
              whileInView={{ opacity: 1, y: 0 }}
              viewport={{ once: true, margin: "100px" }}
@@ -48,7 +48,7 @@ const ProfessionalDevelopment = memo(() => {
           >
              <Briefcase className="w-4 h-4 text-accent" />
              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Continuous Growth</span>
-          </motion.div>
+          </m.div>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-white">
             Training & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe]">Courses</span>
           </h2>
@@ -63,7 +63,7 @@ const ProfessionalDevelopment = memo(() => {
             {trainings.map((tr, index) => {
               const tColor = "text-[#f97316]";
               return (
-              <motion.div 
+              <m.div 
                 key={tr.id}
                 initial={{ opacity: 0, x: -20, y: 20 }}
                 whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -129,7 +129,7 @@ const ProfessionalDevelopment = memo(() => {
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </m.div>
             )})}
           </div>
         )}

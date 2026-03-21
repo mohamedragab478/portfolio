@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
 const ScrollToTop = () => {
@@ -28,7 +28,7 @@ const ScrollToTop = () => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.button
+        <m.button
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -39,7 +39,7 @@ const ScrollToTop = () => {
           aria-label="Scroll to top"
         >
           <ArrowUp size={24} className="group-hover:animate-bounce" />
-        </motion.button>
+        </m.button>
       )}
     </AnimatePresence>
   );

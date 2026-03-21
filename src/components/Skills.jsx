@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { useState, useEffect, memo, useMemo } from 'react';
 import { db } from '../firebase';
@@ -6,7 +6,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 const MarqueeRow = memo(({ items, direction = 1 }) => (
   <div className="flex overflow-hidden py-4 group">
-    <motion.div 
+    <m.div 
       animate={{ 
         x: direction > 0 ? [0, "-100%"] : ["-100%", 0] 
       }}
@@ -38,7 +38,7 @@ const MarqueeRow = memo(({ items, direction = 1 }) => (
           </span>
         </div>
       ))}
-    </motion.div>
+    </m.div>
   </div>
 ));
 
@@ -73,7 +73,7 @@ const Skills = memo(() => {
       <div className="absolute bottom-[20%] left-[-5%] w-[400px] h-[400px] bg-[#d8b4fe]/5 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 mb-20 md:mb-28 text-center relative z-10">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "100px" }}
@@ -88,7 +88,7 @@ const Skills = memo(() => {
           <p className="text-muted/70 font-medium tracking-tight max-w-2xl mx-auto text-lg leading-relaxed">
             The meticulously curated stack I utilize to build scalable machine learning models and high-performance applications.
           </p>
-        </motion.div>
+        </m.div>
       </div>
 
       {!isLoading && (

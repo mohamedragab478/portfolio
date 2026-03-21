@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { Trash2, Edit2, Plus, RefreshCw, Layers, Database, Image as ImageIcon, Hash, Code } from 'lucide-react';
 import { skillIcons } from '../utils/skillIcons';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 
 const SkillsManager = () => {
   const [skills, setSkills] = useState([]);
@@ -154,14 +154,14 @@ const SkillsManager = () => {
                 required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="e.g. React" />
               <AnimatePresence>
                 {showDropdown && filteredTools.length > 0 && (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-surface border border-accent rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
+                  <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-surface border border-accent rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
                     {filteredTools.map(tool => (
                       <div key={tool} onMouseDown={(e) => e.preventDefault()} onClick={() => { setName(tool); setIconUrl(skillIcons[tool]); setShowDropdown(false); }} className="px-5 py-3 text-sm font-bold tracking-wider text-purple-100 hover:bg-accent/20 hover:text-accent cursor-pointer transition-colors border-b border-accent last:border-0 flex items-center gap-3">
                         {skillIcons[tool] ? <img src={skillIcons[tool]} alt={tool} className="w-5 h-5 object-contain" /> : <Code size={16} />}
                         {tool}
                       </div>
                     ))}
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>

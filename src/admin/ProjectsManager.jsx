@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Trash2, Edit2, Plus, RefreshCw, FolderPlus, Github, Code, Hash, AlignLeft, Globe, X, Database, CheckCircle2 } from 'lucide-react';
 import { skillIcons } from '../utils/skillIcons';
 
@@ -187,13 +187,13 @@ const ProjectsManager = () => {
              <div className="flex flex-col gap-2 mt-3 p-4 bg-[#7c3aed]/5 rounded-xl border border-[#7c3aed]/20">
                <AnimatePresence>
                  {keyAchievements.map(ach => (
-                    <motion.div key={ach} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl group/ach">
+                    <m.div key={ach} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl group/ach">
                        <div className="flex items-center gap-3">
                           <CheckCircle2 className="w-4 h-4 text-[#d8b4fe] shrink-0" />
                           <span className="text-xs font-bold text-white">{ach}</span>
                        </div>
                        <button type="button" onClick={() => handleRemoveAchievement(ach)} className="p-1.5 opacity-0 md:opacity-100 lg:opacity-0 group-hover/ach:opacity-100 hover:bg-red-500/20 text-red-500 rounded-lg transition-all"><X className="w-4 h-4" /></button>
-                    </motion.div>
+                    </m.div>
                  ))}
                </AnimatePresence>
              </div>
@@ -226,14 +226,14 @@ const ProjectsManager = () => {
               />
               <AnimatePresence>
                 {showDropdown && searchTerm && filteredTools.length > 0 && (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-surface border border-accent rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
+                  <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-surface border border-accent rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
                     {filteredTools.map(tool => (
                       <div key={tool} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (!techStack.includes(tool)) setTechStack([...techStack, tool]); setSearchTerm(''); setShowDropdown(false); }} className="px-5 py-3 text-sm font-bold tracking-wider text-purple-100 hover:bg-accent/20 hover:text-accent cursor-pointer transition-colors border-b border-accent last:border-0 flex items-center gap-3">
                         {skillIcons[tool] ? <img src={skillIcons[tool]} alt={tool} className="w-5 h-5 object-contain" /> : <Code size={16} />}
                         {tool}
                       </div>
                     ))}
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { Send, MessageSquare, Phone, Github, Linkedin, Mail, ArrowUpRight, Zap, Briefcase, Facebook, Instagram } from 'lucide-react';
 import { db } from '../firebase';
@@ -88,7 +88,7 @@ const Contact = memo(() => {
     <section id="contact" className="py-24 bg-transparent relative">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-24">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "100px" }}
@@ -96,7 +96,7 @@ const Contact = memo(() => {
           >
              <Zap className="w-4 h-4 text-accent" />
              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Open for Collaboration</span>
-          </motion.div>
+          </m.div>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-white">
             Connect for <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe]">Innovation.</span>
           </h2>
@@ -169,7 +169,7 @@ const Contact = memo(() => {
 
           {/* Right Side: Contact Form */}
           <div className="lg:col-span-7">
-            <motion.form 
+            <m.form 
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "100px" }}
@@ -244,7 +244,7 @@ const Contact = memo(() => {
               {status.error && (
                 <p className="text-red-400 text-xs font-bold uppercase tracking-widest text-center mt-4">{status.error}</p>
               )}
-            </motion.form>
+            </m.form>
           </div>
         </div>
       </div>

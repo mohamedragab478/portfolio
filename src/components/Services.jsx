@@ -1,7 +1,7 @@
 import { useState, useEffect, memo, useMemo } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 
 const ServiceCard = memo(({ service, index }) => {
@@ -9,7 +9,7 @@ const ServiceCard = memo(({ service, index }) => {
   const tColor = "text-[#f97316]";
   
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "100px" }}
@@ -30,7 +30,7 @@ const ServiceCard = memo(({ service, index }) => {
           {service.description}
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 });
 
@@ -59,10 +59,10 @@ const Services = memo(() => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#7c3aed]/5 blur-[150px] rounded-full pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "100px" }}
           className="mb-20 md:mb-28 text-center"
         >
           <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-white/5 bg-surface/30 backdrop-blur-md mb-8">
@@ -75,7 +75,7 @@ const Services = memo(() => {
           <p className="text-muted/70 font-medium tracking-tight max-w-2xl mx-auto text-lg leading-relaxed">
             Delivering high-performance architectural solutions and specialized engineering to elevate product realities.
           </p>
-        </motion.div>
+        </m.div>
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">

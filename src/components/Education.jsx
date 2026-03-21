@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { GraduationCap, Award, BookOpen, Calendar, MapPin, ExternalLink, ShieldCheck } from 'lucide-react';
 import { db } from '../firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
@@ -56,7 +56,7 @@ const Education = memo(() => {
       <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#7c3aed]/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "100px" }}
@@ -72,7 +72,7 @@ const Education = memo(() => {
           <p className="text-muted/70 font-medium tracking-tight max-w-2xl mx-auto text-lg leading-relaxed">
             A solid foundation in computer science paired with specialized certifications in AI and edge computing.
           </p>
-        </motion.div>
+        </m.div>
 
         <div className="flex flex-col gap-12 w-full">
           
@@ -81,7 +81,7 @@ const Education = memo(() => {
             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-muted/50 mb-6 pl-4 flex items-center gap-3">
                <span className="w-8 h-[1px] bg-[#7c3aed]/30" /> University Degree
             </h3>
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "100px" }}
@@ -115,7 +115,7 @@ const Education = memo(() => {
                 <div className="hidden md:flex items-center justify-center w-20 h-20 rounded-full bg-[#7c3aed]/20 border border-[#7c3aed]/50 group-hover:bg-[#7c3aed] group-hover:scale-110 transition-all duration-500 z-10 shrink-0 ml-10 shadow-lg shadow-[#7c3aed]/10">
                    <GraduationCap className="w-10 h-10 text-[#d8b4fe] group-hover:text-white transition-colors duration-500" />
                 </div>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Certifications List */}
@@ -128,7 +128,7 @@ const Education = memo(() => {
                 {certifications.map((cert, index) => {
                   const tColor = "text-[#f97316]";
                   return (
-                  <motion.div
+                  <m.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -170,7 +170,7 @@ const Education = memo(() => {
                           <ShieldCheck className="w-5 h-5 text-white/30 group-hover:text-white transition-colors duration-500" />
                         )}
                       </div>
-                  </motion.div>
+                  </m.div>
                 )})}
               </div>
             </div>

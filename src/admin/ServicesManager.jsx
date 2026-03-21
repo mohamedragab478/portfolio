@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { Settings, Plus, RefreshCw, Trash2, Hexagon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 
 const POPULAR_ICONS = ['Code', 'Database', 'Server', 'Cpu', 'Layers', 'Zap', 'Globe', 'Smartphone', 'Monitor', 'Shield', 'Activity', 'Terminal', 'Cloud', 'Network', 'Lock', 'Key', 'Briefcase', 'Star', 'Heart', 'Award', 'Hexagon', 'Box', 'Workflow', 'Share2', 'Settings', 'Search'];
 
@@ -89,7 +89,7 @@ const ServicesManager = () => {
               
               <AnimatePresence>
                 {showDropdown && filteredIcons.length > 0 && (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-surface border border-accent rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
+                  <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute top-full left-0 right-0 mt-2 bg-surface border border-accent rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden max-h-48 overflow-y-auto">
                     {filteredIcons.map(icon => {
                       const IconComp = LucideIcons[icon] || LucideIcons.Code;
                       return (
@@ -99,7 +99,7 @@ const ServicesManager = () => {
                         </div>
                       )
                     })}
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { 
   ExternalLink, Github, X, Code2, Database, Cpu, 
   Globe, ChevronDown, ChevronUp, ArrowRight, Info,
@@ -37,7 +37,7 @@ const skillIcons = {
 
 const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -91,7 +91,7 @@ const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
             )})}
          </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 });
 
@@ -127,7 +127,7 @@ const Projects = memo(() => {
     <section id="projects" className="py-24 bg-transparent relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "100px" }}
@@ -135,7 +135,7 @@ const Projects = memo(() => {
           >
              <Zap className="w-4 h-4 text-accent" />
              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Selected Works</span>
-          </motion.div>
+          </m.div>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-white">
             Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe]">Projects</span>
           </h2>
@@ -143,7 +143,7 @@ const Projects = memo(() => {
 
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <motion.div 
+            <m.div 
               key="skeletons"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -172,9 +172,9 @@ const Projects = memo(() => {
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div 
+            <m.div 
               key="projects"
               className="grid lg:grid-cols-2 gap-8"
               layout
@@ -187,7 +187,7 @@ const Projects = memo(() => {
                   skillIcons={skillIcons}
                 />
               ))}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
@@ -208,7 +208,7 @@ const Projects = memo(() => {
       <AnimatePresence>
         {selectedProject && (
           <div className="fixed inset-0 z-[100] flex justify-center p-4 overflow-y-auto pt-32 pb-12">
-             <motion.div 
+             <m.div 
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
@@ -216,7 +216,7 @@ const Projects = memo(() => {
                className="fixed inset-0 bg-surface/40 backdrop-blur-xl"
              />
              
-             <motion.div 
+             <m.div 
                initial={{ opacity: 0, scale: 0.9, y: 40 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.9, y: 40 }}
@@ -229,7 +229,7 @@ const Projects = memo(() => {
                   <X size={20} className="group-hover/close:rotate-90 transition-transform duration-300" />
                 </button>
 
-                 {/* Image Header - Full Width & Clean */}
+                 {/* Image Header */}
                  <div className="relative w-full h-[300px] md:h-[450px] overflow-hidden shrink-0">
                     <img 
                       src={selectedProject.image} 
@@ -242,14 +242,12 @@ const Projects = memo(() => {
                  </div>
 
                  <div className="p-8 md:p-12 flex flex-col bg-background">
-                    {/* Title & Category - Moved below image */}
                     <div className="mb-12">
                        <p className={`text-[10px] font-black uppercase tracking-[0.5em] ${selectedProject.accent} mb-3`}>{selectedProject.category}</p>
                        <h3 className="text-4xl md:text-6xl font-black italic uppercase text-[#f97316] tracking-tight leading-none">{selectedProject.title}</h3>
                     </div>
 
                     <div className="grid lg:grid-cols-2 gap-12">
-                       {/* Left Column: Description & Highlights */}
                        <div className="space-y-10">
                           <div>
                              <h5 className="text-[10px] font-black uppercase text-accent/30 mb-4 tracking-[0.2em] flex items-center gap-2">
@@ -275,7 +273,6 @@ const Projects = memo(() => {
                           </div>
                        </div>
 
-                       {/* Right Column: Stack & Actions */}
                        <div className="space-y-10">
                           <div>
                              <h5 className="text-[10px] font-black uppercase text-accent/30 mb-6 tracking-[0.2em] flex items-center gap-2">
@@ -283,7 +280,7 @@ const Projects = memo(() => {
                                 Core Architecture
                              </h5>
                              <div className="grid grid-cols-2 gap-3">
-                               {selectedProject.tags?.map((tag, idx) => {
+                               {selectedProject.tags?.map((tag) => {
                                  const colorClass = "text-[#10b981] border-[#10b981]/30 hover:bg-[#10b981]/10 bg-[#10b981]/5";
                                  return (
                                  <div key={tag} className={`flex items-center gap-3 p-4 border rounded-2xl text-xs font-bold transition-all ${colorClass}`}>
@@ -313,7 +310,7 @@ const Projects = memo(() => {
                        </div>
                     </div>
                  </div>
-              </motion.div>
+              </m.div>
           </div>
         )}
       </AnimatePresence>

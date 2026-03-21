@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Github, Linkedin, Send, X, Share2 } from 'lucide-react';
 
 const SocialFloatingButton = () => {
@@ -51,7 +51,7 @@ const SocialFloatingButton = () => {
           const y = Math.sin((social.angle * Math.PI) / 180) * radius;
 
           return (
-            <motion.a
+            <m.a
               key={social.label}
               href={social.href}
               target="_blank"
@@ -74,13 +74,13 @@ const SocialFloatingButton = () => {
               <span className="absolute left-14 px-3 py-1 bg-white text-accent text-[10px] font-black uppercase rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-black/5">
                 {social.label}
               </span>
-            </motion.a>
+            </m.a>
           );
         })}
       </AnimatePresence>
 
       {/* Main Toggle Button */}
-      <motion.button
+      <m.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
@@ -92,26 +92,26 @@ const SocialFloatingButton = () => {
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.div
+            <m.div
               key="close"
               initial={{ rotate: -90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: 90, opacity: 0 }}
             >
               <X size={26} />
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div
+            <m.div
               key="open"
               initial={{ rotate: 90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }}
             >
               <Share2 size={26} />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-      </motion.button>
+      </m.button>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Zap, Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
 
 const Footer = () => {

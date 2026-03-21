@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Lock, Mail, ArrowRight, ShieldAlert, Hexagon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,33 +33,33 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden px-4 font-sans selection:bg-accent/30">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <motion.div 
+      <m.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md bg-[#7c3aed]/5 backdrop-blur-xl border border-[#7c3aed]/20 p-8 md:p-10 rounded-[2.5rem] shadow-[0_0_80px_rgba(124,58,237,0.15)] relative z-10"
       >
         <div className="text-center mb-10">
-          <motion.div 
+          <m.div 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
             className="w-16 h-16 bg-[#7c3aed]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#7c3aed]/30 shadow-[0_0_30px_rgba(124,58,237,0.2)]"
           >
             <Hexagon className="text-white w-8 h-8" />
-          </motion.div>
+          </m.div>
           <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe] uppercase tracking-widest mb-2">Aura Access</h2>
           <p className="text-muted/60 text-xs font-bold tracking-[0.2em] uppercase">CMS Authorization Protocol</p>
         </div>
 
         {error && (
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             className="mb-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-3 text-red-400 text-xs font-bold tracking-widest uppercase"
           >
             <ShieldAlert className="w-5 h-5 shrink-0" />
             {error}
-          </motion.div>
+          </m.div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -84,7 +84,7 @@ const Login = () => {
             {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
           </button>
         </form>
-      </motion.div>
+      </m.div>
     </div>
   );
 };
