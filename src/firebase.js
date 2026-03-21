@@ -1,26 +1,18 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// import { getAuth } from "firebase/auth"; // Useful for the Admin Login
 
-// TODO: RE-ENTER YOUR FIREBASE CONFIGURATION HERE
-// 1. Go to console.firebase.google.com
-// 2. Create a new Project or select an existing one
-// 3. Add a "Web App" to the project to generate these keys
-// 4. Paste the object below
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyA2G350fJcL_up99AC3h4JRE-5mNfFtRPY",
+  authDomain: "amir-portfolio-cms.firebaseapp.com",
+  projectId: "amir-portfolio-cms",
+  storageBucket: "amir-portfolio-cms.firebasestorage.app",
+  messagingSenderId: "870008538483",
+  appId: "1:870008538483:web:12b32c753507b4781e3106",
+  measurementId: "G-JCXZY31G3G"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Cloud Firestore and get a reference to the service
+export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// export const auth = getAuth(app); // Export auth if implementing login

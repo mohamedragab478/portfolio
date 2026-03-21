@@ -20,14 +20,14 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="relative min-h-screen flex bg-[#030014] text-white overflow-hidden">
+    <div className="relative min-h-screen flex bg-background text-accent overflow-hidden">
       <GlobalBackground />
       
       {/* Sidebar */}
-      <aside className="relative z-20 w-64 border-r border-white/10 bg-[#05011a]/80 backdrop-blur-2xl flex flex-col">
-        <div className="p-8 border-b border-white/10">
-          <span className="text-2xl font-black tracking-tighter uppercase text-white">
-            Admin<span className="text-primary italic">.Panel</span>
+      <aside className="relative z-20 w-64 border-r border-borderColor bg-[#05011a]/80 backdrop-blur-2xl flex flex-col">
+        <div className="p-8 border-b border-borderColor">
+          <span className="text-2xl font-black tracking-tighter uppercase text-accent">
+            Admin<span className="text-accent italic">.Panel</span>
           </span>
         </div>
         
@@ -39,8 +39,8 @@ const AdminLayout = () => {
               className={({ isActive }) => 
                 `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-bold uppercase tracking-widest text-xs ${
                   isActive 
-                    ? 'bg-primary/20 text-primary border border-primary/30 shadow-[0_0_20px_rgba(124,58,237,0.2)]' 
-                    : 'text-secondary hover:bg-white/5 hover:text-white'
+                    ? 'bg-accent/20 text-accent border border-accent/30 shadow-[0_0_20px_rgba(13,148,136,0.2)]' 
+                    : 'text-muted hover:bg-surface/20 hover:text-accent'
                 }`
               }
             >
@@ -50,7 +50,7 @@ const AdminLayout = () => {
           ))}
         </nav>
 
-        <div className="p-6 border-t border-white/10">
+        <div className="p-6 border-t border-borderColor">
           <button 
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors font-bold uppercase tracking-widest text-xs"

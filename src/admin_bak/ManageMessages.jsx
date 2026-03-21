@@ -49,21 +49,21 @@ const ManageMessages = () => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
          <div>
-           <h1 className="text-4xl font-black uppercase tracking-tighter text-white">Manage <span className="text-primary italic">Messages</span></h1>
-           <p className="text-secondary tracking-tight">Read and clear incoming communications from the portfolio.</p>
+           <h1 className="text-4xl font-black uppercase tracking-tighter text-accent">Manage <span className="text-accent italic">Messages</span></h1>
+           <p className="text-muted tracking-tight">Read and clear incoming communications from the portfolio.</p>
          </div>
-         <div className="p-3 bg-primary/20 rounded-xl border border-primary/30">
-            <MessageSquare size={24} className="text-primary" />
+         <div className="p-3 bg-accent/20 rounded-xl border border-accent/30">
+            <MessageSquare size={24} className="text-accent" />
          </div>
       </div>
 
-      <div className="bg-[#05011a]/60 border border-white/10 rounded-[2rem] backdrop-blur-xl p-8">
+      <div className="bg-[#05011a]/60 border border-borderColor rounded-[2rem] backdrop-blur-xl p-8">
          {loading ? (
              <div className="flex justify-center items-center py-20">
-                 <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                 <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
              </div>
          ) : messages.length === 0 ? (
-             <div className="text-center py-20 text-secondary/60">
+             <div className="text-center py-20 text-muted/60">
                  <MessageSquare size={48} className="mx-auto mb-4 opacity-20" />
                  <p className="text-sm font-bold uppercase tracking-widest">Inbox Empty</p>
              </div>
@@ -71,7 +71,7 @@ const ManageMessages = () => {
              <div className="overflow-x-auto">
                <table className="w-full text-left border-collapse min-w-[800px]">
                  <thead>
-                   <tr className="border-b border-white/10 text-[10px] font-black uppercase tracking-widest text-secondary/60">
+                   <tr className="border-b border-borderColor text-[10px] font-black uppercase tracking-widest text-muted/60">
                      <th className="pb-4 pl-4 w-1/5">Sender Identity</th>
                      <th className="pb-4 w-1/5">Timestamp</th>
                      <th className="pb-4 w-2/5">Payload</th>
@@ -80,17 +80,17 @@ const ManageMessages = () => {
                  </thead>
                  <tbody>
                    {messages.map((msg) => (
-                     <tr key={msg.id} className="border-b border-white/5 group hover:bg-white/5 transition-colors">
+                     <tr key={msg.id} className="border-b border-borderColor group hover:bg-surface/20 transition-colors">
                        <td className="py-6 pl-4">
-                          <p className="text-white font-bold">{msg.name}</p>
-                          <a href={`mailto:${msg.email}`} className="text-[10px] font-bold tracking-widest uppercase text-primary hover:underline">{msg.email}</a>
+                          <p className="text-accent font-bold">{msg.name}</p>
+                          <a href={`mailto:${msg.email}`} className="text-[10px] font-bold tracking-widest uppercase text-accent hover:underline">{msg.email}</a>
                        </td>
-                       <td className="py-6 text-secondary text-xs font-bold uppercase tracking-widest">
+                       <td className="py-6 text-muted text-xs font-bold uppercase tracking-widest">
                           {new Date(msg.timestamp).toLocaleDateString()}
                        </td>
                        <td className="py-6 pr-8">
-                          <p className="text-white text-sm font-bold mb-1">{msg.subject}</p>
-                          <p className="text-secondary/80 text-xs leading-relaxed">{msg.message}</p>
+                          <p className="text-accent text-sm font-bold mb-1">{msg.subject}</p>
+                          <p className="text-muted/80 text-xs leading-relaxed">{msg.message}</p>
                        </td>
                        <td className="py-6 pr-4 text-right align-top">
                          <button 

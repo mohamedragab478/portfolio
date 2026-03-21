@@ -4,9 +4,8 @@ import Hero from './components/Hero';
 import Services from './components/Services';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Certifications from './components/Certifications';
-import Testimonials from './components/Testimonials';
+import ProfessionalDevelopment from './components/ProfessionalDevelopment';
+import Education from './components/Education';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -14,13 +13,18 @@ import SocialFloatingButton from './components/SocialFloatingButton';
 import GlobalBackground from './components/GlobalBackground';
 
 // Admin Imports
-import AdminLayout from './admin/AdminLayout';
+import AdminLayout from './admin/Layout';
+import DashboardHome from './admin/DashboardHome';
+import HeroManager from './admin/HeroManager';
+import ServicesManager from './admin/ServicesManager';
+import SkillsManager from './admin/SkillsManager';
+import ProjectsManager from './admin/ProjectsManager';
+import CertsManager from './admin/CertsManager';
+import Inbox from './admin/Inbox';
+import TrainingManager from './admin/TrainingManager';
 import Login from './admin/Login';
-import ManageProjects from './admin/ManageProjects';
-import ManageCertifications from './admin/ManageCertifications';
-import ManageServices from './admin/ManageServices';
-import ManageMessages from './admin/ManageMessages';
-import ManageProfile from './admin/ManageProfile';
+import EducationManager from './admin/EducationManager';
+import ContactManager from './admin/ContactManager';
 
 function Portfolio() {
   return (
@@ -31,10 +35,9 @@ function Portfolio() {
         <Hero />
         <Services />
         <Skills />
-        <Experience />
+        <ProfessionalDevelopment />
         <Projects />
-        <Certifications />
-        <Testimonials />
+        <Education />
         <Contact />
       </main>
       <Footer />
@@ -50,13 +53,16 @@ function App() {
       <Route path="/" element={<Portfolio />} />
       <Route path="/admin/login" element={<Login />} />
       <Route path="/admin" element={<AdminLayout />}>
-        {/* Dashboard sub-routes */}
-        <Route index element={<ManageProjects />} />
-        <Route path="projects" element={<ManageProjects />} />
-        <Route path="certifications" element={<ManageCertifications />} />
-        <Route path="services" element={<ManageServices />} />
-        <Route path="messages" element={<ManageMessages />} />
-        <Route path="profile" element={<ManageProfile />} />
+        <Route index element={<DashboardHome />} />
+        <Route path="hero" element={<HeroManager />} />
+        <Route path="services" element={<ServicesManager />} />
+        <Route path="arsenal" element={<SkillsManager />} />
+        <Route path="training" element={<TrainingManager />} />
+        <Route path="projects" element={<ProjectsManager />} />
+        <Route path="certs" element={<CertsManager />} />
+        <Route path="education" element={<EducationManager />} />
+        <Route path="contact" element={<ContactManager />} />
+        <Route path="inbox" element={<Inbox />} />
       </Route>
     </Routes>
   );

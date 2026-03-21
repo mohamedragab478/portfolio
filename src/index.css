@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --darkNav: #030014;
-  --surface: #0a041f;
-  --primary: #7c3aed; /* Violet 600 */
-  --secondary: #94a3b8; /* Slate 400 */
-  --accent: #d8b4fe;   /* Purple 300 */
+  --darkNav: 3 0 20;
+  --surface: 10 4 31;
+  --primary: 124 58 237; /* Violet 600 */
+  --secondary: 148 163 184; /* Slate 400 */
+  --accent: 216 180 254;   /* Purple 300 */
 }
 
 @layer base {
@@ -16,7 +16,7 @@
     overflow-x: hidden;
   }
   body {
-    background-color: var(--darkNav);
+    background-color: rgb(var(--darkNav));
     color: white;
     font-family: 'Inter', 'Poppins', sans-serif;
     overflow-x: hidden;
@@ -67,23 +67,19 @@
   }
 
   .gradient-text {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-image: linear-gradient(to right, #7c3aed, #d8b4fe);
-    font-weight: 800;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent-primary)] to-[var(--text-main)] font-extrabold;
   }
 }
 
 .bg-mesh {
   background-image: 
-    radial-gradient(at 0% 0%, hsla(260, 100%, 15%, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(280, 100%, 15%, 0.15) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, hsla(260, 100%, 10%, 0.15) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, hsla(270, 80%, 12%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(280, 80%, 12%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, hsla(260, 60%, 8%, 0.15) 0px, transparent 50%);
 }
 
 .glow-aura {
-  box-shadow: 0 0 40px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent-secondary) 20%, transparent);
 }
 
 @keyframes scan {

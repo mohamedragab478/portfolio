@@ -66,12 +66,12 @@ const SocialFloatingButton = () => {
                 delay: index * 0.05 
               }}
               whileHover={{ scale: 1.2 }}
-              className={`absolute p-4 rounded-full text-white shadow-xl border border-white/20 flex items-center justify-center group ${social.color} ${social.hover}`}
+              className={`absolute p-4 rounded-full text-accent shadow-xl border border-borderColor flex items-center justify-center group ${social.color} ${social.hover}`}
               title={social.label}
             >
               <div className="relative z-10">{social.icon}</div>
               {/* Tooltip */}
-              <span className="absolute left-14 px-3 py-1 bg-white text-black text-[10px] font-black uppercase rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-black/5">
+              <span className="absolute left-14 px-3 py-1 bg-white text-accent text-[10px] font-black uppercase rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl border border-black/5">
                 {social.label}
               </span>
             </motion.a>
@@ -84,10 +84,10 @@ const SocialFloatingButton = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative z-20 p-5 rounded-full shadow-2xl border border-white/20 transition-all duration-300 flex items-center justify-center ${
+        className={`relative z-20 p-5 rounded-full shadow-2xl border border-borderColor transition-all duration-300 flex items-center justify-center ${
           isOpen 
-            ? 'bg-white text-black shadow-[0_0_30px_rgba(255,255,255,0.4)]' 
-            : 'bg-primary text-white shadow-[0_0_30px_rgba(124,58,237,0.4)]'
+            ? 'bg-white text-accent shadow-[0_0_30px_rgba(255,255,255,0.4)]' 
+            : 'bg-accent text-accent shadow-[0_0_30px_rgba(13,148,136,0.4)]'
         }`}
       >
         <AnimatePresence mode="wait">
