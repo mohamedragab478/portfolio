@@ -39,9 +39,9 @@ const Contact = memo(() => {
     
     try {
       // 1. Send via EmailJS
-      const serviceId = 'service_56yumbr';
-      const templateId = 'template_x3o6b5j';
-      const publicKey = '7-XBK1lVY6QkeCYLr';
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       const templateParams = {
         name: formData.name,
