@@ -3,8 +3,6 @@ import { m } from 'framer-motion';
 import { Brain, Code, Wifi, Settings, ExternalLink, Briefcase, Eye, Database, Clock, Calendar, CheckCircle2 } from 'lucide-react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-import { skillIcons } from '../utils/skillIcons';
-
 const ProfessionalDevelopment = memo(() => {
   const [trainings, setTrainings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,8 +70,8 @@ const ProfessionalDevelopment = memo(() => {
                 className="relative pl-8 md:pl-12 group"
               >
                 {/* Timeline Bullet */}
-                <div className={`absolute left-[-17px] top-6 w-8 h-8 rounded-full bg-background border-2 ${tr.isCompleted ? 'border-[#d8b4fe] shadow-none' : 'border-[#7c3aed] shadow-[0_0_15px_rgba(124,58,237,0.5)]'} flex items-center justify-center z-10 transition-colors`}>
-                  {getTrainingIcon(tr.title, tr.provider, tr.isCompleted)}
+                <div className={`absolute left-[-17px] top-6 w-8 h-8 rounded-full bg-background border-2 border-[#7c3aed] shadow-[0_0_15px_rgba(124,58,237,0.5)] flex items-center justify-center z-10 transition-colors`}>
+                  {getTrainingIcon(tr.title, tr.provider, false)}
                 </div>
 
                 {/* Content Card */}
@@ -87,15 +85,6 @@ const ProfessionalDevelopment = memo(() => {
                     
                     <div className="flex flex-col items-start md:items-end gap-2.5 shrink-0 w-full md:w-auto mt-2 md:mt-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        {tr.isCompleted ? (
-                           <div className="flex items-center gap-1.5 px-3 py-1 border border-emerald-500/50 rounded-full text-emerald-500 text-[10px] uppercase font-black tracking-widest bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                             <CheckCircle2 size={12} /> DONE
-                           </div>
-                        ) : (
-                           <div className="flex items-center gap-1.5 px-3 py-1 border border-amber-500/50 rounded-full text-amber-500 text-[10px] uppercase font-black tracking-widest bg-amber-500/10 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
-                             <Clock size={12} /> ONGOING
-                           </div>
-                        )}
                         <div className="flex items-center gap-1.5 px-3 py-1 text-[#d8b4fe] bg-white/5 border border-white/10 rounded-full text-[10px] uppercase font-bold tracking-widest">
                            <Clock size={12} /> {tr.duration}
                         </div>
@@ -107,27 +96,7 @@ const ProfessionalDevelopment = memo(() => {
                     <p className="text-[#a09eb5] text-sm leading-relaxed max-w-2xl mt-2">{tr.description}</p>
                   )}
 
-                  {/* Skills (if any) */}
-                  {tr.skillsListed && tr.skillsListed.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {tr.skillsListed.map((skill, idx) => (
-                        <span key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-surface/20 border border-borderColor rounded-lg text-[9px] font-black uppercase tracking-wider text-accent/60 hover:text-accent hover:border-accent hover:bg-accent/10 transition-all cursor-default">
-                          {skillIcons[skill] && <img src={skillIcons[skill]} alt={skill} loading="lazy" decoding="async" className="w-3.5 h-3.5 object-contain" />}
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  )}
 
-                  {/* Action Button */}
-                  {tr.isCompleted && tr.certificateUrl && (
-                    <div className="mt-4 flex shrink-0 border-t border-borderColor pt-6 w-full md:w-auto">
-                      <a href={tr.certificateUrl} target="_blank" rel="noreferrer" className="w-full md:w-auto h-fit flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:border-emerald-400 rounded-xl text-emerald-500 hover:text-accent text-[10px] font-black uppercase tracking-[0.2em] transition-all group/btn">
-                        View Certificate
-                        <ExternalLink className="w-4 h-4 transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                      </a>
-                    </div>
-                  )}
                 </div>
               </m.div>
             )})}

@@ -1,6 +1,6 @@
 import { useState, useEffect, memo } from 'react';
 import { m } from 'framer-motion';
-import { GraduationCap, Award, BookOpen, Calendar, MapPin, ExternalLink, ShieldCheck } from 'lucide-react';
+import { GraduationCap, Award, BookOpen, Calendar, MapPin, ExternalLink, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { db } from '../firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 
@@ -138,37 +138,69 @@ const Education = memo(() => {
                   >
                       <div className="absolute inset-0 bg-gradient-to-r from-[#7c3aed]/0 via-[#7c3aed]/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
                       
-                      <div className="flex-1 w-full z-10">
-                         <div className="flex flex-wrap items-center gap-3 mb-3">
-                            <span className="text-[10px] font-black tracking-[0.2em] uppercase text-[#d8b4fe] bg-[#7c3aed]/10 px-3 py-1 rounded-full border border-[#7c3aed]/20">
-                               {cert.issuer || cert.institution || "Authority"}
-                            </span>
-                            <span className="w-1 h-1 rounded-full bg-white/20 hidden sm:block" />
-                            <span className="text-[10px] font-bold tracking-widest uppercase text-muted/40">
-                               {cert.date || new Date().getFullYear()}
-                            </span>
+                      <div className="flex flex-col w-full z-10">
+                         {/* Top Row: Info */}
+                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 w-full mb-4">
+                            <div className="flex-1">
+                               <div className="flex flex-wrap items-center gap-3 mb-3">
+                                  <span className="text-[10px] font-black tracking-[0.2em] uppercase text-[#d8b4fe] bg-[#7c3aed]/10 px-3 py-1 rounded-full border border-[#7c3aed]/20">
+                                     {cert.issuer || cert.institution || "Authority"}
+                                  </span>
+                                  <span className="w-1 h-1 rounded-full bg-white/20 hidden sm:block" />
+                                  <span className="text-[10px] font-bold tracking-widest uppercase text-muted/40">
+                                     {cert.date || new Date().getFullYear()}
+                                  </span>
+                               </div>
+                               
+                               <h3 className={`text-xl md:text-2xl font-black tracking-tight transition-colors leading-tight ${tColor}`}>
+                                  {cert.title}
+                               </h3>
+                            </div>
+                            
+                            {/* Desktop: Right side Icon/Logo (optional, keeping it for aesthetic) */}
+                            <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-white/5 bg-white/5 group-hover:bg-[#7c3aed] group-hover:border-[#7c3aed] shadow-lg shadow-transparent group-hover:shadow-[#7c3aed]/20 transition-all duration-500 shrink-0">
+                              {cert.issuerLogo || cert.issuerLogoUrl ? (
+                                <img src={cert.issuerLogo || cert.issuerLogoUrl} alt={cert.title} loading="lazy" decoding="async" className="w-6 h-6 object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+                              ) : (
+                                <ShieldCheck className="w-5 h-5 text-white/30 group-hover:text-white transition-colors duration-500" />
+                              )}
+                            </div>
                          </div>
-                         
-                         <h3 className={`text-xl md:text-2xl font-black tracking-tight transition-colors leading-tight mb-4 ${tColor}`}>
-                            {cert.title}
-                         </h3>
 
-                         {/* Skills Learned */}
-                         <div className="flex flex-wrap gap-2 mt-2">
-                           {(cert.skillsListed || cert.skills || []).map(skill => (
-                             <span key={skill} className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[9px] font-bold uppercase tracking-widest text-[#d8b4fe]/80 hover:text-white hover:border-[#7c3aed]/50 transition-colors">
-                               {skill}
-                             </span>
-                           ))}
+                         {/* Bottom Row: Skills & Link */}
+                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-auto pt-4 border-t border-white/5">
+                           {/* Skills Learned */}
+                           <div className="flex flex-wrap gap-2">
+                             {(cert.skillsListed || cert.skills || []).map(skill => (
+                               <span key={skill} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[9px] font-bold uppercase tracking-widest text-[#d8b4fe]/80 hover:text-white hover:border-[#7c3aed]/50 transition-colors">
+                                 {skill}
+                               </span>
+                             ))}
+                           </div>
+
+                           {/* Verified Badge / Link (bottom right on desktop) */}
+                           <div className="flex flex-wrap items-center gap-3 mt-4 md:mt-0 shrink-0">
+                              {cert.isVerified !== false ? (
+                                 cert.verificationUrl ? (
+                                    <a href={cert.verificationUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-500/10 border border-emerald-500/50 hover:bg-emerald-500 hover:border-emerald-400 rounded-xl text-emerald-400 hover:text-accent text-[11px] font-black uppercase tracking-[0.2em] transition-all group/btn shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                                      <CheckCircle2 size={16} /> VERIFIED
+                                      <ExternalLink className="w-3.5 h-3.5 ml-1 opacity-70 transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                                    </a>
+                                 ) : (
+                                    <div className="flex items-center justify-center gap-1.5 px-5 py-2.5 border border-emerald-500/50 rounded-xl text-emerald-500 text-[11px] uppercase font-black tracking-widest bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)] cursor-default">
+                                      <CheckCircle2 size={16} /> VERIFIED
+                                    </div>
+                                 )
+                              ) : (
+                                 cert.verificationUrl && (
+                                    <a href={cert.verificationUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-4 py-2 bg-white/5 border border-white/20 hover:bg-[#7c3aed] hover:border-[#7c3aed] rounded-xl text-white/70 hover:text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all group/btn">
+                                      View Certificate
+                                      <ExternalLink className="w-3 h-3 transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                                    </a>
+                                 )
+                              )}
+                           </div>
                          </div>
-                      </div>
-                      
-                      <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-white/5 bg-white/5 group-hover:bg-[#7c3aed] group-hover:border-[#7c3aed] shadow-lg shadow-transparent group-hover:shadow-[#7c3aed]/20 transition-all duration-500 z-10 shrink-0 ml-8">
-                        {cert.issuerLogo || cert.issuerLogoUrl ? (
-                          <img src={cert.issuerLogo || cert.issuerLogoUrl} alt={cert.title} loading="lazy" decoding="async" className="w-6 h-6 object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
-                        ) : (
-                          <ShieldCheck className="w-5 h-5 text-white/30 group-hover:text-white transition-colors duration-500" />
-                        )}
                       </div>
                   </m.div>
                 )})}

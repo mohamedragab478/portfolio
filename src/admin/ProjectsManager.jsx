@@ -171,37 +171,33 @@ const ProjectsManager = () => {
         )}
       </div>
 
-      <form onSubmit={handleSaveProject} className="bg-[#7c3aed]/5 backdrop-blur-md border border-[#7c3aed]/20 p-8 rounded-[2.5rem] space-y-6 shadow-[0_0_40px_rgba(124,58,237,0.05)] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#7c3aed]/5 rounded-full blur-[80px] pointer-events-none" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+      <form onSubmit={handleSaveProject} className="bg-[#7c3aed]/5 backdrop-blur-md border border-[#7c3aed]/20 p-8 rounded-[2.5rem] space-y-6 shadow-[0_0_40px_rgba(124,58,237,0.05)] relative overflow-visible z-20">
+        <div className="absolute inset-0 overflow-hidden rounded-[2.5rem] pointer-events-none">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-[#7c3aed]/5 rounded-full blur-[80px]" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-50">
           <div className="space-y-3">
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Hash className="w-3 h-3 text-[#d8b4fe]" /> Protocol Title</label>
             <input type="text" value={title} onChange={e => setTitle(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="e.g. Neural Nexus" />
           </div>
-          <div className="space-y-3 relative">
+          <div className="space-y-3 relative z-20">
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Hash className="w-3 h-3 text-[#d8b4fe]" /> Category Domain</label>
-            <button 
-              type="button"
-              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] hover:bg-[#7c3aed]/10 transition-all text-sm font-bold flex items-center justify-between"
-            >
-              {category ? (
-                 <span className="flex items-center gap-3">
-                    {(() => {
-                        const domain = AI_DOMAINS.find(d => d.id === category);
-                        const Icon = domain ? LucideIcons[domain.icon] : Hash;
-                        return <><Icon className="w-4 h-4 text-[#d8b4fe]" /> {domain ? domain.label : category}</>;
-                    })()}
-                 </span>
-              ) : <span className="text-muted/40">Select AI Domain...</span>}
-            </button>
+            <input 
+              type="text" 
+              value={category} 
+              onChange={e => setCategory(e.target.value)} 
+              onFocus={() => setShowCategoryDropdown(true)}
+              onBlur={() => setTimeout(() => setShowCategoryDropdown(false), 200)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" 
+              placeholder="Type category or select from presets" 
+            />
             <AnimatePresence>
               {showCategoryDropdown && (
-                <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute mt-2 w-full bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(124,58,237,0.2)] z-50 p-4 grid grid-cols-2 gap-3">
+                <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute mt-2 w-full bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(124,58,237,0.2)] z-50 p-4 grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
                   {AI_DOMAINS.map(domain => {
                     const IconComp = LucideIcons[domain.icon];
                     return (
-                      <div key={domain.id} onClick={() => { setCategory(domain.id); setShowCategoryDropdown(false); }} className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-[#7c3aed]/20 hover:border-[#d8b4fe]/50 cursor-pointer transition-all duration-300 group shadow-lg">
+                      <div key={domain.id} onMouseDown={(e) => e.preventDefault()} onClick={() => { setCategory(domain.id); setShowCategoryDropdown(false); }} className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-[#7c3aed]/20 hover:border-[#d8b4fe]/50 cursor-pointer transition-all duration-300 group shadow-lg">
                         <IconComp className="w-8 h-8 text-white/50 group-hover:text-[#d8b4fe] mb-2 drop-shadow-[0_0_10px_rgba(124,58,237,0)] group-hover:drop-shadow-[0_0_15px_rgba(216,180,254,0.6)] transition-all" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-center text-white/70 group-hover:text-white">{domain.label}</span>
                       </div>
