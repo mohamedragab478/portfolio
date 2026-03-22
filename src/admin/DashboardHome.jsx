@@ -110,7 +110,7 @@ const DashboardHome = () => {
           {stats.analytics ? (
             <div className="flex flex-col">
                <span className="text-5xl font-black text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">{stats.analytics.totalViews}</span>
-               <span className="text-[10px] font-black text-emerald-400/60 uppercase tracking-widest mt-1">Page Views Verified</span>
+               <span className="text-[10px] font-black text-emerald-400/60 uppercase tracking-widest mt-1">Page Views • {stats.analytics.activeUsers} Users</span>
             </div>
           ) : (
             <span className="text-xl font-black text-white/30 uppercase tracking-widest">Establishing Link...</span>
