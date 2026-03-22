@@ -1,68 +1,48 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
-// Initialize the client with service account credentials from env
-const analyticsDataClient = new BetaAnalyticsDataClient({
-  credentials: {
-    client_email: process.env.GA_CLIENT_EMAIL,
-    private_key: process.env.GA_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  },
-});
-
-const propertyId = process.env.GA_PROPERTY_ID;
-
 export default async function handler(req, res) {
-  // Add CORS headers for local development if needed
+  // 1. CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (!propertyId) {
-    return res.status(500).json({ error: 'GA_PROPERTY_ID is not configured' });
-  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
 
   try {
+    // 2. Fetch raw environment variables
+    const rawPropertyId = process.env.GA_PROPERTY_ID || '';
+    const rawEmail = process.env.GA_CLIENT_EMAIL || '';
+    const rawPrivateKey = process.env.GA_PRIVATE_KEY || '';
+
+    if (!rawPropertyId || !rawEmail || !rawPrivateKey) {
+      throw new Error("Missing Google Analytics Environment Variables.");
+    }
+
+    // 3. Rigorous sanitization (Remove extra quotes and fix newlines)
+    const cleanPropertyId = rawPropertyId.replace(/"/g, '').trim();
+    const cleanEmail = rawEmail.replace(/"/g, '').trim();
+    const cleanPrivateKey = rawPrivateKey.replace(/"/g, '').replace(/\\n/g, '\n');
+
+    // 4. Initialize GA4 Client
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+      credentials: {
+        client_email: cleanEmail,
+        private_key: cleanPrivateKey,
+      }
+    });
+
+    // 5. Fetch Data
     const [response] = await analyticsDataClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: '7daysAgo',
-          endDate: 'today',
-        },
-      ],
-      dimensions: [
-        {
-          name: 'date',
-        },
-      ],
-      metrics: [
-        {
-          name: 'activeUsers',
-        },
-        {
-          name: 'screenPageViews',
-        },
-      ],
+      property: `properties/${cleanPropertyId}`,
+      dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+      metrics: [{ name: 'activeUsers' }, { name: 'screenPageViews' }],
     });
 
-    // Sum up the metrics for the 7-day period
-    let totalUsers = 0;
-    let totalViews = 0;
+    // 6. Return Data
+    return res.status(200).json(response);
 
-    response.rows.forEach(row => {
-      totalUsers += parseInt(row.metricValues[0].value);
-      totalViews += parseInt(row.metricValues[1].value);
-    });
-
-    return res.status(200).json({
-      totalUsers,
-      totalViews,
-      rows: response.rows,
-    });
   } catch (error) {
-    console.error('GA4 API Error:', error);
-    return res.status(500).json({ error: error.message || "Unknown API Error" });
+    console.error('GA4 API Execution Error:', error);
+    return res.status(500).json({ 
+      error: "GA4 API Error", 
+      details: error.message 
+    });
   }
 }
