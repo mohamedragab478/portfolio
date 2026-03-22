@@ -58,6 +58,7 @@ const Contact = memo(() => {
          email: formData.email,
          subject: formData.subject,
          message: formData.message,
+         read: false,
          createdAt: new Date().toISOString()
       });
       

@@ -3,7 +3,8 @@ import {
   ExternalLink, Github, X, Code2, Database, Cpu, 
   Globe, ChevronDown, ChevronUp, ArrowRight, Info,
   Layers, Settings, Box, Workflow, Monitor, Server,
-  Terminal, Search, Activity, Share2, Zap, CheckCircle2, Loader
+  Terminal, Search, Activity, Share2, Zap, CheckCircle2, Loader,
+  BrainCircuit, Eye, Sparkles
 } from 'lucide-react';
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import { db } from '../firebase';
@@ -35,6 +36,15 @@ const skillIcons = {
   "Gradio": "https://cdn.simpleicons.org/gradio/white"
 };
 
+const CATEGORY_MAP = {
+  nlp: { icon: 'BrainCircuit', color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20', shadow: 'shadow-[0_0_15px_rgba(96,165,250,0.3)]', label: 'NLP' },
+  cv: { icon: 'Eye', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20', shadow: 'shadow-[0_0_15px_rgba(52,211,153,0.3)]', label: 'Computer Vision' },
+  dl: { icon: 'Layers', color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20', shadow: 'shadow-[0_0_15px_rgba(192,132,252,0.3)]', label: 'Deep Learning' },
+  ds: { icon: 'Database', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20', shadow: 'shadow-[0_0_15px_rgba(251,191,36,0.3)]', label: 'Data Science' },
+  agents: { icon: 'Zap', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20', shadow: 'shadow-[0_0_15px_rgba(250,204,21,0.3)]', label: 'AI Agents' },
+  gen_ai: { icon: 'Sparkles', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-400/20', shadow: 'shadow-[0_0_15px_rgba(244,114,182,0.3)]', label: 'Generative AI' }
+};
+
 const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
   return (
     <m.div
@@ -59,8 +69,23 @@ const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
          <div>
             <div className="flex justify-between items-start mb-2">
                <div>
-                  <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${project.accent}`}>{project.category}</span>
-                  <h4 className="text-lg font-black uppercase mt-1 text-[#f97316] tracking-tight">{project.title}</h4>
+                  {(() => {
+                    const catInfo = CATEGORY_MAP[project.category] || { icon: 'Code2', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30', shadow: 'shadow-none', label: project.category };
+                    const IconComp = {
+                      BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2
+                    }[catInfo.icon] || Code2;
+                    return (
+                      <div className="flex items-center gap-4">
+                         <div className={`p-2.5 rounded-xl border ${catInfo.bg} ${catInfo.border} ${catInfo.shadow} transition-all duration-500 group-hover:scale-110`}>
+                           <IconComp className={`w-5 h-5 ${catInfo.color}`} />
+                         </div>
+                         <div className="flex flex-col">
+                           <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/50">{catInfo.label}</span>
+                           <h4 className="text-lg font-black uppercase mt-1 text-[#f97316] tracking-tight leading-none">{project.title}</h4>
+                         </div>
+                      </div>
+                    );
+                  })()}
                </div>
                <button 
                  onClick={() => onSelect(project)}
@@ -243,8 +268,23 @@ const Projects = memo(() => {
 
                  <div className="p-8 md:p-12 flex flex-col bg-background">
                     <div className="mb-12">
-                       <p className={`text-[10px] font-black uppercase tracking-[0.5em] ${selectedProject.accent} mb-3`}>{selectedProject.category}</p>
-                       <h3 className="text-4xl md:text-6xl font-black italic uppercase text-[#f97316] tracking-tight leading-none">{selectedProject.title}</h3>
+                       {(() => {
+                          const catInfo = CATEGORY_MAP[selectedProject.category] || { icon: 'Code2', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30', shadow: 'shadow-[0_0_15px_rgba(156,163,175,0.3)]', label: selectedProject.category };
+                          const IconComp = {
+                            BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2
+                          }[catInfo.icon] || Code2;
+                          return (
+                            <div className="flex items-center gap-6 mb-8">
+                               <div className={`p-4 rounded-2xl border ${catInfo.bg} ${catInfo.border} ${catInfo.shadow}`}>
+                                  <IconComp className={`w-7 h-7 ${catInfo.color}`} />
+                               </div>
+                               <div className="flex flex-col">
+                                 <span className="text-[12px] font-black uppercase tracking-[0.5em] text-white/50 mb-1">{catInfo.label}</span>
+                                 <h3 className="text-3xl md:text-5xl font-black italic uppercase text-[#f97316] tracking-tight leading-none">{selectedProject.title}</h3>
+                               </div>
+                            </div>
+                          );
+                       })()}
                     </div>
 
                     <div className="grid lg:grid-cols-2 gap-12">

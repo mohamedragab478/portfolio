@@ -3,9 +3,19 @@ import { db } from '../firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { m, AnimatePresence } from 'framer-motion';
 import { Trash2, Edit2, Plus, RefreshCw, FolderPlus, Github, Code, Hash, AlignLeft, Globe, X, Database, CheckCircle2 } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { skillIcons } from '../utils/skillIcons';
 
 const POPULAR_TOOLS = ['React', 'Tailwind CSS', 'Python', 'PyTorch', 'TensorFlow', 'OpenCV', 'FastAPI', 'Flask', 'Docker', 'YOLO', 'LangChain', 'Pinecone', 'Vite', 'Git'];
+
+const AI_DOMAINS = [
+  { id: 'nlp', label: 'NLP', icon: 'BrainCircuit' },
+  { id: 'cv', label: 'Computer Vision', icon: 'Eye' },
+  { id: 'dl', label: 'Deep Learning', icon: 'Layers' },
+  { id: 'ds', label: 'Data Science', icon: 'Database' },
+  { id: 'agents', label: 'AI Agents', icon: 'Zap' },
+  { id: 'gen_ai', label: 'Generative AI', icon: 'Sparkles' }
+];
 
 const ProjectsManager = () => {
   const [projects, setProjects] = useState([]);
@@ -19,6 +29,7 @@ const ProjectsManager = () => {
   const [techStack, setTechStack] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [keyAchievements, setKeyAchievements] = useState([]);
   const [achievementInput, setAchievementInput] = useState('');
   const [githubLink, setGithubLink] = useState('');
@@ -46,7 +57,7 @@ const ProjectsManager = () => {
   const resetForm = () => {
     setTitle(''); setCategory(''); setDescription(''); setTechStack([]);
     setSearchTerm(''); setGithubLink(''); setImageUrl(''); setKeyAchievements([]);
-    setAchievementInput(''); setEditingId(null);
+    setAchievementInput(''); setEditingId(null); setShowCategoryDropdown(false);
   };
 
   const handleSaveProject = async (e) => {
@@ -167,9 +178,38 @@ const ProjectsManager = () => {
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Hash className="w-3 h-3 text-[#d8b4fe]" /> Protocol Title</label>
             <input type="text" value={title} onChange={e => setTitle(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="e.g. Neural Nexus" />
           </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Hash className="w-3 h-3 text-[#d8b4fe]" /> Category</label>
-            <input type="text" value={category} onChange={e => setCategory(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="e.g. AI Research" />
+          <div className="space-y-3 relative">
+            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Hash className="w-3 h-3 text-[#d8b4fe]" /> Category Domain</label>
+            <button 
+              type="button"
+              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] hover:bg-[#7c3aed]/10 transition-all text-sm font-bold flex items-center justify-between"
+            >
+              {category ? (
+                 <span className="flex items-center gap-3">
+                    {(() => {
+                        const domain = AI_DOMAINS.find(d => d.id === category);
+                        const Icon = domain ? LucideIcons[domain.icon] : Hash;
+                        return <><Icon className="w-4 h-4 text-[#d8b4fe]" /> {domain ? domain.label : category}</>;
+                    })()}
+                 </span>
+              ) : <span className="text-muted/40">Select AI Domain...</span>}
+            </button>
+            <AnimatePresence>
+              {showCategoryDropdown && (
+                <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute mt-2 w-full bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(124,58,237,0.2)] z-50 p-4 grid grid-cols-2 gap-3">
+                  {AI_DOMAINS.map(domain => {
+                    const IconComp = LucideIcons[domain.icon];
+                    return (
+                      <div key={domain.id} onClick={() => { setCategory(domain.id); setShowCategoryDropdown(false); }} className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-[#7c3aed]/20 hover:border-[#d8b4fe]/50 cursor-pointer transition-all duration-300 group shadow-lg">
+                        <IconComp className="w-8 h-8 text-white/50 group-hover:text-[#d8b4fe] mb-2 drop-shadow-[0_0_10px_rgba(124,58,237,0)] group-hover:drop-shadow-[0_0_15px_rgba(216,180,254,0.6)] transition-all" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-center text-white/70 group-hover:text-white">{domain.label}</span>
+                      </div>
+                    )
+                  })}
+                </m.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -299,7 +339,21 @@ const ProjectsManager = () => {
                  {projects.map(proj => (
                    <tr key={proj.id} className="hover:bg-background transition-colors group">
                      <td className="py-5 px-6"><span className="text-[13px] font-black tracking-tight text-accent block truncate max-w-[200px]">{proj.title}</span></td>
-                     <td className="py-5 px-6"><span className="text-[9px] font-black text-accent bg-accent/10 border border-accent px-3 py-1.5 rounded-lg uppercase tracking-[0.2em]">{proj.category}</span></td>
+                     <td className="py-5 px-6">
+                       {(() => {
+                         const domain = AI_DOMAINS.find(d => d.id === proj.category);
+                         return (
+                           <span className="inline-flex items-center gap-2 text-[9px] font-black text-accent bg-accent/10 border border-accent px-3 py-1.5 rounded-lg uppercase tracking-[0.2em]">
+                             {domain ? (
+                               <>
+                                 {(() => { const Icon = LucideIcons[domain.icon]; return <Icon className="w-3 h-3" />; })()}
+                                 {domain.label}
+                               </>
+                             ) : proj.category}
+                           </span>
+                         );
+                       })()}
+                     </td>
                      <td className="py-5 px-6"><div className="flex items-center gap-2 flex-wrap">{proj.techStack?.map((tech, i) => (
                         <span key={i} className="flex items-center gap-1.5 text-[9px] font-bold text-purple-100/70 bg-surface/40 border border-accent px-2.5 py-1 rounded-md uppercase tracking-wider">
                            {skillIcons[tech] ? <img src={skillIcons[tech]} alt={tech} className="w-3 h-3 object-contain opacity-70" /> : null}

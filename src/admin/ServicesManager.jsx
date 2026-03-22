@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { Settings, Plus, RefreshCw, Trash2, Hexagon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
@@ -9,6 +9,7 @@ const POPULAR_ICONS = ['Code', 'Database', 'Server', 'Cpu', 'Layers', 'Zap', 'Gl
 
 const ServicesManager = () => {
   const [services, setServices] = useState([]);
+  const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [formData, setFormData] = useState({ iconName: '', title: '', description: '' });
@@ -32,15 +33,20 @@ const ServicesManager = () => {
 
   useEffect(() => { fetchServices(); }, []);
 
-  const handleAdd = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await addDoc(collection(db, "services"), { ...formData, createdAt: new Date().toISOString() });
+      if (editingId) {
+        await updateDoc(doc(db, "services", editingId), { ...formData, updatedAt: new Date().toISOString() });
+        setEditingId(null);
+      } else {
+        await addDoc(collection(db, "services"), { ...formData, createdAt: new Date().toISOString() });
+      }
       setFormData({ iconName: '', title: '', description: '' });
       fetchServices();
     } catch (error) {
-      console.error("Error adding service:", error);
+      console.error("Error saving service:", error);
     } finally {
       setLoading(false);
     }
@@ -68,10 +74,10 @@ const ServicesManager = () => {
         </div>
       </div>
 
-      {/* Add Form */}
-      <form onSubmit={handleAdd} className="bg-[#7c3aed]/5 backdrop-blur-md border border-[#7c3aed]/20 p-8 rounded-[2.5rem] space-y-6 shadow-[0_0_40px_rgba(124,58,237,0.05)] relative overflow-visible">
+      {/* Add/Edit Form */}
+      <form onSubmit={handleSubmit} className="bg-[#7c3aed]/5 backdrop-blur-md border border-[#7c3aed]/20 p-8 rounded-[2.5rem] space-y-6 shadow-[0_0_40px_rgba(124,58,237,0.05)] relative overflow-visible">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#7c3aed]/5 rounded-full blur-[80px] pointer-events-none" />
-        <h3 className="text-sm font-black uppercase text-white tracking-widest mb-6 relative z-10">Deploy New Service</h3>
+        <h3 className="text-sm font-black uppercase text-white tracking-widest mb-6 relative z-10">{editingId ? "Update Existing Service" : "Deploy New Service"}</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-20">
           
@@ -114,10 +120,17 @@ const ServicesManager = () => {
           <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Operational Description</label>
           <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} required rows={3} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold resize-none placeholder:text-muted/40" placeholder="Elaborate on the module capabilities..." />
         </div>
-        <button type="submit" disabled={loading} className="w-full md:w-auto px-10 py-5 bg-gradient-to-r from-[#7c3aed] to-[#ec4899] hover:opacity-90 text-white rounded-xl font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-3 transition-all disabled:opacity-50 border-none shadow-lg shadow-[#ec4899]/20 hover:scale-[1.02] active:scale-[0.98]">
-          {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
-          {loading ? "Deploying..." : "Deploy Service"}
-        </button>
+        <div className="flex flex-col md:flex-row gap-4 relative z-10 w-full">
+          <button type="submit" disabled={loading} className="flex-1 md:flex-none px-10 py-5 bg-gradient-to-r from-[#7c3aed] to-[#ec4899] hover:opacity-90 text-white rounded-xl font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-3 transition-all disabled:opacity-50 border-none shadow-lg shadow-[#ec4899]/20 hover:scale-[1.02] active:scale-[0.98]">
+            {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : (editingId ? <LucideIcons.Save className="w-5 h-5" /> : <Plus className="w-5 h-5" />)}
+            {loading ? (editingId ? "UPDATING..." : "DEPLOYING...") : (editingId ? "UPDATE SERVICE" : "DEPLOY SERVICE")}
+          </button>
+          {editingId && (
+            <button type="button" onClick={() => { setEditingId(null); setFormData({ iconName: '', title: '', description: '' }); }} className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white rounded-xl font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center transition-all border border-white/10">
+              CANCEL
+            </button>
+          )}
+        </div>
       </form>
 
       {/* List */}
@@ -157,9 +170,14 @@ const ServicesManager = () => {
                           </div>
                         );
                       })()}
-                      <button onClick={() => handleDelete(srv.id)} className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-all border border-red-500/20">
-                       <Trash2 className="w-4 h-4" />
-                     </button>
+                      <div className="flex opacity-0 group-hover:opacity-100 transition-all gap-2">
+                        <button onClick={() => { setEditingId(srv.id); setFormData({ iconName: srv.iconName || '', title: srv.title || '', description: srv.description || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="p-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-all border border-blue-500/20">
+                          <LucideIcons.Pencil className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(srv.id)} className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-all border border-red-500/20">
+                         <Trash2 className="w-4 h-4" />
+                       </button>
+                     </div>
                    </div>
                    <h4 className="text-lg font-black text-white uppercase tracking-wider mb-2">{srv.title}</h4>
                    <p className="text-sm font-medium text-white/60 line-clamp-3">{srv.description}</p>

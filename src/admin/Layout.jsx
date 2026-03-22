@@ -2,7 +2,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { LayoutDashboard, Settings, Users, FileText, Award, Inbox as InboxIcon, LogOut, Hexagon, Phone, User as UserIcon } from 'lucide-react';
-import ThemeToggle from '../components/ThemeToggle';
+
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const AdminLayout = () => {
             <Hexagon className="text-[#d8b4fe] w-6 h-6" />
           </div>
           <h2 className="text-2xl font-black uppercase tracking-widest text-white drop-shadow-[0_0_8px_rgba(192,132,252,0.4)]">Aura CMS</h2>
-          <ThemeToggle className="ml-auto" />
+
         </div>
         
         <nav className="flex-1 p-6 space-y-2 overflow-y-auto hidden md:block">
