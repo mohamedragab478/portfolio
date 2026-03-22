@@ -12,6 +12,7 @@ const DashboardHome = () => {
     analytics: null,
     loading: true
   });
+  const [gaError, setGaError] = useState(null);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -32,11 +33,17 @@ const DashboardHome = () => {
         let analyticsData = null;
         try {
           const res = await fetch('/api/analytics');
-          const contentType = res.headers.get("content-type");
-          if (res.ok && contentType && contentType.includes("application/json")) {
-            analyticsData = await res.json();
+          if (!res.ok) {
+            const data = await res.json();
+            setGaError(data.error);
+            console.error("Dashboard GA4 Fetch Error:", data.error);
           } else {
-            console.warn("Analytics uplink returned non-JSON response (expected in local dev)");
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+              analyticsData = await res.json();
+            } else {
+              console.warn("Analytics uplink returned non-JSON response (expected in local dev)");
+            }
           }
         } catch (err) {
           console.warn("Analytics uplink failed:", err);

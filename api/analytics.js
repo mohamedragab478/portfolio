@@ -63,6 +63,6 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('GA4 API Error:', error);
-    return res.status(500).json({ error: error.message || "Failed to fetch GA data" });
+    return res.status(500).json({ error: error.message || "Unknown API Error" });
   }
 }
