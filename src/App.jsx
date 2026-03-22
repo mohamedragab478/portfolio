@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -7,6 +7,7 @@ import ScrollToTop from './components/ScrollToTop';
 import SocialFloatingButton from './components/SocialFloatingButton';
 import GlobalBackground from './components/GlobalBackground';
 import ProtectedRoute from './components/ProtectedRoute';
+
 
 // Lazy-loaded below-fold public sections
 const Services = React.lazy(() => import('./components/Services'));
