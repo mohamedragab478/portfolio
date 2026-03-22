@@ -242,7 +242,14 @@ const ProjectsManager = () => {
 
         <div className="space-y-3 relative z-10">
           <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Globe className="w-3 h-3 text-[#d8b4fe]" /> Visual Asset URL</label>
-          <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="Paste Image Direct URL (e.g., from Imgur)" />
+          <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="Paste Image Direct URL (e.g., from Imgur, Unsplash, any link)" />
+          {imageUrl && (
+            <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded-xl">
+              <p className="text-[8px] font-black uppercase text-white/30 tracking-widest mb-2">Cover Preview</p>
+              <img src={imageUrl} alt="Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-full max-w-[200px] h-28 object-cover rounded-xl border border-white/10" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='flex'; }} />
+              <div className="hidden items-center justify-center w-full max-w-[200px] h-28 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-[8px] font-bold uppercase">Image URL invalid</div>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">

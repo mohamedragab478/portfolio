@@ -12,7 +12,7 @@ const ServicesManager = () => {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [formData, setFormData] = useState({ iconName: '', title: '', description: '' });
+  const [formData, setFormData] = useState({ iconName: '', iconUrl: '', title: '', description: '' });
   const [showDropdown, setShowDropdown] = useState(false);
 
   const filteredIcons = formData.iconName.trim() === '' 
@@ -43,7 +43,7 @@ const ServicesManager = () => {
       } else {
         await addDoc(collection(db, "services"), { ...formData, createdAt: new Date().toISOString() });
       }
-      setFormData({ iconName: '', title: '', description: '' });
+      setFormData({ iconName: '', iconUrl: '', title: '', description: '' });
       fetchServices();
     } catch (error) {
       console.error("Error saving service:", error);
@@ -112,6 +112,19 @@ const ServicesManager = () => {
           </div>
 
           <div className="space-y-3">
+            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Custom Icon URL (Optional)</label>
+            <input type="text" value={formData.iconUrl || ''} 
+              onChange={e => setFormData({...formData, iconUrl: e.target.value})} 
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="Paste any image URL (overrides Lucide icon)" />
+            {formData.iconUrl && (
+              <div className="mt-2 inline-flex items-center gap-3 p-2 bg-white/5 border border-white/10 rounded-xl">
+                <img src={formData.iconUrl} alt="Icon Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-8 h-8 object-contain rounded-lg" onError={(e) => { e.target.src=''; }} />
+                <span className="text-[8px] font-black uppercase text-white/30 tracking-widest">Icon Preview</span>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Service Title</label>
             <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="e.g. Backend Architecture" />
           </div>
@@ -171,7 +184,7 @@ const ServicesManager = () => {
                         );
                       })()}
                       <div className="flex opacity-0 group-hover:opacity-100 transition-all gap-2">
-                        <button onClick={() => { setEditingId(srv.id); setFormData({ iconName: srv.iconName || '', title: srv.title || '', description: srv.description || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="p-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-all border border-blue-500/20">
+                        <button onClick={() => { setEditingId(srv.id); setFormData({ iconName: srv.iconName || '', iconUrl: srv.iconUrl || '', title: srv.title || '', description: srv.description || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="p-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-all border border-blue-500/20">
                           <LucideIcons.Pencil className="w-4 h-4" />
                         </button>
                         <button onClick={() => handleDelete(srv.id)} className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-all border border-red-500/20">

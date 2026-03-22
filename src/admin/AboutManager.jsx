@@ -114,10 +114,16 @@ const AboutManager = () => {
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><FileText className="w-3 h-3 text-[#d8b4fe]" /> Main Paragraph</label>
                <textarea value={paragraph} onChange={e => setParagraph(e.target.value)} rows={4} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold resize-none placeholder:text-muted/40" />
              </div>
-             <div className="space-y-3">
-               <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><ImageIcon className="w-3 h-3 text-[#d8b4fe]" /> Profile Image URL</label>
-               <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" />
-             </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><ImageIcon className="w-3 h-3 text-[#d8b4fe]" /> Profile Image URL</label>
+                <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="https://i.imgur.com/... or any direct image link" />
+                {imageUrl && imageUrl !== '/my_img.jpeg' && (
+                  <div className="mt-2 p-3 bg-white/5 border border-white/10 rounded-xl inline-flex items-center gap-3">
+                    <img src={imageUrl} alt="Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-16 h-16 object-cover rounded-xl border border-white/10" onError={(e) => { e.target.src=''; }} />
+                    <span className="text-[8px] font-black uppercase text-white/30 tracking-widest">Preview</span>
+                  </div>
+                )}
+              </div>
              <div className="space-y-3">
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><User className="w-3 h-3 text-[#d8b4fe]" /> Floating Tag</label>
                <input type="text" value={floatingTag} onChange={e => setFloatingTag(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" />

@@ -147,6 +147,7 @@ const About = () => {
                 <img 
                   src={aboutData.imageUrl} 
                   alt="Profile" 
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:brightness-110 filter grayscale group-hover:grayscale-0"
                 />
                 

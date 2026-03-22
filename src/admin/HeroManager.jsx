@@ -117,12 +117,25 @@ const HeroManager = () => {
 
         <div className="space-y-3 relative z-10">
           <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Profile Image URL</label>
-          <input type="text" name="profileImageUrl" value={formData.profileImageUrl || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold" />
+          <input type="text" name="profileImageUrl" value={formData.profileImageUrl || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold" placeholder="https://i.imgur.com/... or any direct image link" />
+          {formData.profileImageUrl && (
+            <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded-xl">
+              <p className="text-[8px] font-black uppercase text-white/30 tracking-widest mb-2">Preview</p>
+              <img src={formData.profileImageUrl} alt="Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-24 h-24 object-cover rounded-xl border border-white/10" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='flex'; }} />
+              <div className="hidden items-center justify-center w-24 h-24 rounded-xl border border-red-500/30 bg-red-500/5 text-red-400 text-[8px] font-bold uppercase">Failed to load</div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-3 relative z-10">
           <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Site Logo URL / Favicon Link</label>
           <input type="text" name="siteLogoUrl" value={formData.siteLogoUrl || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="https://..." />
+          {formData.siteLogoUrl && (
+            <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded-xl inline-flex items-center gap-3">
+              <img src={formData.siteLogoUrl} alt="Logo Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-10 h-10 object-contain rounded-lg" onError={(e) => { e.target.src=''; }} />
+              <span className="text-[8px] font-black uppercase text-white/30 tracking-widest">Logo Preview</span>
+            </div>
+          )}
         </div>
 
         {/* Stats Section */}
