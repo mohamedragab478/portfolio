@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import SocialFloatingButton from './components/SocialFloatingButton';
 import GlobalBackground from './components/GlobalBackground';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy-loaded below-fold public sections
 const Services = React.lazy(() => import('./components/Services'));
@@ -65,7 +66,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Portfolio />} />
         <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<DashboardHome />} />
           <Route path="hero" element={<HeroManager />} />
           <Route path="services" element={<ServicesManager />} />
