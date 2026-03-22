@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Zap, Briefcase, Layers, Award, User } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
+import { db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [siteLogoUrl, setSiteLogoUrl] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +16,25 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Fetch site logo from Firebase
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const snap = await getDoc(doc(db, "site_config", "hero"));
+        if (snap.exists() && snap.data().siteLogoUrl) {
+          const logoUrl = snap.data().siteLogoUrl;
+          setSiteLogoUrl(logoUrl);
+          // Also update favicon dynamically
+          const favicon = document.querySelector("link[rel='icon']");
+          if (favicon) favicon.href = logoUrl;
+        }
+      } catch (err) {
+        console.warn("Could not fetch site logo:", err);
+      }
+    };
+    fetchLogo();
   }, []);
 
   const navLinks = [
@@ -34,7 +56,10 @@ const Navbar = () => {
         }`}
       >
         <a href="#" className="flex items-center gap-2 group relative">
-          <Zap className="w-5 h-5 text-[#7c3aed]" />
+          {siteLogoUrl ? (
+            <img src={siteLogoUrl} alt="Logo" referrerPolicy="no-referrer" className="w-6 h-6 object-contain rounded" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='block'; }} />
+          ) : null}
+          {!siteLogoUrl && <Zap className="w-5 h-5 text-[#7c3aed]" />}
           <span className="text-xl font-black tracking-widest uppercase text-white">
             AMIR<span className="text-[#7c3aed]">.AURA</span>
           </span>
