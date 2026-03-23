@@ -85,8 +85,17 @@ const ProfessionalDevelopment = memo(() => {
                     
                     <div className="flex flex-col items-start md:items-end gap-2.5 shrink-0 w-full md:w-auto mt-2 md:mt-0">
                       <div className="flex flex-wrap items-center gap-2">
+                        {tr.isCompleted ? (
+                          <div className="flex items-center gap-1.5 px-3 py-1 text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full text-[10px] uppercase font-black tracking-widest shadow-[0_0_10px_rgba(52,211,153,0.1)]">
+                             <CheckCircle2 size={12} /> VERIFIED
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1.5 px-3 py-1 text-amber-500 bg-amber-500/10 border border-amber-500/20 rounded-full text-[10px] uppercase font-black tracking-widest">
+                             <Clock size={12} /> ONGOING
+                          </div>
+                        )}
                         <div className="flex items-center gap-1.5 px-3 py-1 text-[#d8b4fe] bg-white/5 border border-white/10 rounded-full text-[10px] uppercase font-bold tracking-widest">
-                           <Clock size={12} /> {tr.duration}
+                           <Calendar size={12} /> {tr.duration}
                         </div>
                       </div>
                     </div>

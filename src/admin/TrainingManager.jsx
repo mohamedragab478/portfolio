@@ -15,6 +15,10 @@ const TrainingManager = () => {
   const [provider, setProvider] = useState('');
   const [duration, setDuration] = useState('');
   const [description, setDescription] = useState('');
+  const [skillsListed, setSkillsListed] = useState([]);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [certificateUrl, setCertificateUrl] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchTrainings = async () => {
     setFetching(true);
@@ -32,7 +36,8 @@ const TrainingManager = () => {
 
   const resetForm = () => {
     setEditingId(null); setTitle(''); setProvider(''); setDuration('');
-    setDescription('');
+    setDescription(''); setSkillsListed([]); setIsCompleted(false);
+    setCertificateUrl(''); setSearchTerm('');
   };
 
   const handleSave = async (e) => {
@@ -44,6 +49,9 @@ const TrainingManager = () => {
       provider,
       duration,
       description,
+      skillsListed,
+      isCompleted,
+      certificateUrl,
       status: "Actively Relevant",
       updatedAt: new Date().toISOString()
     };
@@ -70,6 +78,9 @@ const TrainingManager = () => {
     setProvider(training.provider || '');
     setDuration(training.duration || '');
     setDescription(training.description || '');
+    setSkillsListed(training.skillsListed || []);
+    setIsCompleted(training.isCompleted || false);
+    setCertificateUrl(training.certificateUrl || '');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -82,6 +93,10 @@ const TrainingManager = () => {
     } catch (error) {
       console.error("Error deleting training:", error);
     }
+  };
+
+  const handleRemoveTag = (tag) => {
+    setSkillsListed(skillsListed.filter(t => t !== tag));
   };
 
   return (
@@ -123,6 +138,65 @@ const TrainingManager = () => {
             <textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold resize-none placeholder:text-muted/40" placeholder="Briefly describe the topics covered..." />
           </div>
 
+          <div className="space-y-3 relative z-20 md:col-span-2">
+            <label className="text-[10px] font-black uppercase text-accent/80 tracking-[0.2em] ml-2 flex items-center gap-2"><Briefcase className="w-3 h-3" /> Topics / Skills Gained</label>
+            <input 
+              type="text" value={searchTerm} 
+              onChange={e => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && searchTerm.trim() !== '') {
+                  e.preventDefault();
+                  if (!skillsListed.includes(searchTerm.trim())) setSkillsListed([...skillsListed, searchTerm.trim()]);
+                  setSearchTerm('');
+                }
+              }} 
+              className="w-full bg-background border border-green-500/30 rounded-xl py-4 px-5 text-green-100 focus:outline-none focus:border-green-500/60 transition-all text-sm font-medium placeholder:text-green-100/20" 
+              placeholder="Type a topic (e.g. Routing, Network Security) and press Enter" 
+            />
+            {skillsListed.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3 p-3 bg-green-500/5 rounded-xl border border-green-500/20 min-h-[48px]">
+                <AnimatePresence>
+                  {skillsListed.map(tag => (
+                    <m.span key={tag} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="inline-flex items-center gap-2 px-3 py-1.5 bg-background border border-green-500/30 text-green-300 text-[10px] font-bold rounded-lg uppercase tracking-wider shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+                      {tag} 
+                      <button type="button" onClick={() => handleRemoveTag(tag)} className="hover:bg-red-500/20 ml-1 hover:text-red-400 rounded-full p-0.5 transition-colors text-green-300/50"><X size={12} /></button>
+                    </m.span>
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3 relative z-10 md:col-span-2">
+            <label className="text-[10px] font-black uppercase text-accent tracking-[0.2em] ml-2 flex items-center gap-2">
+               <CheckCircle2 className="w-3 h-3" /> Certificate Link
+            </label>
+            <input 
+               type="text" 
+               value={certificateUrl} 
+               onChange={e => setCertificateUrl(e.target.value)} 
+               className="w-full bg-background border border-green-500/30 rounded-xl py-4 px-5 text-green-100 focus:outline-none focus:border-green-500/60 transition-all text-sm font-medium placeholder:text-green-100/20" 
+               placeholder="https://credly.com/badges/..." 
+            />
+          </div>
+
+        </div>
+
+        {/* Verification Status Setup */}
+        <div className="p-6 rounded-2xl border border-accent bg-background mt-4 relative z-10 transition-colors duration-300 data-[completed=true]:border-emerald-500/30 data-[completed=true]:bg-emerald-500/5" data-completed={isCompleted}>
+          <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsCompleted(!isCompleted)}>
+            <div>
+              <h4 className={`text-sm font-black uppercase tracking-widest ${isCompleted ? 'text-emerald-400' : 'text-accent'}`}>
+                {isCompleted ? "Status: COMPLETED & VERIFIED" : "Status: ONGOING / IN PROGRESS"}
+              </h4>
+              <p className="text-[10px] max-w-sm text-purple-100/50 mt-1 uppercase font-bold tracking-wider">
+                {isCompleted ? "This training will automatically sync to your certificates section." : "This training is still ongoing."}
+              </p>
+            </div>
+            <div className={`w-14 h-8 rounded-full flex items-center transition-colors p-1 ${isCompleted ? 'bg-emerald-500/20 border border-emerald-500/50' : 'bg-surface/20 border border-borderColor'}`}>
+               <div className={`w-6 h-6 rounded-full shadow-md transform transition-transform ${isCompleted ? 'translate-x-6 bg-emerald-400' : 'translate-x-0 bg-surface/20'}`} />
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-4 mt-6 relative z-10 border-t border-[#7c3aed]/20 pt-6">
@@ -167,7 +241,12 @@ const TrainingManager = () => {
                      <td className="py-5 px-6">
                         <span className="text-sm font-black text-accent uppercase tracking-wider">{tr.title}</span><br />
                         <span className="text-[10px] font-bold text-accent/30 uppercase tracking-widest">{tr.duration}</span>
-                     </td>
+                        {tr.isCompleted && (
+                          <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+                            Verified Sync
+                          </span>
+                        )}
+                      </td>
                      <td className="py-5 px-6">
                         <span className="text-xs font-bold text-purple-300 uppercase tracking-widest">{tr.provider}</span>
                      </td>

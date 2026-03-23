@@ -11,8 +11,27 @@ const Certifications = () => {
   useEffect(() => {
     const fetchCerts = async () => {
       try {
-        const snap = await getDocs(collection(db, "certifications"));
-        setCertifications(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const [certSnap, trainingSnap] = await Promise.all([
+           getDocs(collection(db, "certifications")),
+           getDocs(collection(db, "trainings"))
+        ]);
+        
+        let allCerts = certSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let trainingCerts = trainingSnap.docs
+           .map(doc => ({ id: doc.id, ...doc.data() }))
+           .filter(t => t.isCompleted)
+           .map(t => ({
+              id: 'tr_' + t.id,
+              title: t.title,
+              issuer: t.provider,
+              date: t.duration,
+              skills: t.skillsListed || [],
+              verificationUrl: t.certificateUrl || '',
+              isVerified: true,
+              syncedFromTraining: true
+           }));
+           
+        setCertifications([...allCerts, ...trainingCerts]);
       } catch (error) {
         console.error("Error fetching certifications:", error);
       } finally {

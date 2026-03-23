@@ -12,9 +12,10 @@ const Education = memo(() => {
   useEffect(() => {
     const fetchAcademicData = async () => {
       try {
-        const [degSnap, certSnap] = await Promise.all([
+        const [degSnap, certSnap, trainingSnap] = await Promise.all([
           getDoc(doc(db, 'portfolioConfig', 'educationDegree')),
-          getDocs(collection(db, 'certifications'))
+          getDocs(collection(db, 'certifications')),
+          getDocs(collection(db, 'trainings'))
         ]);
         
         if (degSnap.exists()) {
@@ -29,9 +30,29 @@ const Education = memo(() => {
           });
         }
 
+        let allCerts = [];
         if (!certSnap.empty) {
-          setCertifications(certSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+          allCerts = certSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         }
+
+        let trainingCerts = [];
+        if (trainingSnap && !trainingSnap.empty) {
+           trainingCerts = trainingSnap.docs
+             .map(doc => ({ id: doc.id, ...doc.data() }))
+             .filter(t => t.isCompleted)
+             .map(t => ({
+                id: 'tr_' + t.id,
+                title: t.title,
+                issuer: t.provider,
+                date: t.duration,
+                skills: t.skillsListed || [],
+                verificationUrl: t.certificateUrl || '',
+                isVerified: true,
+                syncedFromTraining: true
+             }));
+        }
+
+        setCertifications([...allCerts, ...trainingCerts]);
       } catch (error) {
         console.error("Error fetching academic data:", error);
       } finally {
