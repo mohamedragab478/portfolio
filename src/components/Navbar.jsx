@@ -55,38 +55,42 @@ const Navbar = () => {
             : 'bg-transparent w-[95%] md:w-[85%] border-transparent'
         }`}
       >
-        <a href="#" className="flex items-center gap-2 group relative">
-          {siteLogoUrl ? (
-            <img src={siteLogoUrl} alt="Logo" referrerPolicy="no-referrer" className="w-6 h-6 object-contain rounded" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='block'; }} />
-          ) : null}
-          {!siteLogoUrl && <Zap className="w-5 h-5 text-[#7c3aed]" />}
-          <span className="text-xl font-black tracking-widest uppercase text-white">
-            AMIR<span className="text-[#7c3aed]">.AURA</span>
-          </span>
-        </a>
+        <div className="flex-1">
+          <a href="#" className="flex items-center gap-2 group relative w-fit">
+            {siteLogoUrl ? (
+              <img src={siteLogoUrl} alt="Logo" referrerPolicy="no-referrer" className="w-6 h-6 object-contain rounded" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='block'; }} />
+            ) : null}
+            {!siteLogoUrl && <Zap className="w-5 h-5 text-[#7c3aed]" />}
+            <span className="text-xl font-black tracking-widest uppercase text-white">
+              AMIR<span className="text-[#7c3aed]">.AURA</span>
+            </span>
+          </a>
+        </div>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Nav - Centered Pills */}
+        <div className="hidden md:flex items-center gap-2 px-2 py-1.5 bg-white/[0.03] border border-white/5 rounded-full backdrop-blur-md transition-all duration-300">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="group flex flex-col items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.3em] text-secondary hover:text-white transition-all py-2 relative"
+              className="group flex items-center gap-2.5 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-[#94a3b8] hover:text-white hover:bg-white/5 transition-all duration-300"
             >
-              <span className="text-secondary/60 group-hover:text-accent transition-colors duration-300">
+              <span className="text-[#94a3b8]/50 group-hover:text-[#7c3aed] transition-colors duration-300">
                 {link.icon}
               </span>
               {link.name}
             </a>
           ))}
-          <m.a
+        </div>
+
+        {/* Desktop Right - Connect Button */}
+        <div className="hidden md:flex flex-1 justify-end items-center">
+          <a
             href="#contact"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 rounded-full bg-[#7c3aed] text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all ml-4 hover:brightness-110 shadow-lg shadow-[#7c3aed]/20"
+            className="px-8 py-3 rounded-full bg-[#7c3aed] text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 hover:brightness-110 shadow-lg shadow-[#7c3aed]/20"
           >
             Connect
-          </m.a>
+          </a>
         </div>
 
         {/* Mobile Toggle */}

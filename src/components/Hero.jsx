@@ -1,11 +1,30 @@
 import { m, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, ChevronRight, Sparkles, Code, Terminal, Database, Award, Briefcase, Zap, Brain, Star, User } from 'lucide-react';
+import { ArrowRight, ChevronRight, Sparkles, Code, Terminal, Database, Award, Briefcase, Zap, Brain, Star, User, Cpu, GitBranch, Layers, BarChart } from 'lucide-react';
 import { useState, useEffect, useMemo, memo } from 'react';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
+// Swiper imports
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 // Lucide icon name string to actual component mapping
-const ICON_MAP = { Terminal, Database, Award, Briefcase, Zap, Brain, Code, Star, User };
+const ICON_MAP = { Terminal, Database, Award, Briefcase, Zap, Brain, Code, Star, User, Cpu, GitBranch, Layers, BarChart };
+
+// Helper function for default detailed descriptions - Moved outside to prevent ReferenceError
+const getDefaultDetailedDescription = (title) => {
+  const descriptions = {
+    '1+ Year': 'Hands-on experience with production-grade AI models, achieving 95%+ accuracy in computer vision tasks and reducing inference time by 40% through optimization.',
+    '8': 'Comprehensive knowledge validated by industry leaders, covering everything from fundamental ML concepts to advanced generative AI and MLOps practices.',
+    'AI & CV Experience': 'Developed and deployed multiple computer vision solutions including facial recognition, object detection, and image classification systems.',
+    'Certifications': 'Continuous learning mindset with certifications from Google, AWS, DeepLearning.AI, and Stanford Online.',
+    'Linux Admin': 'Proficient in managing high-performance computing clusters, automating workflows, and maintaining 99.9% system uptime.',
+    'IoT': 'Architected end-to-end IoT solutions with edge AI capabilities, reducing latency by 60% and enabling real-time decision making.'
+  };
+  return descriptions[title] || 'Proven expertise with measurable results in production environments.';
+};
 
 const Hero = memo(() => {
   const [heroData, setHeroData] = useState(null);
@@ -25,21 +44,6 @@ const Hero = memo(() => {
     fetchHero();
   }, []);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 30, stiffness: 100 };
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), springConfig);
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
   // Resolved dynamic values with fallbacks to original hardcoded content
   const rawName = useMemo(() => (heroData?.name || 'AMIR ELREFAI').trim().split(' '), [heroData?.name]);
   const displayLastName = rawName.length > 1 ? rawName[rawName.length - 1] : '';
@@ -50,13 +54,42 @@ const Hero = memo(() => {
   const githubUrl = heroData?.githubUrl || 'https://github.com/amerelfalwo';
   const profileImage = heroData?.profileImageUrl || '/hero1.png';
 
-  // Dynamic stats from Firestore or fallback
-  const stats = useMemo(() => heroData?.heroStats?.length > 0
-    ? heroData.heroStats
-    : [
-        { title: '1+ Year', description: 'AI & CV Experience', iconName: 'Terminal' },
-        { title: '6+', description: 'Professional Certifications', iconName: 'Database' },
-      ], [heroData?.heroStats]);
+  // Enhanced stats with more detailed content
+  const stats = useMemo(() => {
+    const baseStats = heroData?.heroStats?.length > 0
+      ? heroData.heroStats
+      : [
+          { 
+            title: '1+ Year XP', 
+            description: 'AI & CV Specialist', 
+            iconName: 'Brain',
+            detailedDescription: 'Specialized in Computer Vision architectures including CNNs, Transformers, and YOLO models.'
+          },
+          { 
+            title: '8+ Certifications', 
+            description: 'Industry-recognized credentials', 
+            iconName: 'Award',
+            detailedDescription: 'Credentials in Deep Learning, TensorFlow, AWS AI Services, and Advanced ML from top institutions.'
+          },
+          { 
+            title: 'Linux Admin', 
+            description: 'Systems Optimization', 
+            iconName: 'Terminal',
+            detailedDescription: 'Expert in Linux server administration, shell scripting, and infrastructure optimization.'
+          },
+          { 
+            title: 'IoT & Edge AI', 
+            description: 'Smart Ecosystems', 
+            iconName: 'Cpu',
+            detailedDescription: 'Developing intelligent IoT solutions integrating edge AI and real-time data processing.'
+          },
+        ];
+
+    return baseStats.map(stat => ({
+      ...stat,
+      detailedDescription: stat.detailedDescription || getDefaultDetailedDescription(stat.title)
+    }));
+  }, [heroData?.heroStats]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -73,24 +106,13 @@ const Hero = memo(() => {
 
   if (isLoading) {
     return (
-      <section className="relative min-h-[95vh] flex items-center justify-center pt-32 pb-20 bg-transparent">
+      <section className="relative min-h-screen flex items-center justify-center pt-32 pb-20 bg-transparent">
         <div className="relative z-10 w-full max-w-7xl px-6 md:px-12 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="flex flex-col items-start gap-6 animate-pulse w-full">
             <div className="h-8 w-48 bg-surface/40 rounded-full" />
             <div className="h-20 w-3/4 bg-surface/40 rounded-2xl" />
             <div className="h-6 w-1/3 bg-surface/40 rounded-lg" />
             <div className="h-24 w-full bg-surface/40 rounded-2xl" />
-            <div className="flex gap-4 w-full">
-               <div className="h-14 w-40 bg-surface/40 rounded-xl" />
-               <div className="h-14 w-40 bg-surface/40 rounded-xl" />
-            </div>
-            <div className="grid grid-cols-2 gap-6 w-full mt-6">
-               <div className="h-24 bg-surface/40 rounded-2xl" />
-               <div className="h-24 bg-surface/40 rounded-2xl" />
-            </div>
-          </div>
-          <div className="hidden lg:flex justify-end animate-pulse">
-            <div className="w-[400px] aspect-[4/5] bg-surface/40 rounded-[2rem]" />
           </div>
         </div>
       </section>
@@ -98,30 +120,27 @@ const Hero = memo(() => {
   }
 
   return (
-    <section 
-      onMouseMove={handleMouseMove}
-      className="relative min-h-[95vh] flex items-center justify-center pt-32 pb-20 bg-transparent"
-    >
-      <div className="relative z-10 w-full max-w-7xl px-6 md:px-12 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-
-        {/* Left Side: Text Content */}
+    <section className="relative min-h-screen flex items-center justify-center pt-36 pb-20 bg-transparent overflow-hidden">
+      <div className="relative z-10 w-full max-w-7xl px-6 md:px-12 grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        
+        {/* Left Side: Content Column */}
         <m.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
           className="flex flex-col items-start text-left"
         >
           <m.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 glass-card text-secondary text-[10px] font-black uppercase tracking-[0.3em] mb-6"
           >
-            <Sparkles size={14} className="text-secondary animate-pulse" />
+            <Sparkles size={14} className="text-secondary" />
             Deep Learning Engineer <ChevronRight size={14} className="text-secondary/60" />
           </m.div>
 
           <m.h1 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-7xl lg:text-[85px] font-black mb-4 tracking-tighter uppercase leading-[0.9] text-white whitespace-nowrap"
           >
@@ -129,10 +148,10 @@ const Hero = memo(() => {
           </m.h1>
           
           <m.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex items-center gap-3 md:gap-5 mb-10 w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex items-center gap-3 md:gap-5 mb-8 w-full"
           >
             <h2 className="text-xs md:text-base lg:text-lg font-bold tracking-[0.4em] lg:tracking-[0.5em] text-white uppercase whitespace-nowrap">
               {displayTitle}
@@ -143,12 +162,12 @@ const Hero = memo(() => {
              initial={{ opacity: 0 }}
              animate={{ opacity: 1 }}
              transition={{ duration: 1, delay: 0.4 }}
-             className="max-w-lg text-muted/80 text-lg md:text-xl mb-12 font-medium leading-relaxed tracking-tight"
+             className="max-w-lg text-muted/80 text-lg md:text-xl mb-10 font-medium leading-relaxed tracking-tight"
           >
              {displayBio}
           </m.p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-10">
             <m.a 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -167,61 +186,73 @@ const Hero = memo(() => {
             </m.a>
           </div>
 
-           {/* Dynamic Stats Cards */}
-           <m.div 
-             variants={containerVariants}
-             initial="hidden"
-             animate="visible"
-             className="mt-12 grid grid-cols-2 gap-6 w-full max-w-md border-t border-white/5 pt-8"
-           >
-             {stats.map((stat, i) => {
-               const IconComp = ICON_MAP[stat.iconName] || Terminal;
-               const colors = [
-                 "text-[#06b6d4] bg-[#06b6d4]/10 border-[#06b6d4]/20 shadow-[0_0_15px_rgba(6,182,212,0.3)]", 
-                 "text-[#ec4899] bg-[#ec4899]/10 border-[#ec4899]/20 shadow-[0_0_15px_rgba(236,72,153,0.3)]",
-               ];
-               const colorClass = colors[i % colors.length];
-               const iconColor = i % 2 === 0 ? "text-[#06b6d4]" : "text-[#ec4899]";
-               return (
-                 <m.div
-                   key={i}
-                   variants={itemVariants}
-                   className="flex flex-col xl:flex-row items-start xl:items-center gap-4 py-4 pr-6 border border-white/5 rounded-2xl group/stat glow-aura bg-surface hover:bg-surface/60 transition-colors"
-                 >
-                   <div className={`p-2.5 rounded-xl border ml-4 transition-all duration-500 group-hover/stat:scale-110 ${colorClass}`}>
-                     <IconComp className={`${iconColor} w-5 h-5`} />
-                   </div>
-                   <div className="ml-4 xl:ml-0">
-                     <h4 className="text-white font-black text-[13px] uppercase tracking-widest">{stat.title}</h4>
-                     <p className="text-secondary text-[8px] font-bold uppercase tracking-widest mt-1">{stat.description}</p>
-                   </div>
-                 </m.div>
-               );
-             })}
-           </m.div>
+           {/* Professional Stats Slider - Compact Version */}
+           <div className="w-full max-w-2xl border-t border-white/5 pt-8">
+             <Swiper
+               modules={[Autoplay, Pagination]}
+               spaceBetween={16}
+               slidesPerView={1}
+               autoplay={{ delay: 4000, disableOnInteraction: false }}
+               loop={true}
+               breakpoints={{ 768: { slidesPerView: 2 } }}
+               className="stats-swiper pb-8"
+             >
+               {stats.map((stat, i) => {
+                 const IconComp = ICON_MAP[stat.iconName] || Terminal;
+                 const gradientColors = [
+                   "from-cyan-500/20 to-blue-500/20 shadow-cyan-500/10",
+                   "from-pink-500/20 to-purple-500/20 shadow-pink-500/10",
+                 ];
+                 const iconGradient = i % 2 === 0 ? "text-cyan-400" : "text-pink-400";
+                 
+                 return (
+                   <SwiperSlide key={i} className="h-auto">
+                     <m.div
+                       variants={itemVariants}
+                       className="group relative overflow-hidden bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl p-4 h-full flex flex-col gap-3 hover:scale-[1.02] transition-all duration-500"
+                     >
+                        {/* Glow Animation */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+
+                        <div className="flex items-center gap-4 relative z-10">
+                          <div className={`p-2.5 rounded-xl bg-gradient-to-br ${gradientColors[i % 2]} backdrop-blur-md border border-white/10`}>
+                            <IconComp className={`${iconGradient} w-5 h-5`} />
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-lg font-black text-white leading-none">{stat.title}</span>
+                            <h4 className="text-white/70 font-bold text-[10px] uppercase tracking-wider mt-1">
+                              {stat.description}
+                            </h4>
+                          </div>
+                        </div>
+                     </m.div>
+                   </SwiperSlide>
+                 );
+               })}
+             </Swiper>
+           </div>
         </m.div>
 
-        {/* Right Side: Profile Image with 3D Parallax */}
+        {/* Right Side: Profile Image - Balanced Height */}
+        {/* Right Side: Profile Image - Elevated for Alignment */}
         <m.div
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.2 }}
-          className="relative group lg:justify-self-end flex items-center justify-center mt-12 lg:mt-0"
+          transition={{ duration: 0.8 }}
+          className="relative group lg:justify-self-end flex items-start justify-center lg:-mt-32"
         >
           {/* Subtle Ambient Glow behind image */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] -z-10 pointer-events-none glow-aura rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] -z-10 pointer-events-none glow-aura rounded-full blur-[100px] opacity-30" />
 
-          {/* Refined Image Container - No borders, smooth fade using CSS Mask */}
-          <div className="relative z-10 w-full max-w-[600px] aspect-[4/5] flex items-end justify-center">
+          <div className="relative z-10 w-full max-w-[550px] flex items-start justify-center overflow-hidden rounded-[3rem]">
             {profileImage && (
               <m.img 
                 src={profileImage}
-                alt={`${displayName} ${displayLastName}`}
-                className="w-full h-full object-cover object-top drop-shadow-2xl transition-all duration-700 pointer-events-none"
+                alt={displayName}
+                className="w-full h-auto max-h-[750px] object-contain object-top drop-shadow-2xl transition-all duration-700 pointer-events-none"
                 style={{ 
-                  WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-                  maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+                  WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+                  maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)'
                 }}
                 fetchPriority="high"
                 decoding="async"
@@ -232,6 +263,11 @@ const Hero = memo(() => {
           </div>
         </m.div>
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .stats-swiper .swiper-pagination-bullet { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.2); opacity: 1; }
+        .stats-swiper .swiper-pagination-bullet-active { width: 24px; border-radius: 4px; background: #7c3aed; box-shadow: 0 0 15px rgba(124, 58, 237, 0.5); }
+      `}} />
     </section>
   );
 });

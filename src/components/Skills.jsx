@@ -11,7 +11,7 @@ const MarqueeRow = memo(({ items, direction = 1 }) => (
         x: direction > 0 ? [0, "-100%"] : ["-100%", 0] 
       }}
       transition={{ 
-        duration: 40, 
+        duration: 60, 
         repeat: Infinity, 
         ease: "linear" 
       }}
@@ -26,11 +26,11 @@ const MarqueeRow = memo(({ items, direction = 1 }) => (
           
           <div className="w-8 h-8 flex items-center justify-center z-10 bg-white/5 rounded-xl p-1.5 border border-white/5 group-hover/skill:bg-[#7c3aed]/20 transition-colors">
             <img 
-              src={skill.icon} 
-              alt={skill.name} 
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-contain filter group-hover/skill:scale-110 transition-transform duration-500" 
+               src={skill.icon} 
+               alt={skill.name} 
+               loading="lazy"
+               decoding="async"
+               className="w-full h-full object-contain transition-transform" 
             />
           </div>
           <span className="text-xs font-black uppercase tracking-widest text-muted/60 group-hover/skill:text-white transition-colors duration-500 z-10">
@@ -68,9 +68,9 @@ const Skills = memo(() => {
 
   return (
     <section id="skills" className="py-24 bg-transparent relative overflow-hidden">
-      {/* Decorative ambient gradients */}
-      <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-[#7c3aed]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[20%] left-[-5%] w-[400px] h-[400px] bg-[#d8b4fe]/5 rounded-full blur-[120px] pointer-events-none" />
+      {/* Decorative ambient gradients - Optimized */}
+      <div className="absolute top-[20%] right-[-5%] w-[300px] h-[300px] bg-[#7c3aed]/5 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-[-5%] w-[300px] h-[300px] bg-[#d8b4fe]/5 rounded-full blur-[80px] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 mb-20 md:mb-28 text-center relative z-10">
         <m.div 

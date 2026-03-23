@@ -73,8 +73,8 @@ const About = () => {
 
   return (
     <section id="about" className="py-32 bg-transparent relative overflow-hidden">
-      {/* Ambient Depth */}
-      <div className="absolute top-0 left-[-10%] w-[500px] h-[500px] bg-[#7c3aed]/5 rounded-full blur-[150px] pointer-events-none" />
+      {/* Ambient Depth - Optimized */}
+      <div className="absolute top-0 left-[-10%] w-[300px] h-[300px] bg-[#7c3aed]/5 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 grid lg:grid-cols-2 gap-20 lg:gap-24 items-center">
         {/* Left: Expert Story */}
@@ -148,7 +148,7 @@ const About = () => {
                   src={aboutData.imageUrl} 
                   alt="Profile" 
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:brightness-110 filter grayscale group-hover:grayscale-0"
+                  className="w-full h-full object-cover transition-all duration-1000"
                 />
                 
                 {/* Floating Tags/Labels */}
@@ -160,14 +160,12 @@ const About = () => {
                 </div>
              </div>
 
-             {/* Orbital Elements */}
-             <motion.div 
-               animate={{ rotate: 360 }}
-               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+             {/* Orbital Elements - Simplified (Removed infinite rotation) */}
+             <div 
                className="absolute -inset-16 border border-white/5 rounded-full pointer-events-none"
              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#7c3aed] rounded-full blur-[2px] shadow-[0_0_20px_rgba(124,58,237,1)]" />
-             </motion.div>
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#7c3aed]/40 rounded-full blur-[2px]" />
+             </div>
           </div>
 
           {/* Floating Achievements/Tech Stack */}

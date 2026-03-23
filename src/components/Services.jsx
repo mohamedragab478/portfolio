@@ -16,7 +16,7 @@ const ServiceCard = memo(({ service, index }) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative flex flex-col p-8 md:p-10 rounded-[2.5rem] border border-white/5 bg-surface/20 hover:bg-surface/40 hover:border-[#7c3aed]/30 transition-all duration-500 overflow-hidden cursor-default shadow-lg shadow-transparent hover:shadow-[#7c3aed]/10"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#7c3aed]/0 via-[#7c3aed]/5 to-transparent translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+      {/* Removed sliding gradient animation for performance */}
       
       <div className="mb-8 p-5 bg-white/5 border border-white/5 rounded-2xl w-fit group-hover:bg-[#7c3aed]/20 group-hover:border-[#7c3aed]/50 transition-all duration-500 z-10">
         <IconComponent size={32} className="text-[#d8b4fe] group-hover:text-white transition-colors duration-500" />
@@ -56,7 +56,7 @@ const Services = memo(() => {
 
   return (
     <section id="services" className="py-32 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#7c3aed]/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#7c3aed]/5 blur-[80px] rounded-full pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <m.div 
