@@ -48,9 +48,12 @@ const CATEGORY_MAP = {
 const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
   return (
     <div
-      className={`group flex flex-col md:flex-row overflow-hidden rounded-[1.2rem] border border-white/5 hover:border-white/10 transition-colors duration-300 bg-surface h-full md:h-[240px] glass-card`}
+      className="group flex flex-col overflow-hidden rounded-[2rem] border border-white/5 hover:border-accent/20 transition-all duration-500 bg-surface/30 glass-card h-full relative"
     >
-      <div className="relative w-full md:w-[38%] h-[160px] md:h-full overflow-hidden shrink-0">
+      {/* Dynamic Glow Effect */}
+      <div className={`absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br ${project.color || 'from-purple-500/20 to-blue-500/20'} blur-[80px] opacity-0 group-hover:opacity-40 transition-opacity duration-700`} />
+      
+      <div className="relative w-full aspect-video overflow-hidden shrink-0">
          <img 
            src={project.image} 
            alt={project.title} 
@@ -59,58 +62,65 @@ const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
            referrerPolicy="no-referrer"
            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
          />
-         <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-30 group-hover:opacity-10 transition-opacity`} />
+         <div className="absolute inset-0 bg-gradient-to-t from-[#030014] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+         
+         <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+            <button 
+              onClick={(e) => { e.stopPropagation(); onSelect(project); }}
+              className="p-3 bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white hover:text-black text-white rounded-2xl transition-all duration-300 shadow-xl"
+            >
+               <ArrowRight size={18} />
+            </button>
+         </div>
       </div>
 
-      <div className="p-5 md:p-6 flex flex-col justify-between flex-grow">
-         <div>
-            <div className="flex justify-between items-start mb-2">
-               <div>
-                  {(() => {
-                    const catInfo = CATEGORY_MAP[project.category] || { icon: 'Code2', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30', shadow: 'shadow-none', label: project.category };
-                    const IconComp = {
-                      BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2
-                    }[catInfo.icon] || Code2;
-                    return (
-                      <div className="flex items-center gap-4">
-                         <div className={`p-2.5 rounded-xl border ${catInfo.bg} ${catInfo.border} ${catInfo.shadow} transition-all duration-500 group-hover:scale-110`}>
-                           <IconComp className={`w-5 h-5 ${catInfo.color}`} />
-                         </div>
-                         <div className="flex flex-col">
-                           <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/50">{catInfo.label}</span>
-                           <h4 className="text-lg font-black uppercase mt-1 text-[#f97316] tracking-tight leading-none">{project.title}</h4>
-                         </div>
-                      </div>
-                    );
-                  })()}
-               </div>
-               <button 
-                 onClick={() => onSelect(project)}
-                 className="flex items-center gap-2 px-4 py-2 bg-transparent border border-white/10 hover:border-white/20 text-white rounded-full transition-all text-[8px] font-black uppercase tracking-wider hover:bg-white/5"
-               >
-                  Details
-                  <ArrowRight size={12} />
-               </button>
-            </div>
-            
-            <p className="text-muted text-[12px] leading-tight line-clamp-2 md:line-clamp-3 mb-4 font-medium">
-              {project.description}
-            </p>
-         </div>
-
-         <div className="flex flex-wrap gap-1.5 pt-3 border-t border-borderColor">
-            {project.tags?.map((tag) => {
-              const colorClass = "text-[#10b981] border-[#10b981]/30 bg-[#10b981]/5";
+      <div className="p-6 md:p-8 flex flex-col flex-grow relative z-10">
+         <div className="mb-6">
+            {(() => {
+              const catInfo = CATEGORY_MAP[project.category] || { icon: 'Code2', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30', shadow: 'shadow-none', label: project.category };
+              const IconComp = {
+                BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2
+              }[catInfo.icon] || Code2;
               return (
-              <span key={tag} className={`flex items-center gap-1.5 px-2 py-1 text-[8px] font-black uppercase border rounded-md transition-all cursor-default ${colorClass}`}>
+                <div className="flex flex-col gap-4">
+                   <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-xl border ${catInfo.bg} ${catInfo.border} shadow-sm transition-all duration-500 group-hover:rotate-12`}>
+                        <IconComp className={`w-4 h-4 ${catInfo.color}`} />
+                      </div>
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] font-mono ${catInfo.color}`}>{catInfo.label}</span>
+                   </div>
+                   <h4 className="text-2xl font-black uppercase text-white group-hover:text-accent transition-colors duration-300 leading-tight">
+                      {project.title}
+                   </h4>
+                </div>
+              );
+            })()}
+         </div>
+         
+         <p className="text-muted text-[14px] leading-relaxed line-clamp-3 mb-8 font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+           {project.description}
+         </p>
+
+         <div className="mt-auto pt-6 border-t border-white/5 flex flex-wrap gap-2">
+            {project.tags?.slice(0, 5).map((tag) => (
+              <span key={tag} className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase bg-white/5 border border-white/10 rounded-lg text-white/50 hover:text-white hover:border-white/20 transition-all group/tag">
                 {skillIcons[tag] ? (
-                  <img src={skillIcons[tag]} alt={tag} loading="lazy" decoding="async" className="w-3 h-3 object-contain" />
+                  <img 
+                    src={skillIcons[tag]} 
+                    alt={tag} 
+                    className="w-3.5 h-3.5 object-contain opacity-60 group-hover/tag:opacity-100 transition-opacity" 
+                  />
                 ) : (
-                  <Code2 size={10} />
+                  <Code2 size={12} className="opacity-60 group-hover/tag:opacity-100" />
                 )}
                 {tag}
               </span>
-            )})}
+            ))}
+            {project.tags?.length > 5 && (
+              <span className="px-3 py-1.5 text-[10px] font-bold uppercase bg-white/5 border border-white/10 rounded-lg text-white/30">
+                +{project.tags.length - 5}
+              </span>
+            )}
          </div>
       </div>
     </div>
@@ -167,26 +177,24 @@ const Projects = memo(() => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid lg:grid-cols-2 gap-8"
+              className="grid md:grid-cols-2 gap-8"
             >
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="flex flex-col md:flex-row rounded-[1.2rem] bg-surface/40 border-2 border-borderColor h-full md:h-[240px] animate-pulse">
-                  <div className="w-full md:w-[38%] h-[160px] md:h-full bg-surface/60 rounded-t-[1.2rem] md:rounded-l-[1.2rem] md:rounded-tr-none" />
-                  <div className="p-6 flex flex-col justify-between flex-grow">
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                         <div className="w-16 h-3 bg-surface/60 rounded" />
-                         <div className="w-20 h-6 bg-surface/60 rounded-full" />
-                      </div>
-                      <div className="w-3/4 h-6 bg-surface/60 rounded" />
-                      <div className="space-y-2 mt-4">
-                        <div className="w-full h-3 bg-surface/60 rounded" />
-                        <div className="w-5/6 h-3 bg-surface/60 rounded" />
-                      </div>
+                <div key={i} className="flex flex-col rounded-[2rem] bg-surface/40 border border-white/5 h-[500px] animate-pulse">
+                  <div className="w-full aspect-video bg-surface/60 rounded-t-[2rem]" />
+                  <div className="p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                       <div className="w-8 h-8 bg-surface/60 rounded-xl" />
+                       <div className="w-24 h-3 bg-surface/60 rounded" />
                     </div>
-                    <div className="flex gap-2 mt-6">
-                      <div className="w-16 h-6 bg-surface/60 rounded-md" />
-                      <div className="w-16 h-6 bg-surface/60 rounded-md" />
+                    <div className="w-3/4 h-8 bg-surface/60 rounded-lg" />
+                    <div className="space-y-3">
+                      <div className="w-full h-3 bg-surface/60 rounded" />
+                      <div className="w-5/6 h-3 bg-surface/60 rounded" />
+                    </div>
+                    <div className="flex gap-2 pt-6">
+                      <div className="w-16 h-8 bg-surface/60 rounded-lg" />
+                      <div className="w-16 h-8 bg-surface/60 rounded-lg" />
                     </div>
                   </div>
                 </div>
@@ -195,7 +203,7 @@ const Projects = memo(() => {
           ) : (
             <m.div 
               key="projects"
-              className="grid lg:grid-cols-2 gap-8"
+              className="grid md:grid-cols-2 gap-10"
             >
               {visibleProjects.map((project) => (
                 <ProjectCard 
