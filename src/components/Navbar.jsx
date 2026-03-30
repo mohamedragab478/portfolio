@@ -56,12 +56,12 @@ const Navbar = () => {
         }`}
       >
         <div className="flex-1">
-          <a href="#" className="flex items-center gap-2 group relative w-fit">
+          <a href="#" className="flex items-center gap-1 group relative w-fit">
             {siteLogoUrl ? (
-              <img src={siteLogoUrl} alt="Logo" referrerPolicy="no-referrer" className="w-6 h-6 object-contain rounded" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='block'; }} />
+              <img src={siteLogoUrl} alt="Logo" referrerPolicy="no-referrer" className="h-10 md:h-12 w-auto object-contain rounded" onError={(e) => { e.target.style.display='none'; e.target.nextElementSibling.style.display='block'; }} />
             ) : null}
-            {!siteLogoUrl && <Zap className="w-5 h-5 text-[#7c3aed]" />}
-            <span className="text-xl font-black tracking-widest uppercase text-white">
+            {!siteLogoUrl && <Zap className="w-8 h-8 md:w-10 md:h-10 text-[#7c3aed]" />}
+            <span className="text-2xl md:text-3xl font-black tracking-widest uppercase text-white drop-shadow-md">
               AMIR<span className="text-[#7c3aed]">.AURA</span>
             </span>
           </a>
