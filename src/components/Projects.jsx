@@ -1,14 +1,11 @@
 import { m, AnimatePresence } from 'framer-motion';
 import { 
-  ExternalLink, Github, X, Code2, Database, Cpu, 
-  Globe, ChevronDown, ChevronUp, ArrowRight, Info,
-  Layers, Settings, Box, Workflow, Monitor, Server,
-  Terminal, Search, Activity, Share2, Zap, CheckCircle2, Loader,
-  BrainCircuit, Eye, Sparkles
+  Code2, Database, Zap, Sparkles, Layers, Eye, BrainCircuit, ChevronDown, ChevronUp 
 } from 'lucide-react';
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import ProjectCube from './ProjectCube';
 
 const skillIcons = {
   "PyTorch": "https://raw.githubusercontent.com/devicons/devicon/master/icons/pytorch/pytorch-original.svg",
@@ -19,118 +16,93 @@ const skillIcons = {
   "MediaPipe": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/google.svg",
   "C++": "https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg",
   "Docker": "https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg",
-  "Kubernetes": "https://raw.githubusercontent.com/devicons/devicon/master/icons/server/server-original.svg",
-  "LangChain": "https://cdn.simpleicons.org/langchain/white",
   "React": "https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg",
   "FastAPI": "https://raw.githubusercontent.com/devicons/devicon/master/icons/fastapi/fastapi-original.svg",
   "NumPy": "https://raw.githubusercontent.com/devicons/devicon/master/icons/numpy/numpy-original.svg",
   "Pandas": "https://raw.githubusercontent.com/devicons/devicon/master/icons/pandas/pandas-original.svg",
-  "Keras": "https://cdn.simpleicons.org/keras/white",
-  "Pinecone": "https://cdn.simpleicons.org/pinecone/white",
-  "UNet++": "https://raw.githubusercontent.com/devicons/devicon/master/icons/pytorch/pytorch-original.svg",
-  "VGG16": "https://raw.githubusercontent.com/devicons/devicon/master/icons/tensorflow/tensorflow-original.svg",
-  "ResNet50": "https://raw.githubusercontent.com/devicons/devicon/master/icons/tensorflow/tensorflow-original.svg",
-  "ngrok": "https://cdn.simpleicons.org/ngrok/white",
-  "Render": "https://cdn.simpleicons.org/render/white",
-  "Scikit-learn": "https://cdn.simpleicons.org/scikitlearn/white",
-  "Gradio": "https://cdn.simpleicons.org/gradio/white"
 };
 
 const CATEGORY_MAP = {
-  nlp: { icon: 'BrainCircuit', color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20', shadow: 'shadow-[0_0_15px_rgba(96,165,250,0.3)]', label: 'NLP' },
-  cv: { icon: 'Eye', color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20', shadow: 'shadow-[0_0_15px_rgba(52,211,153,0.3)]', label: 'Computer Vision' },
-  dl: { icon: 'Layers', color: 'text-purple-400', bg: 'bg-purple-400/10', border: 'border-purple-400/20', shadow: 'shadow-[0_0_15px_rgba(192,132,252,0.3)]', label: 'Deep Learning' },
-  ds: { icon: 'Database', color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20', shadow: 'shadow-[0_0_15px_rgba(251,191,36,0.3)]', label: 'Data Science' },
-  agents: { icon: 'Zap', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20', shadow: 'shadow-[0_0_15px_rgba(250,204,21,0.3)]', label: 'AI Agents' },
-  gen_ai: { icon: 'Sparkles', color: 'text-pink-400', bg: 'bg-pink-400/10', border: 'border-pink-400/20', shadow: 'shadow-[0_0_15px_rgba(244,114,182,0.3)]', label: 'Generative AI' }
+  nlp: { icon: 'BrainCircuit', color: 'text-sky-500', bg: 'bg-sky-50', border: 'border-sky-100', label: 'NLP' },
+  cv: { icon: 'Eye', color: 'text-emerald-500', bg: 'bg-emerald-50', border: 'border-emerald-100', label: 'Computer Vision' },
+  dl: { icon: 'Layers', color: 'text-purple-500', bg: 'bg-purple-50', border: 'border-purple-100', label: 'Deep Learning' },
+  ds: { icon: 'Database', color: 'text-amber-500', bg: 'bg-amber-50', border: 'border-amber-100', label: 'Data Science' },
+  agents: { icon: 'Zap', color: 'text-yellow-500', bg: 'bg-yellow-50', border: 'border-yellow-100', label: 'AI Agents' },
+  gen_ai: { icon: 'Sparkles', color: 'text-pink-500', bg: 'bg-pink-50', border: 'border-pink-100', label: 'Generative AI' }
 };
 
-const ProjectCard = memo(({ project, onSelect, skillIcons }) => {
-  return (
-    <div
-      className="group flex flex-col overflow-hidden rounded-[2rem] border border-white/5 hover:border-accent/20 transition-all duration-500 bg-surface/30 glass-card h-full relative"
-    >
-      {/* Dynamic Glow Effect */}
-      <div className={`absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br ${project.color || 'from-purple-500/20 to-blue-500/20'} blur-[80px] opacity-0 group-hover:opacity-40 transition-opacity duration-700`} />
-      
-      <div className="relative w-full aspect-video overflow-hidden shrink-0">
-         <img 
-           src={project.image} 
-           alt={project.title} 
-           loading="lazy"
-           decoding="async"
-           referrerPolicy="no-referrer"
-           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-         />
-         <div className="absolute inset-0 bg-gradient-to-t from-[#030014] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-         
-         <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-            <button 
-              onClick={(e) => { e.stopPropagation(); onSelect(project); }}
-              className="p-3 bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white hover:text-black text-white rounded-2xl transition-all duration-300 shadow-xl"
-            >
-               <ArrowRight size={18} />
-            </button>
-         </div>
-      </div>
+const CategoryStack = memo(({ category, items, onSelect }) => {
+  const catInfo = CATEGORY_MAP[category] || { icon: 'Code2', color: 'text-slate-500', bg: 'bg-slate-50', border: 'border-slate-200', label: category };
+  const IconComp = { BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2 }[catInfo.icon] || Code2;
+  
+  const displayItems = items.slice(0, 3); // Show up to 3 cards in stack
 
-      <div className="p-6 md:p-8 flex flex-col flex-grow relative z-10">
-         <div className="mb-6">
-            {(() => {
-              const catInfo = CATEGORY_MAP[project.category] || { icon: 'Code2', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30', shadow: 'shadow-none', label: project.category };
-              const IconComp = {
-                BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2
-              }[catInfo.icon] || Code2;
-              return (
-                <div className="flex flex-col gap-4">
-                   <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-xl border ${catInfo.bg} ${catInfo.border} shadow-sm transition-all duration-500 group-hover:rotate-12`}>
+  return (
+    <m.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "50px" }}
+      className="group relative w-full h-[400px] cursor-pointer perspective-[1000px]"
+      onClick={() => onSelect(category, items)}
+    >
+      <div className="absolute inset-0 flex items-end justify-center pb-6">
+        {displayItems.map((project, idx) => {
+          const isTop = idx === 0;
+          const translateY = isTop ? 'translate-y-0' : idx === 1 ? 'translate-y-4 scale-95 opacity-80' : 'translate-y-8 scale-90 opacity-60';
+          const zIndex = 30 - idx;
+          
+          return (
+            <div 
+              key={project.id || idx}
+              className={`absolute top-0 w-full h-full rounded-[2rem] bg-white border border-slate-200 shadow-sm transition-all duration-500 group-hover:-translate-y-6 group-hover:shadow-xl overflow-hidden ${translateY}`}
+              style={{ zIndex }}
+            >
+              {isTop && (
+                <div className="flex flex-col h-full">
+                  <div className="relative w-full h-48 shrink-0 overflow-hidden bg-slate-100">
+                    <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
+                  </div>
+                  <div className="p-6 flex-1 flex flex-col bg-white">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`p-2 rounded-xl border ${catInfo.bg} ${catInfo.border}`}>
                         <IconComp className={`w-4 h-4 ${catInfo.color}`} />
                       </div>
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] font-mono ${catInfo.color}`}>{catInfo.label}</span>
-                   </div>
-                   <h4 className="text-2xl font-black uppercase text-white group-hover:text-accent transition-colors duration-300 leading-tight">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${catInfo.color}`}>{catInfo.label}</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-800 mb-2 leading-tight">
                       {project.title}
-                   </h4>
+                    </h3>
+                    <p className="text-sm font-medium text-slate-500 line-clamp-2">
+                      {project.description}
+                    </p>
+                    
+                    <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
+                       <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{items.length} Projects</span>
+                       <span className="text-sky-500 text-xs font-bold uppercase tracking-widest group-hover:translate-x-1 transition-transform">Explore Stack &rarr;</span>
+                    </div>
+                  </div>
                 </div>
-              );
-            })()}
-         </div>
-         
-         <p className="text-muted text-[14px] leading-relaxed line-clamp-3 mb-8 font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-           {project.description}
-         </p>
-
-         <div className="mt-auto pt-6 border-t border-white/5 flex flex-wrap gap-2">
-            {project.tags?.slice(0, 5).map((tag) => (
-              <span key={tag} className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase bg-white/5 border border-white/10 rounded-lg text-white/50 hover:text-white hover:border-white/20 transition-all group/tag">
-                {skillIcons[tag] ? (
-                  <img 
-                    src={skillIcons[tag]} 
-                    alt={tag} 
-                    className="w-3.5 h-3.5 object-contain opacity-60 group-hover/tag:opacity-100 transition-opacity" 
-                  />
-                ) : (
-                  <Code2 size={12} className="opacity-60 group-hover/tag:opacity-100" />
-                )}
-                {tag}
-              </span>
-            ))}
-            {project.tags?.length > 5 && (
-              <span className="px-3 py-1.5 text-[10px] font-bold uppercase bg-white/5 border border-white/10 rounded-lg text-white/30">
-                +{project.tags.length - 5}
-              </span>
-            )}
-         </div>
+              )}
+              {/* Background cards just show a solid color/gradient or image preview */}
+              {!isTop && (
+                 <div className="w-full h-full bg-slate-50">
+                    <img src={project.image} alt="" className="w-full h-full object-cover opacity-50 grayscale" />
+                 </div>
+              )}
+            </div>
+          );
+        })}
       </div>
-    </div>
+    </m.div>
   );
 });
 
-ProjectCard.displayName = 'ProjectCard';
+CategoryStack.displayName = 'CategoryStack';
 
 const Projects = memo(() => {
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [showAll, setShowAll] = useState(false);
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -149,210 +121,90 @@ const Projects = memo(() => {
     fetchProjects();
   }, []);
 
-  const handleSelectProject = useCallback((project) => {
-    setSelectedProject(project);
+  const groupedProjects = useMemo(() => {
+    const groups = {};
+    projects.forEach(p => {
+      const cat = p.category || 'other';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(p);
+    });
+    return Object.entries(groups).map(([category, items]) => ({
+      category,
+      items
+    }));
+  }, [projects]);
+
+  const handleSelectStack = useCallback((category, items) => {
+    setSelectedCategory(category);
+    setSelectedItems(items);
   }, []);
 
-  const visibleProjects = useMemo(() => showAll ? projects : projects.slice(0, 4), [showAll, projects]);
+  const handleCloseCube = useCallback(() => {
+    setSelectedCategory(null);
+    setSelectedItems([]);
+  }, []);
+
+  const visibleGroups = useMemo(() => showAll ? groupedProjects : groupedProjects.slice(0, 4), [showAll, groupedProjects]);
 
   return (
-    <section id="projects" className="py-24 bg-transparent relative overflow-hidden">
+    <section id="projects" className="py-32 bg-slate-50/50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <div 
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6"
-          >
-             <Zap className="w-4 h-4 text-accent" />
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Selected Works</span>
+        <div className="text-center mb-24">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 mb-6 shadow-sm">
+             <Zap className="w-4 h-4 text-sky-500" />
+             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600">Selected Works</span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-white">
-            Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe]">Projects</span>
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-slate-800">
+            Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-sky-300">Projects</span>
           </h2>
+          <p className="text-slate-500 font-medium tracking-tight max-w-2xl mx-auto text-lg leading-relaxed">
+            A curated collection of impactful solutions, grouped by domain to explore the depth of my expertise.
+          </p>
         </div>
 
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <m.div 
-              key="skeletons"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid md:grid-cols-2 gap-8"
-            >
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="flex flex-col rounded-[2rem] bg-surface/40 border border-white/5 h-[500px] animate-pulse">
-                  <div className="w-full aspect-video bg-surface/60 rounded-t-[2rem]" />
-                  <div className="p-8 space-y-6">
-                    <div className="flex items-center gap-3">
-                       <div className="w-8 h-8 bg-surface/60 rounded-xl" />
-                       <div className="w-24 h-3 bg-surface/60 rounded" />
-                    </div>
-                    <div className="w-3/4 h-8 bg-surface/60 rounded-lg" />
-                    <div className="space-y-3">
-                      <div className="w-full h-3 bg-surface/60 rounded" />
-                      <div className="w-5/6 h-3 bg-surface/60 rounded" />
-                    </div>
-                    <div className="flex gap-2 pt-6">
-                      <div className="w-16 h-8 bg-surface/60 rounded-lg" />
-                      <div className="w-16 h-8 bg-surface/60 rounded-lg" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </m.div>
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <div className="w-10 h-10 border-4 border-sky-200 border-t-sky-500 rounded-full animate-spin" />
+              <p className="text-slate-400 tracking-[0.3em] uppercase text-[10px] font-bold animate-pulse">Loading Projects</p>
+            </div>
           ) : (
             <m.div 
-              key="projects"
-              className="grid md:grid-cols-2 gap-10"
+              key="project-stacks"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16"
             >
-              {visibleProjects.map((project) => (
-                <ProjectCard 
-                  key={project.id || project.title}
-                  project={project}
-                  onSelect={handleSelectProject}
-                  skillIcons={skillIcons}
+              {visibleGroups.map((group) => (
+                <CategoryStack 
+                  key={group.category}
+                  category={group.category}
+                  items={group.items}
+                  onSelect={handleSelectStack}
                 />
               ))}
             </m.div>
           )}
         </AnimatePresence>
+
+        {!isLoading && groupedProjects.length > 4 && (
+          <div className="mt-20 text-center">
+             <button 
+               onClick={() => setShowAll(!showAll)}
+               className="px-10 py-4 rounded-full shadow-sm bg-white border border-slate-200 text-slate-600 hover:text-sky-500 hover:border-sky-200 text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 mx-auto transition-all"
+             >
+               {showAll ? "Show Less" : "Discover More"}
+               {showAll ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+             </button>
+          </div>
+        )}
       </div>
 
-      {!isLoading && (
-        <div className="mt-14 text-center">
-           <button 
-             onClick={() => setShowAll(!showAll)}
-             className="px-10 py-4 rounded-full shadow-lg shadow-[#7c3aed]/20 bg-[#7c3aed] text-white hover:bg-white hover:text-[#7c3aed] text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 mx-auto transition-all"
-           >
-             {showAll ? "Show Less" : "Discover More"}
-             {showAll ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-           </button>
-        </div>
-      )}
-
-      {/* Project Details Modal */}
       <AnimatePresence>
-        {selectedProject && (
-          <div className="fixed inset-0 z-[100] flex justify-center p-4 overflow-y-auto pt-32 pb-12">
-             <m.div 
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               onClick={() => setSelectedProject(null)}
-               className="fixed inset-0 bg-surface/40 backdrop-blur-xl"
-             />
-             
-             <m.div 
-               initial={{ opacity: 0, scale: 0.9, y: 40 }}
-               animate={{ opacity: 1, scale: 1, y: 0 }}
-               exit={{ opacity: 0, scale: 0.9, y: 40 }}
-               className="relative w-full max-w-4xl h-fit bg-background rounded-[2.5rem] overflow-hidden border border-borderColor shadow-[0_0_80px_rgba(0,0,0,0.6)] flex flex-col"
-             >
-                <button 
-                  onClick={() => setSelectedProject(null)}
-                  className="absolute top-6 right-6 z-50 p-3 bg-surface/40 backdrop-blur-md hover:bg-surface/40 border border-borderColor rounded-2xl text-accent transition-all group/close"
-                >
-                  <X size={20} className="group-hover/close:rotate-90 transition-transform duration-300" />
-                </button>
-
-                 {/* Image Header */}
-                 <div className="relative w-full h-[300px] md:h-[450px] overflow-hidden shrink-0">
-                    <img 
-                      src={selectedProject.image} 
-                      alt={selectedProject.title} 
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover" 
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t from-[#030014] via-transparent to-transparent opacity-60`} />
-                 </div>
-
-                 <div className="p-8 md:p-12 flex flex-col bg-background">
-                    <div className="mb-12">
-                       {(() => {
-                          const catInfo = CATEGORY_MAP[selectedProject.category] || { icon: 'Code2', color: 'text-gray-400', bg: 'bg-gray-400/10', border: 'border-gray-400/30', shadow: 'shadow-[0_0_15px_rgba(156,163,175,0.3)]', label: selectedProject.category };
-                          const IconComp = {
-                            BrainCircuit, Eye, Layers, Database, Zap, Sparkles, Code2
-                          }[catInfo.icon] || Code2;
-                          return (
-                            <div className="flex items-center gap-6 mb-8">
-                               <div className={`p-4 rounded-2xl border ${catInfo.bg} ${catInfo.border} ${catInfo.shadow}`}>
-                                  <IconComp className={`w-7 h-7 ${catInfo.color}`} />
-                               </div>
-                               <div className="flex flex-col">
-                                 <span className="text-[12px] font-black uppercase tracking-[0.5em] text-white/50 mb-1">{catInfo.label}</span>
-                                 <h3 className="text-3xl md:text-5xl font-black italic uppercase text-[#f97316] tracking-tight leading-none">{selectedProject.title}</h3>
-                               </div>
-                            </div>
-                          );
-                       })()}
-                    </div>
-
-                    <div className="grid lg:grid-cols-2 gap-12">
-                       <div className="space-y-10">
-                          <div>
-                             <h5 className="text-[10px] font-black uppercase text-accent/30 mb-4 tracking-[0.2em] flex items-center gap-2">
-                                <span className="w-6 h-[1px] bg-accent" />
-                                Mission Overview
-                             </h5>
-                             <p className="text-muted text-lg leading-relaxed font-medium">{selectedProject.fullDescription}</p>
-                          </div>
-
-                          <div>
-                             <h5 className="text-[10px] font-black uppercase text-accent/30 mb-6 tracking-[0.2em] flex items-center gap-2">
-                                <span className="w-6 h-[1px] bg-accent" />
-                                Key Achievements
-                             </h5>
-                             <div className="space-y-3">
-                                {selectedProject.highlights?.map((item, i) => (
-                                  <div key={i} className="flex gap-4 p-5 rounded-2xl bg-surface/20 border border-borderColor hover:border-accent/20 transition-all group/item">
-                                     <CheckCircle2 size={20} className="text-accent shrink-0 group-hover/item:scale-110 transition-transform" />
-                                     <p className="text-muted text-[15px] font-medium leading-snug">{item}</p>
-                                  </div>
-                                ))}
-                             </div>
-                          </div>
-                       </div>
-
-                       <div className="space-y-10">
-                          <div>
-                             <h5 className="text-[10px] font-black uppercase text-accent/30 mb-6 tracking-[0.2em] flex items-center gap-2">
-                                <span className="w-6 h-[1px] bg-accent" />
-                                Core Architecture
-                             </h5>
-                             <div className="grid grid-cols-2 gap-3">
-                               {selectedProject.tags?.map((tag) => {
-                                 const colorClass = "text-[#10b981] border-[#10b981]/30 hover:bg-[#10b981]/10 bg-[#10b981]/5";
-                                 return (
-                                 <div key={tag} className={`flex items-center gap-3 p-4 border rounded-2xl text-xs font-bold transition-all ${colorClass}`}>
-                                   {skillIcons[tag] ? (
-                                     <img src={skillIcons[tag]} alt={tag} loading="lazy" decoding="async" className="w-6 h-6 object-contain" />
-                                   ) : (
-                                     <Code2 size={16} />
-                                   )}
-                                   {tag}
-                                 </div>
-                               )})}
-                             </div>
-                          </div>
-
-                          <div className="pt-10 border-t border-borderColor">
-                             <div className="flex flex-col gap-4">
-                                <a href={selectedProject.link} target="_blank" className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl bg-[#7c3aed] text-white text-xs font-black uppercase tracking-[0.2em] hover:bg-white hover:text-[#7c3aed] shadow-lg shadow-[#7c3aed]/20 transition-all group/btn">
-                                   Launch Project
-                                   <ExternalLink size={18} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                                </a>
-                                <a href={selectedProject.github} target="_blank" className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl border border-white/10 hover:border-white/20 text-white text-xs font-black uppercase tracking-[0.2em] bg-transparent hover:bg-white/5 transition-all">
-                                   <Github size={18} />
-                                   Source Protocol
-                                </a>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-              </m.div>
-          </div>
+        {selectedCategory && (
+          <ProjectCube 
+            category={CATEGORY_MAP[selectedCategory]?.label || selectedCategory}
+            projects={selectedItems} 
+            onClose={handleCloseCube} 
+          />
         )}
       </AnimatePresence>
     </section>
