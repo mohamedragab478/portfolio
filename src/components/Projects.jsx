@@ -39,7 +39,7 @@ const CategoryStack = memo(({ category, items, onSelect }) => {
           return (
             <div 
               key={project.id || idx}
-              className={`absolute top-0 w-full h-full rounded-3xl bg-slate-900/40 border border-slate-700/50 shadow-[0_0_15px_rgba(168,85,247,0.05)] backdrop-blur-md transition-all duration-500 group-hover:-translate-y-6 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] group-hover:border-purple-500/40 overflow-hidden ${translateY}`}
+              className={`absolute top-0 w-full h-full rounded-3xl bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 shadow-[0_0_15px_rgba(168,85,247,0.05)] md:backdrop-blur-md transition-all duration-300 group-hover:-translate-y-6 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] group-hover:border-purple-500/40 overflow-hidden ${translateY}`}
               style={{ zIndex }}
             >
               {isTop && (
@@ -175,7 +175,7 @@ const Projects = memo(() => {
           <div className="mt-20 text-center">
              <button 
                onClick={() => setShowAll(!showAll)}
-               className="px-10 py-4 rounded-full bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:text-white hover:border-purple-500/40 hover:bg-purple-500/10 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)] text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-3 mx-auto transition-all duration-300 backdrop-blur-md"
+               className="px-10 py-4 rounded-full bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 text-slate-300 hover:text-white hover:border-purple-500/40 hover:bg-purple-500/10 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)] text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-3 mx-auto transition-colors duration-200 md:backdrop-blur-md"
              >
                {showAll ? "Show Less" : "Discover More"}
                {showAll ? <ChevronUp size={18} /> : <ChevronDown size={18} />}

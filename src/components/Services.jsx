@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { m, useMotionTemplate, useMotionValue } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 
-const spring = { type: 'spring', stiffness: 200, damping: 20 };
+const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
 const ServiceCard = memo(({ service, index }) => {
   const IconComponent = LucideIcons[service.icon_name] || LucideIcons[service.icon] || LucideIcons.Code;
@@ -32,9 +32,10 @@ const ServiceCard = memo(({ service, index }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '80px' }}
-      transition={{ ...spring, delay: index * 0.08 }}
+      transition={{ ...tween, delay: index * 0.05 }}
       onMouseMove={handleMouseMove}
-      className={`group relative flex flex-col p-8 md:p-10 rounded-3xl bg-slate-900/40 border border-slate-700/50 backdrop-blur-md transition-all duration-500 overflow-hidden cursor-default ${theme.border}`}
+      style={{ willChange: 'transform, opacity', transform: 'translate3d(0,0,0)' }}
+      className={`group relative flex flex-col p-8 md:p-10 rounded-3xl bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 md:backdrop-blur-md transition-colors duration-300 overflow-hidden cursor-default ${theme.border}`}
     >
       {/* Spotlight overlay */}
       <m.div
@@ -97,7 +98,7 @@ const Services = memo(() => {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '80px' }}
-          transition={spring}
+          transition={tween}
           className="mb-20 md:mb-24 text-center"
         >
           <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-purple-500/15 bg-purple-500/5 mb-8">

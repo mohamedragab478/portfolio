@@ -46,22 +46,25 @@ function categorizeSkill(name) {
    ANIMATION VARIANTS
    ═══════════════════════════════════════════ */
 
-const spring = { type: 'spring', stiffness: 200, damping: 20 };
+const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
 const gridContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.04, delayChildren: 0.05 },
+    transition: { staggerChildren: 0.03, delayChildren: 0.02 },
   },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
+  exit: { opacity: 0, transition: { duration: 0.12 } },
 };
 
 const gridItem = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: spring },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.12 } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: tween },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.1 } },
 };
+
+/* Check for touch device to skip expensive mouse-tracking */
+const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
 
 /* ═══════════════════════════════════════════
@@ -73,7 +76,7 @@ const SkillCard = memo(({ skill, featured = false, index = 0 }) => {
   const colors = CATEGORY_COLORS[cat] || CATEGORY_COLORS.devops;
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = isTouchDevice ? undefined : (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setMousePosition({
       x: e.clientX - rect.left,
@@ -92,10 +95,11 @@ const SkillCard = memo(({ skill, featured = false, index = 0 }) => {
   return (
     <m.div
       variants={gridItem}
-      whileHover={{ scale: 1.02 }}
-      transition={spring}
+      whileHover={isTouchDevice ? undefined : { scale: 1.02 }}
+      transition={tween}
       onMouseMove={handleMouseMove}
-      className={`group relative flex flex-col items-center justify-center gap-4 ${featured ? 'p-6 md:p-8' : 'p-5 md:p-6'} rounded-3xl bg-slate-900/40 border border-slate-700/50 ${colors.hoverBorder} transition-all duration-500 overflow-hidden cursor-default backdrop-blur-md ${spanClass}`}
+      style={{ willChange: 'transform, opacity', transform: 'translate3d(0,0,0)' }}
+      className={`group relative flex flex-col items-center justify-center gap-4 ${featured ? 'p-6 md:p-8' : 'p-5 md:p-6'} rounded-3xl bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 ${colors.hoverBorder} transition-colors duration-300 overflow-hidden cursor-default md:backdrop-blur-md ${spanClass}`}
     >
       {/* Spotlight */}
       <div 
@@ -217,10 +221,10 @@ const Skills = memo(() => {
 
         {/* ── Section header ── */}
         <m.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '80px' }}
-          transition={spring}
+          viewport={{ once: true, margin: '100px' }}
+          transition={tween}
           className="text-center mb-16"
         >
         <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 mb-8 backdrop-blur-md">
@@ -246,7 +250,7 @@ const Skills = memo(() => {
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ ...spring, delay: 0.1 }}
+          transition={{ ...tween, delay: 0.05 }}
           className="flex flex-wrap justify-center gap-3 md:gap-4 mb-14"
         >
           {availableCats.map((cat) => {
@@ -258,7 +262,7 @@ const Skills = memo(() => {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`relative flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold transition-all duration-300 border backdrop-blur-md ${
+                className={`relative flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors duration-200 border md:backdrop-blur-md ${
                   isActive
                     ? 'bg-slate-800/80 border-cyan-500/50 text-cyan-100 shadow-[0_0_20px_rgba(34,211,238,0.2)]'
                     : 'bg-slate-900/40 border-slate-700/50 text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:bg-slate-800/50'

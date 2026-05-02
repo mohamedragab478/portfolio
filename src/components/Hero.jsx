@@ -6,7 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 
 const ICON_MAP = { Terminal, Award, Brain, Code, Cpu, Zap };
 
-const spring = { type: 'spring', stiffness: 200, damping: 20 };
+const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
 /* ─── Typewriter ─── */
 const TypewriterText = ({ words }) => {
@@ -53,8 +53,8 @@ const StatCard = memo(({ stat, index }) => {
     <m.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ ...spring, delay: 0.8 + index * 0.1 }}
-      className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-purple-500/30 transition-colors duration-500"
+      transition={{ ...tween, delay: 0.6 + index * 0.08 }}
+      className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-purple-500/30 transition-colors duration-300"
     >
       <div className={`shrink-0 p-2.5 rounded-xl border border-white/[0.06] ${isEven ? 'bg-purple-500/10' : 'bg-cyan-500/10'}`}>
         <IconComp className={`w-5 h-5 ${isEven ? 'text-purple-400' : 'text-cyan-400'}`} />
@@ -136,7 +136,7 @@ const Hero = memo(() => {
           <m.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 0.2 }}
+            transition={{ ...tween, delay: 0.15 }}
             className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-purple-500/20 bg-purple-500/5 mb-8"
           >
             <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
@@ -149,7 +149,7 @@ const Hero = memo(() => {
           <m.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 0.35 }}
+            transition={{ ...tween, delay: 0.25 }}
             className="text-5xl md:text-7xl lg:text-[88px] font-black mb-6 tracking-[-0.04em] uppercase leading-[0.9] text-white"
           >
             {displayName}
@@ -189,7 +189,7 @@ const Hero = memo(() => {
           <m.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 0.7 }}
+            transition={{ ...tween, delay: 0.5 }}
             className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mb-12"
           >
             <m.a
@@ -230,7 +230,7 @@ const Hero = memo(() => {
           className="relative flex items-center justify-center lg:justify-end"
         >
           {/* Ambient glow behind image */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] -z-10 pointer-events-none rounded-full blur-[100px] opacity-30 bg-gradient-to-br from-purple-600/40 to-cyan-500/20" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] -z-10 pointer-events-none rounded-full blur-[100px] opacity-30 bg-gradient-to-br from-purple-600/40 to-cyan-500/20" style={{ willChange: 'transform', transform: 'translate3d(-50%,-50%,0)' }} />
 
           <div className="relative z-10 w-full max-w-[550px] flex items-center justify-center">
             {profileImage && (

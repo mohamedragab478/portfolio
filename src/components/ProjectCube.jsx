@@ -56,7 +56,7 @@ const ProjectCube = ({ projects, category, onClose }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-[#030014]/90 backdrop-blur-md"
+        className="fixed inset-0 bg-[#030014]/90 md:backdrop-blur-md"
       />
 
       {/* Main Container - establishes 3D perspective */}
@@ -68,16 +68,16 @@ const ProjectCube = ({ projects, category, onClose }) => {
         {/* Navigation & Header Layer */}
         <div className="absolute top-0 left-0 right-0 z-50 flex justify-between items-center p-4 pointer-events-none max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-4">
-            <h2 className="text-white font-black uppercase tracking-widest text-sm md:text-base bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-slate-700/50">
+            <h2 className="text-white font-black uppercase tracking-widest text-sm md:text-base bg-slate-900/60 md:backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-slate-700/50">
               {category}
             </h2>
-            <div className="text-white bg-slate-900/40 backdrop-blur-md px-3 py-1 rounded-full text-sm font-mono font-bold border border-slate-700/50">
+            <div className="text-white bg-slate-900/40 md:backdrop-blur-md px-3 py-1 rounded-full text-sm font-mono font-bold border border-slate-700/50">
               {currentIndex + 1} / {projects.length}
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-3 rounded-full bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 backdrop-blur-md text-white transition-all pointer-events-auto shadow-sm"
+            className="p-3 rounded-full bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 md:backdrop-blur-md text-white transition-colors pointer-events-auto shadow-sm"
           >
             <X size={20} />
           </button>
@@ -90,7 +90,7 @@ const ProjectCube = ({ projects, category, onClose }) => {
              const offset = getOffset(index, currentIndex, projects.length);
              const isCenter = offset === 0;
              // Only render items that are somewhat visible to save performance
-             const isVisible = Math.abs(offset) <= 3;
+             const isVisible = Math.abs(offset) <= 2;
 
              if (!isVisible) return null;
 
@@ -112,10 +112,9 @@ const ProjectCube = ({ projects, category, onClose }) => {
                    opacity,
                  }}
                  transition={{ 
-                   type: "spring", 
-                   stiffness: 250, 
-                   damping: 30,
-                   mass: 0.8
+                   type: "tween", 
+                   duration: 0.35,
+                   ease: "easeOut"
                  }}
                  style={{
                    position: "absolute",
@@ -124,12 +123,13 @@ const ProjectCube = ({ projects, category, onClose }) => {
                    height: "100%",
                    transformStyle: "preserve-3d",
                    zIndex: 50 - Math.abs(offset),
+                   willChange: 'transform, opacity',
                  }}
                  className="flex items-center justify-center"
                >
                  {/* Card Face */}
                  <div 
-                   className={`relative w-full h-full bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] overflow-hidden flex flex-col shadow-2xl transition-all duration-500 ${!isCenter ? 'hover:border-purple-500/40 cursor-pointer' : 'shadow-[0_0_40px_rgba(168,85,247,0.15)] border-purple-500/50'}`}
+                   className={`relative w-full h-full bg-slate-900/80 md:bg-slate-900/40 md:backdrop-blur-xl border border-slate-700/50 rounded-[2rem] overflow-hidden flex flex-col shadow-2xl transition-colors duration-300 ${!isCenter ? 'hover:border-purple-500/40 cursor-pointer' : 'shadow-[0_0_40px_rgba(168,85,247,0.15)] border-purple-500/50'}`}
                    onClick={() => {
                      if (!isCenter) navigate(offset);
                    }}
@@ -148,7 +148,7 @@ const ProjectCube = ({ projects, category, onClose }) => {
                      {/* Tech Tags Overlay */}
                      <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2">
                        {project.techStack?.map((tag) => (
-                         <span key={tag} className="px-3 py-1.5 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700/50 text-[10px] font-bold text-white tracking-widest uppercase flex items-center gap-1.5 shadow-sm">
+                         <span key={tag} className="px-3 py-1.5 rounded-lg bg-slate-900/80 md:backdrop-blur-md border border-slate-700/50 text-[10px] font-bold text-white tracking-widest uppercase flex items-center gap-1.5 shadow-sm">
                            {skillIcons[tag] && (
                              <img src={skillIcons[tag]} alt="" className="w-3 h-3 object-contain" />
                            )}
@@ -217,13 +217,13 @@ const ProjectCube = ({ projects, category, onClose }) => {
           <>
             <button 
               onClick={() => navigate(-1)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-slate-900/60 hover:bg-purple-600 border border-slate-700/50 text-white shadow-md transition-all backdrop-blur-md hidden sm:block"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-slate-900/60 hover:bg-purple-600 border border-slate-700/50 text-white shadow-md transition-colors md:backdrop-blur-md hidden sm:block"
             >
               <ChevronLeft size={24} />
             </button>
             <button 
               onClick={() => navigate(1)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-slate-900/60 hover:bg-purple-600 border border-slate-700/50 text-white shadow-md transition-all backdrop-blur-md hidden sm:block"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-slate-900/60 hover:bg-purple-600 border border-slate-700/50 text-white shadow-md transition-colors md:backdrop-blur-md hidden sm:block"
             >
               <ChevronRight size={24} />
             </button>

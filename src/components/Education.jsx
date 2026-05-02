@@ -4,7 +4,7 @@ import { GraduationCap, MapPin, ExternalLink, ShieldCheck, CheckCircle2, X } fro
 import { db } from '../firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 
-const spring = { type: 'spring', stiffness: 200, damping: 20 };
+const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
 const Education = memo(() => {
   const [education, setEducation] = useState(null);
@@ -94,7 +94,7 @@ const Education = memo(() => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '80px' }}
-          transition={spring}
+          transition={tween}
           className="mb-20 md:mb-24 text-center"
         >
           <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-purple-500/15 bg-purple-500/5 mb-8">
@@ -121,7 +121,7 @@ const Education = memo(() => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "100px" }}
-              className="group relative flex flex-col md:flex-row items-start md:items-center justify-between p-8 md:p-12 rounded-3xl bg-slate-900/40 border border-slate-700/50 hover:border-purple-500/40 transition-all duration-500 overflow-hidden cursor-default shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] backdrop-blur-md"
+              className="group relative flex flex-col md:flex-row items-start md:items-center justify-between p-8 md:p-12 rounded-3xl bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 hover:border-purple-500/40 transition-colors duration-300 overflow-hidden cursor-default shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] md:backdrop-blur-md"
             >
                 <div className="flex-1 w-full z-10">
                    <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -165,8 +165,8 @@ const Education = memo(() => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "100px" }}
-                    transition={{ ...spring, delay: index * 0.08 }}
-                    className="group relative flex flex-col rounded-3xl bg-slate-900/40 border border-slate-700/50 hover:border-purple-500/40 transition-all duration-500 overflow-hidden cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] backdrop-blur-md"
+                    transition={{ ...tween, delay: index * 0.05 }}
+                    className="group relative flex flex-col rounded-3xl bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 hover:border-purple-500/40 transition-colors duration-300 overflow-hidden cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] md:backdrop-blur-md"
                     onClick={() => cert.verificationUrl && setSelectedCert(cert)}
                   >
                       {/* Preview Top Section */}
@@ -251,7 +251,7 @@ const Education = memo(() => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#030014]/90 backdrop-blur-md"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#030014]/90 md:backdrop-blur-md"
             onClick={() => setSelectedCert(null)}
           >
             <m.div
