@@ -56,7 +56,7 @@ const ProjectCube = ({ projects, category, onClose }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-md"
+        className="fixed inset-0 bg-[#030014]/90 backdrop-blur-md"
       />
 
       {/* Main Container - establishes 3D perspective */}
@@ -68,16 +68,16 @@ const ProjectCube = ({ projects, category, onClose }) => {
         {/* Navigation & Header Layer */}
         <div className="absolute top-0 left-0 right-0 z-50 flex justify-between items-center p-4 pointer-events-none max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-4">
-            <h2 className="text-slate-800 font-black uppercase tracking-widest text-sm md:text-base bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
+            <h2 className="text-white font-black uppercase tracking-widest text-sm md:text-base bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-slate-700/50">
               {category}
             </h2>
-            <div className="text-white bg-slate-800/50 backdrop-blur-md px-3 py-1 rounded-full text-sm font-mono font-bold">
+            <div className="text-white bg-slate-900/40 backdrop-blur-md px-3 py-1 rounded-full text-sm font-mono font-bold border border-slate-700/50">
               {currentIndex + 1} / {projects.length}
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-3 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 transition-all pointer-events-auto shadow-sm"
+            className="p-3 rounded-full bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 backdrop-blur-md text-white transition-all pointer-events-auto shadow-sm"
           >
             <X size={20} />
           </button>
@@ -129,7 +129,7 @@ const ProjectCube = ({ projects, category, onClose }) => {
                >
                  {/* Card Face */}
                  <div 
-                   className={`relative w-full h-full bg-white border border-slate-200 rounded-[2rem] overflow-hidden flex flex-col lg:flex-row shadow-2xl transition-colors duration-300 ${!isCenter ? 'hover:border-sky-300 cursor-pointer' : 'shadow-sky-500/10 border-sky-100'}`}
+                   className={`relative w-full h-full bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] overflow-hidden flex flex-col shadow-2xl transition-all duration-500 ${!isCenter ? 'hover:border-purple-500/40 cursor-pointer' : 'shadow-[0_0_40px_rgba(168,85,247,0.15)] border-purple-500/50'}`}
                    onClick={() => {
                      if (!isCenter) navigate(offset);
                    }}
@@ -138,18 +138,17 @@ const ProjectCube = ({ projects, category, onClose }) => {
                    {!isCenter && <div className="absolute inset-0 z-50" />}
 
                    {/* Image Section */}
-                   <div className="relative w-full lg:w-[45%] h-64 lg:h-full shrink-0 overflow-hidden bg-slate-100">
+                   <div className="relative w-full h-[40%] md:h-[45%] shrink-0 overflow-hidden bg-slate-950 flex items-center justify-center border-b border-slate-700/50">
                      <img 
                        src={project.image || '/api/placeholder/800/600'} 
                        alt={project.title}
-                       className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                       className="w-full h-full object-contain transition-transform duration-1000 hover:scale-105"
                      />
-                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-white/20" />
                      
                      {/* Tech Tags Overlay */}
                      <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2">
                        {project.techStack?.map((tag) => (
-                         <span key={tag} className="px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-sm border border-slate-200 text-[10px] font-bold text-slate-700 tracking-widest uppercase flex items-center gap-1.5 shadow-sm">
+                         <span key={tag} className="px-3 py-1.5 rounded-lg bg-slate-900/80 backdrop-blur-md border border-slate-700/50 text-[10px] font-bold text-white tracking-widest uppercase flex items-center gap-1.5 shadow-sm">
                            {skillIcons[tag] && (
                              <img src={skillIcons[tag]} alt="" className="w-3 h-3 object-contain" />
                            )}
@@ -160,36 +159,36 @@ const ProjectCube = ({ projects, category, onClose }) => {
                    </div>
 
                    {/* Content Section */}
-                   <div className="flex-1 flex flex-col p-6 sm:p-10 lg:p-12 overflow-y-auto custom-scrollbar bg-white">
-                     <h3 className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-6">
+                   <div className="flex-1 flex flex-col p-6 sm:p-10 lg:p-12 overflow-y-auto custom-scrollbar bg-slate-900/20">
+                     <h3 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-6 group-hover:text-purple-400 transition-colors">
                        {project.title}
                      </h3>
                      
-                     <p className="text-slate-500 text-base md:text-lg leading-relaxed mb-8 font-medium">
+                     <p className="text-muted text-base md:text-lg leading-relaxed mb-8 font-medium">
                        {project.fullDescription || project.description}
                      </p>
 
                      {/* Highlights / Key Results */}
                      {project.highlights && project.highlights.length > 0 && (
                        <div className="mb-10 space-y-3">
-                         <h4 className="text-xs font-black tracking-[0.2em] uppercase text-sky-500 mb-4">Key Results</h4>
+                         <h4 className="text-xs font-black tracking-[0.2em] uppercase text-purple-400 mb-4">Key Results</h4>
                          {project.highlights.map((item, idx) => (
-                           <div key={idx} className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-sky-200 transition-colors">
-                             <CheckCircle2 size={18} className="text-emerald-500 shrink-0 mt-0.5" />
-                             <span className="text-sm text-slate-600 leading-relaxed font-medium">{item}</span>
+                           <div key={idx} className="flex items-start gap-3 p-4 rounded-xl bg-slate-800/30 border border-slate-700/30 hover:border-purple-500/30 transition-colors">
+                             <CheckCircle2 size={18} className="text-purple-400 shrink-0 mt-0.5" />
+                             <span className="text-sm text-white/80 leading-relaxed font-medium">{item}</span>
                            </div>
                          ))}
                        </div>
                      )}
 
                      {/* Actions */}
-                     <div className="mt-auto pt-8 border-t border-slate-100 flex flex-wrap gap-4">
+                     <div className="mt-auto pt-8 border-t border-slate-700/50 flex flex-wrap gap-4">
                        {project.link && (
                          <a 
                            href={project.link} 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-widest shadow-sm transition-all pointer-events-auto"
+                           className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-[#7c3aed] hover:bg-white hover:text-[#7c3aed] text-white font-bold text-xs uppercase tracking-widest shadow-lg shadow-[#7c3aed]/20 transition-all pointer-events-auto"
                          >
                            Launch Project <ExternalLink size={16} />
                          </a>
@@ -199,7 +198,7 @@ const ProjectCube = ({ projects, category, onClose }) => {
                            href={project.github} 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs uppercase tracking-widest hover:bg-slate-200 hover:border-slate-300 transition-all pointer-events-auto"
+                           className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-transparent border border-slate-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-all pointer-events-auto"
                          >
                            <Github size={16} /> Source Code
                          </a>
@@ -218,21 +217,21 @@ const ProjectCube = ({ projects, category, onClose }) => {
           <>
             <button 
               onClick={() => navigate(-1)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-white/80 hover:bg-white border border-slate-200 text-slate-600 shadow-md transition-all backdrop-blur-md hidden sm:block"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-slate-900/60 hover:bg-purple-600 border border-slate-700/50 text-white shadow-md transition-all backdrop-blur-md hidden sm:block"
             >
               <ChevronLeft size={24} />
             </button>
             <button 
               onClick={() => navigate(1)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-white/80 hover:bg-white border border-slate-200 text-slate-600 shadow-md transition-all backdrop-blur-md hidden sm:block"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-50 p-4 rounded-full bg-slate-900/60 hover:bg-purple-600 border border-slate-700/50 text-white shadow-md transition-all backdrop-blur-md hidden sm:block"
             >
               <ChevronRight size={24} />
             </button>
             
             {/* Mobile Nav Indicators */}
             <div className="absolute bottom-6 left-0 right-0 z-50 flex justify-center gap-6 sm:hidden pointer-events-none">
-               <button onClick={() => navigate(-1)} className="pointer-events-auto p-4 rounded-full bg-white shadow-md text-slate-600 border border-slate-200"><ChevronLeft size={20} /></button>
-               <button onClick={() => navigate(1)} className="pointer-events-auto p-4 rounded-full bg-white shadow-md text-slate-600 border border-slate-200"><ChevronRight size={20} /></button>
+               <button onClick={() => navigate(-1)} className="pointer-events-auto p-4 rounded-full bg-slate-900/80 shadow-md text-white border border-slate-700/50"><ChevronLeft size={20} /></button>
+               <button onClick={() => navigate(1)} className="pointer-events-auto p-4 rounded-full bg-slate-900/80 shadow-md text-white border border-slate-700/50"><ChevronRight size={20} /></button>
             </div>
           </>
         )}

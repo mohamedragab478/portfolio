@@ -86,31 +86,31 @@ const Contact = memo(() => {
   const socials = getSocialList();
 
   return (
-    <section id="contact" className="py-24 bg-transparent relative">
+    <section id="contact" className="py-32 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-24">
+        <div className="text-center mb-20">
           <m.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "100px" }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6"
+            viewport={{ once: true, margin: '80px' }}
+            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-purple-500/15 bg-purple-500/5 mb-8"
           >
-             <Zap className="w-4 h-4 text-accent" />
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Open for Collaboration</span>
+             <Zap className="w-3.5 h-3.5 text-cyan-400" />
+             <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-purple-300/70 font-mono">Open for Collaboration</span>
           </m.div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-white">
-            Connect for <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe]">Innovation.</span>
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-[-0.03em] mb-5 text-white">
+            Connect for{' '}<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-400">Innovation.</span>
           </h2>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Left Side: Contact Info */}
           <div className="lg:col-span-5 space-y-8">
-            <div className="group relative flex flex-col p-10 bg-[#7c3aed]/5 border border-[#7c3aed]/20 rounded-[2.5rem] shadow-lg shadow-[#7c3aed]/5 backdrop-blur-md overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-r from-[#7c3aed]/0 via-[#7c3aed]/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+            <div className="group relative flex flex-col p-10 bg-white/[0.02] border border-white/[0.06] rounded-3xl hover:border-purple-500/20 transition-all duration-500 overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                
-               <h3 className="text-2xl font-black uppercase italic mb-8 flex items-center gap-3 relative z-10 text-white">
-                 Reach Out <ArrowUpRight className="text-[#d8b4fe]" />
+               <h3 className="text-2xl font-black uppercase mb-8 flex items-center gap-3 relative z-10 text-white">
+                 Reach Out <ArrowUpRight className="text-purple-400" />
                </h3>
                
                <div className="space-y-6 relative z-10">
@@ -121,32 +121,32 @@ const Contact = memo(() => {
                    </div>
                  ) : (
                    <>
-                     <a href={`mailto:${contactData?.email || 'amer003100@gmail.com'}`} className="group/item flex items-center gap-6 p-4 rounded-3xl hover:bg-[#7c3aed]/10 transition-all border border-transparent hover:border-[#7c3aed]/30">
-                        <div className="w-14 h-14 bg-[#7c3aed]/10 rounded-2xl flex items-center justify-center group-hover/item:bg-[#7c3aed]/30 transition-all duration-300">
-                          <Mail className="text-[#d8b4fe] w-6 h-6" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] uppercase font-bold text-muted/60 tracking-widest mb-1">Email Protocol</p>
-                          <p className="text-lg font-black italic text-[#d8b4fe]">{contactData?.email || 'amer003100@gmail.com'}</p>
-                        </div>
-                     </a>
+                      <a href={`mailto:${contactData?.email || 'amer003100@gmail.com'}`} className="group/item flex items-center gap-6 p-4 rounded-2xl hover:bg-purple-500/5 transition-all border border-transparent hover:border-purple-500/15">
+                         <div className="w-13 h-13 p-3 bg-purple-500/10 rounded-xl flex items-center justify-center group-hover/item:bg-purple-500/15 transition-all duration-300 border border-purple-500/10">
+                           <Mail className="text-purple-300 w-5 h-5" />
+                         </div>
+                         <div>
+                           <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest mb-1 font-mono">Email Protocol</p>
+                           <p className="text-base font-bold text-white/70">{contactData?.email || 'amer003100@gmail.com'}</p>
+                         </div>
+                      </a>
 
-                     <div className="group/item flex items-center gap-6 p-4 rounded-3xl hover:bg-[#7c3aed]/10 transition-all border border-transparent hover:border-[#7c3aed]/30">
-                        <div className="w-14 h-14 bg-[#7c3aed]/10 rounded-2xl flex items-center justify-center group-hover/item:bg-[#7c3aed]/30 transition-all duration-300">
-                          <Phone className="text-[#d8b4fe] w-6 h-6" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] uppercase font-bold text-muted/60 tracking-widest mb-1">Direct Relay</p>
-                          <p className="text-lg font-black italic text-[#d8b4fe]">{contactData?.phone || '+20 102 352 4477'}</p>
-                        </div>
-                     </div>
+                      <div className="group/item flex items-center gap-6 p-4 rounded-2xl hover:bg-purple-500/5 transition-all border border-transparent hover:border-purple-500/15">
+                         <div className="w-13 h-13 p-3 bg-cyan-500/10 rounded-xl flex items-center justify-center group-hover/item:bg-cyan-500/15 transition-all duration-300 border border-cyan-500/10">
+                           <Phone className="text-cyan-300 w-5 h-5" />
+                         </div>
+                         <div>
+                           <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest mb-1 font-mono">Direct Relay</p>
+                           <p className="text-base font-bold text-white/70">{contactData?.phone || '+20 102 352 4477'}</p>
+                         </div>
+                      </div>
                    </>
                  )}
                </div>
 
-               <div className="mt-12 pt-12 border-t border-[#7c3aed]/20 relative z-10">
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted/60 mb-6 flex items-center gap-3">
-                     <span className="w-8 h-[1px] bg-[#7c3aed]/30" /> Digital Ecosystem
+               <div className="mt-10 pt-10 border-t border-white/[0.04] relative z-10">
+                   <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20 mb-6 flex items-center gap-3 font-mono">
+                      <span className="w-8 h-[1px] bg-purple-500/15" /> Digital Ecosystem
                   </p>
                   <div className="flex gap-4 flex-wrap">
                      {socials.map((s, i) => (
@@ -164,8 +164,6 @@ const Contact = memo(() => {
                   </div>
                </div>
             </div>
-
-     
           </div>
 
           {/* Right Side: Contact Form */}
@@ -175,9 +173,9 @@ const Contact = memo(() => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "100px" }}
               onSubmit={handleSubmit}
-              className="group relative flex flex-col p-10 md:p-12 border border-[#7c3aed]/20 bg-[#7c3aed]/5 shadow-lg shadow-[#7c3aed]/5 backdrop-blur-md rounded-[2.5rem] overflow-hidden cursor-default h-full"
+              className="group relative flex flex-col p-10 md:p-12 border border-white/[0.06] bg-white/[0.02] rounded-3xl overflow-hidden cursor-default h-full hover:border-purple-500/20 transition-all duration-500"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#7c3aed]/0 via-[#7c3aed]/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               
               <div className="grid md:grid-cols-2 gap-8 relative z-10">
                 <div className="space-y-3">
@@ -187,7 +185,7 @@ const Contact = memo(() => {
                     required
                     value={formData.name}
                     placeholder="Enter full name"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-purple-400/50 focus:bg-purple-500/5 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40"
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
@@ -198,7 +196,7 @@ const Contact = memo(() => {
                     required
                     value={formData.email}
                     placeholder="Enter email address"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-purple-400/50 focus:bg-purple-500/5 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40"
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
@@ -211,7 +209,7 @@ const Contact = memo(() => {
                   required
                   value={formData.subject}
                   placeholder="Enter objective"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:border-purple-400/50 focus:bg-purple-500/5 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40"
                   onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 />
               </div>
@@ -223,7 +221,7 @@ const Contact = memo(() => {
                   required
                   value={formData.message}
                   placeholder="Describe your vision or inquiry..."
-                  className="w-full bg-white/5 border border-white/10 rounded-[2rem] px-6 py-5 focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40 resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded-[2rem] px-6 py-5 focus:border-purple-400/50 focus:bg-purple-500/5 focus:outline-none transition-all font-bold text-white placeholder:text-muted/40 resize-none"
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                 />
               </div>
@@ -232,7 +230,7 @@ const Contact = memo(() => {
                 type="submit"
                 disabled={status.loading}
                 className={`w-full py-6 font-black uppercase tracking-[0.4em] rounded-[2rem] transition-all flex items-center justify-center gap-4 group border-none ${
-                  status.loading ? 'bg-[#7c3aed]/50 text-white cursor-not-allowed' : 'bg-gradient-to-r from-[#7c3aed] to-[#ec4899] text-white hover:opacity-90 shadow-lg shadow-[#ec4899]/20 hover:scale-[1.02] active:scale-[0.98]'
+                  status.loading ? 'bg-purple-500/40 text-white/60 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600 to-purple-500 text-white hover:opacity-90 shadow-[0_0_30px_rgba(168,85,247,0.2)] hover:shadow-[0_0_40px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-[0.98]'
                 }`}
               >
                 {status.loading ? 'Sending...' : 'Send Message'}

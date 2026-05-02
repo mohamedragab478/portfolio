@@ -1,32 +1,66 @@
-import { useState, useEffect, memo, useMemo } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { m } from 'framer-motion';
+import { m, useMotionTemplate, useMotionValue } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
+
+const spring = { type: 'spring', stiffness: 200, damping: 20 };
 
 const ServiceCard = memo(({ service, index }) => {
   const IconComponent = LucideIcons[service.icon_name] || LucideIcons[service.icon] || LucideIcons.Code;
-  const tColor = "text-[#f97316]";
   
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  // Alternate neon colors for icons and spotlights
+  const colors = [
+    { accent: 'rgba(168, 85, 247, 0.15)', shadow: 'drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]', icon: 'group-hover:text-purple-400', border: 'group-hover:border-purple-500/50' },
+    { accent: 'rgba(34, 211, 238, 0.15)', shadow: 'drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]', icon: 'group-hover:text-cyan-400', border: 'group-hover:border-cyan-500/50' },
+    { accent: 'rgba(59, 130, 246, 0.15)', shadow: 'drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]', icon: 'group-hover:text-blue-400', border: 'group-hover:border-blue-500/50' },
+    { accent: 'rgba(236, 72, 153, 0.15)', shadow: 'drop-shadow-[0_0_15px_rgba(236,72,153,0.5)]', icon: 'group-hover:text-pink-400', border: 'group-hover:border-pink-500/50' }
+  ];
+  const theme = colors[index % colors.length];
+
   return (
     <m.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "100px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative flex flex-col p-8 md:p-10 rounded-[2.5rem] border border-white/5 bg-surface/20 hover:bg-surface/40 hover:border-[#7c3aed]/30 transition-all duration-500 overflow-hidden cursor-default shadow-lg shadow-transparent hover:shadow-[#7c3aed]/10"
+      viewport={{ once: true, margin: '80px' }}
+      transition={{ ...spring, delay: index * 0.08 }}
+      onMouseMove={handleMouseMove}
+      className={`group relative flex flex-col p-8 md:p-10 rounded-3xl bg-slate-900/40 border border-slate-700/50 backdrop-blur-md transition-all duration-500 overflow-hidden cursor-default ${theme.border}`}
     >
-      {/* Removed sliding gradient animation for performance */}
-      
-      <div className="mb-8 p-5 bg-white/5 border border-white/5 rounded-2xl w-fit group-hover:bg-[#7c3aed]/20 group-hover:border-[#7c3aed]/50 transition-all duration-500 z-10">
-        <IconComponent size={32} className="text-[#d8b4fe] group-hover:text-white transition-colors duration-500" />
+      {/* Spotlight overlay */}
+      <m.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 z-0"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              ${theme.accent},
+              transparent 80%
+            )
+          `,
+        }}
+      />
+
+      {/* Icon container */}
+      <div className={`mb-8 p-4 bg-slate-800/50 border border-slate-700/50 rounded-2xl w-fit transition-all duration-500 z-10 relative overflow-hidden group-hover:bg-slate-800/80 ${theme.shadow}`}>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none" />
+        <IconComponent size={32} className={`text-slate-400 ${theme.icon} transition-colors duration-500 relative z-10`} />
       </div>
-      
-      <div className="z-10 mt-auto">
-        <h3 className={`text-2xl font-black mb-4 uppercase tracking-tight transition-colors leading-tight ${tColor}`}>
+
+      <div className="z-10 mt-auto relative">
+        <h3 className="text-xl font-black mb-3 uppercase tracking-tight text-white/90 leading-tight group-hover:text-white transition-colors duration-300">
           {service.title}
         </h3>
-        <p className="text-muted/70 text-sm md:text-base leading-relaxed font-medium">
+        <p className="text-slate-400 text-sm leading-relaxed font-medium group-hover:text-slate-300 transition-colors duration-300">
           {service.description}
         </p>
       </div>
@@ -43,10 +77,10 @@ const Services = memo(() => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "services"));
+        const querySnapshot = await getDocs(collection(db, 'services'));
         setServices(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error('Error fetching services:', error);
       } finally {
         setIsLoading(false);
       }
@@ -56,34 +90,38 @@ const Services = memo(() => {
 
   return (
     <section id="services" className="py-32 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#7c3aed]/5 blur-[80px] rounded-full pointer-events-none" />
-      
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        <m.div 
-          initial={{ opacity: 0, y: 30 }}
+        <m.div
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="mb-20 md:mb-28 text-center"
+          viewport={{ once: true, margin: '80px' }}
+          transition={spring}
+          className="mb-20 md:mb-24 text-center"
         >
-          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full border border-white/5 bg-surface/30 backdrop-blur-md mb-8">
-            <LucideIcons.Layers className="w-4 h-4 text-[#d8b4fe]" />
-            <span className="text-[#d8b4fe] text-xs font-bold tracking-[0.2em] uppercase">Value Proposition</span>
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-purple-500/15 bg-purple-500/5 mb-8">
+            <LucideIcons.Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-purple-300/70 font-mono">Value Proposition</span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter mb-6 text-white">
-            Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7c3aed] to-[#d8b4fe]">Services</span>
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-[-0.03em] mb-5 text-white">
+            Core{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-400">
+              Services
+            </span>
           </h2>
-          <p className="text-muted/70 font-medium tracking-tight max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-white/35 font-medium max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
             Delivering high-performance architectural solutions and specialized engineering to elevate product realities.
           </p>
         </m.div>
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <LucideIcons.Loader className="w-10 h-10 text-[#7c3aed] animate-spin" />
-            <p className="text-muted/50 tracking-[0.3em] uppercase text-[10px] font-bold animate-pulse">Initializing Systems</p>
+            <div className="w-10 h-10 border-[3px] border-purple-500/20 border-t-purple-400 rounded-full animate-spin" />
+            <p className="text-white/30 tracking-[0.3em] uppercase text-[10px] font-bold font-mono">Loading Services</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((service, index) => (
               <ServiceCard key={service.id || index} service={service} index={index} />
             ))}
