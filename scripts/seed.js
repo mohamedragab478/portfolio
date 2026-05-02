@@ -1,14 +1,17 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA2G350fJcL_up99AC3h4JRE-5mNfFtRPY",
-  authDomain: "amir-portfolio-cms.firebaseapp.com",
-  projectId: "amir-portfolio-cms",
-  storageBucket: "amir-portfolio-cms.firebasestorage.app",
-  messagingSenderId: "870008538483",
-  appId: "1:870008538483:web:12b32c753507b4781e3106",
-  measurementId: "G-JCXZY31G3G"
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID,
+  measurementId: process.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
