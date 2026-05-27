@@ -7,7 +7,7 @@ import * as LucideIcons from 'lucide-react';
 const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
 const ServiceCard = memo(({ service, index }) => {
-  const IconComponent = LucideIcons[service.icon_name] || LucideIcons[service.icon] || LucideIcons.Code;
+  const IconComponent = LucideIcons[service.iconName] || LucideIcons[service.icon_name] || LucideIcons[service.icon] || LucideIcons.Code;
   
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
