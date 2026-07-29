@@ -1,7 +1,7 @@
-import { connectDb } from './_utils/mongodb.js';
-import Skill from './models/Skill.js';
-import { setCors, handlePreflight } from './_middleware.js';
-import { verifyAuth } from './_utils/auth.js';
+import { connectDb } from '../_utils/mongodb.js';
+import Certificate from '../models/Certificate.js';
+import { setCors, handlePreflight } from '../_middleware.js';
+import { verifyAuth } from '../_utils/auth.js';
 
 export default async function handler(req, res) {
   setCors(res);
@@ -11,10 +11,10 @@ export default async function handler(req, res) {
     // GET requests are public
     if (req.method === 'GET') {
       await connectDb();
-      const skills = await Skill.find({}).sort({ importance: -1, createdAt: -1 });
+      const certificates = await Certificate.find({}).sort({ date: -1 });
       return res.status(200).json({
         success: true,
-        data: skills,
+        data: certificates,
       });
     }
 
@@ -25,10 +25,10 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const newSkill = await Skill.create(req.body);
+      const newCertificate = await Certificate.create(req.body);
       return res.status(201).json({
         success: true,
-        data: newSkill,
+        data: newCertificate,
       });
     }
 
@@ -37,9 +37,9 @@ export default async function handler(req, res) {
       if (!id) {
         return res.status(400).json({ success: false, error: 'Missing document id parameter' });
       }
-      const updated = await Skill.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+      const updated = await Certificate.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
       if (!updated) {
-        return res.status(404).json({ success: false, error: 'Skill document not found' });
+        return res.status(404).json({ success: false, error: 'Certificate document not found' });
       }
       return res.status(200).json({ success: true, data: updated });
     }
@@ -49,9 +49,9 @@ export default async function handler(req, res) {
       if (!id) {
         return res.status(400).json({ success: false, error: 'Missing document id parameter' });
       }
-      const deleted = await Skill.findByIdAndDelete(id);
+      const deleted = await Certificate.findByIdAndDelete(id);
       if (!deleted) {
-        return res.status(404).json({ success: false, error: 'Skill document not found' });
+        return res.status(404).json({ success: false, error: 'Certificate document not found' });
       }
       return res.status(200).json({ success: true, data: deleted });
     }
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       error: 'Method not allowed',
     });
   } catch (error) {
-    console.error('API Error (/api/skills):', error);
+    console.error('API Error (/api/certificates):', error);
     return res.status(500).json({
       success: false,
       error: error.message || 'Internal server error',

@@ -11,9 +11,9 @@
  */
 import mongoose from 'mongoose';
 import { connectDb } from './_db.js';
-import { setCors, handlePreflight, requireAuth } from './_middleware.js';
-import Training from './models/Training.js';
-import Certification from './models/Certification.js';
+import { setCors, handlePreflight, requireAuth } from '../_middleware.js';
+import Training from '../models/Training.js';
+import Certification from '../models/Certification.js';
 
 export default async function handler(req, res) {
   setCors(res);

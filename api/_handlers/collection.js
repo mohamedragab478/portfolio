@@ -10,7 +10,7 @@
  */
 import mongoose from 'mongoose';
 import { connectDb } from './_db.js';
-import { setCors, handlePreflight, requireAuth } from './_middleware.js';
+import { setCors, handlePreflight, requireAuth } from '../_middleware.js';
 
 export const config = {
   api: {
@@ -22,12 +22,12 @@ export const config = {
 
 
 // Import all models so Mongoose registers them
-import Service from './models/Service.js';
-import Skill from './models/Skill.js';
-import Project from './models/Project.js';
-import Certification from './models/Certification.js';
-import Training from './models/Training.js';
-import Message from './models/Message.js';
+import Service from '../models/Service.js';
+import Skill from '../models/Skill.js';
+import Project from '../models/Project.js';
+import Certification from '../models/Certification.js';
+import Training from '../models/Training.js';
+import Message from '../models/Message.js';
 
 /**
  * Maps collection name (from query string) → Mongoose model.

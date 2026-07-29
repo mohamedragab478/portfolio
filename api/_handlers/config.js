@@ -6,8 +6,8 @@
  * Each config document is stored with a unique `key` field.
  */
 import { connectDb } from './_db.js';
-import { setCors, handlePreflight, requireAuth } from './_middleware.js';
-import SiteConfig from './models/SiteConfig.js';
+import { setCors, handlePreflight, requireAuth } from '../_middleware.js';
+import SiteConfig from '../models/SiteConfig.js';
 
 export default async function handler(req, res) {
   setCors(res);

@@ -1,7 +1,7 @@
-import { connectDb } from './_utils/mongodb.js';
+import { connectDb } from '../_utils/mongodb.js';
 import mongoose from 'mongoose';
-import { setCors, handlePreflight } from './_middleware.js';
-import { verifyAuth } from './_utils/auth.js';
+import { setCors, handlePreflight } from '../_middleware.js';
+import { verifyAuth } from '../_utils/auth.js';
 
 export default async function handler(req, res) {
   setCors(res);

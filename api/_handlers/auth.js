@@ -12,8 +12,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { connectDb } from './_db.js';
-import { ACTUAL_JWT_SECRET, setCors, handlePreflight } from './_middleware.js';
-import AdminUser from './models/AdminUser.js';
+import { ACTUAL_JWT_SECRET, setCors, handlePreflight } from '../_middleware.js';
+import AdminUser from '../models/AdminUser.js';
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@aura.dev';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';

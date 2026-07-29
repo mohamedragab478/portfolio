@@ -15,19 +15,8 @@ function localApiPlugin() {
             const parsedUrl = url.parse(req.url, true);
             const pathname = parsedUrl.pathname;
             
-            // Map e.g. /api/collection to api/collection.js
-            const routeName = pathname.replace(/^\/api/, '');
-            const filePath = path.join(process.cwd(), 'api', routeName + '.js');
-            
-            // Check if file exists
-            try {
-              await fs.access(filePath);
-            } catch {
-              res.statusCode = 404;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: `API route ${pathname} not found.` }));
-              return;
-            }
+            // Map all /api requests through unified router api/[...slug].js
+            const filePath = path.join(process.cwd(), 'api', '[...slug].js');
             
             // Parse body if POST/PUT
             let body = {};

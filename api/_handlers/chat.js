@@ -2,12 +2,12 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { streamText } from 'ai';
-import { connectDb } from './_utils/mongodb.js';
-import Project from './models/Project.js';
-import Skill from './models/Skill.js';
-import Settings from './models/Settings.js';
-import Certificate from './models/Certificate.js';
-import { setCors, handlePreflight } from './_middleware.js';
+import { connectDb } from '../_utils/mongodb.js';
+import Project from '../models/Project.js';
+import Skill from '../models/Skill.js';
+import Settings from '../models/Settings.js';
+import Certificate from '../models/Certificate.js';
+import { setCors, handlePreflight } from '../_middleware.js';
 
 export const config = {
   api: {

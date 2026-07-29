@@ -1,5 +1,5 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
-import { setCors, handlePreflight } from './_middleware.js';
+import { setCors, handlePreflight } from '../_middleware.js';
 
 export default async function handler(req, res) {
   setCors(res);
