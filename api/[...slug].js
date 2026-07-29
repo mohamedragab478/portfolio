@@ -15,6 +15,17 @@ export default async function handler(req, res) {
   if (handlePreflight(req, res)) return;
 
   const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+  
+  if (!req.query) {
+    req.query = Object.fromEntries(url.searchParams.entries());
+  } else {
+    for (const [key, val] of url.searchParams.entries()) {
+      if (!(key in req.query)) {
+        req.query[key] = val;
+      }
+    }
+  }
+
   const pathname = url.pathname.replace(/^\/api\/?/, '');
   const cleanPath = pathname.split('?')[0].replace(/\/$/, '');
 

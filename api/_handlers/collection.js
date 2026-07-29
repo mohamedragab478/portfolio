@@ -9,7 +9,7 @@
  * Uses Mongoose models for schema validation and data integrity.
  */
 import mongoose from 'mongoose';
-import { connectDb } from './_db.js';
+import { connectDb } from '../_db.js';
 import { setCors, handlePreflight, requireAuth } from '../_middleware.js';
 
 export const config = {

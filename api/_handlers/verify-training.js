@@ -10,7 +10,7 @@
  * Auth required.
  */
 import mongoose from 'mongoose';
-import { connectDb } from './_db.js';
+import { connectDb } from '../_db.js';
 import { setCors, handlePreflight, requireAuth } from '../_middleware.js';
 import Training from '../models/Training.js';
 import Certification from '../models/Certification.js';

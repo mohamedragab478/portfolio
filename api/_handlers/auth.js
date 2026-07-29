@@ -11,7 +11,7 @@
  */
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { connectDb } from './_db.js';
+import { connectDb } from '../_db.js';
 import { ACTUAL_JWT_SECRET, setCors, handlePreflight } from '../_middleware.js';
 import AdminUser from '../models/AdminUser.js';
 

@@ -5,7 +5,7 @@
  * Uses Mongoose SiteConfig model with upsert semantics.
  * Each config document is stored with a unique `key` field.
  */
-import { connectDb } from './_db.js';
+import { connectDb } from '../_db.js';
 import { setCors, handlePreflight, requireAuth } from '../_middleware.js';
 import SiteConfig from '../models/SiteConfig.js';
 
