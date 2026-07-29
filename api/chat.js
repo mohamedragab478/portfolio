@@ -21,15 +21,28 @@ export default async function handler(req, res) {
   setCors(res);
   if (handlePreflight(req, res)) return;
 
-  // Dynamically reload .env on each request to ensure fresh API keys
-  dotenv.config({ path: path.join(process.cwd(), '.env'), override: true });
+  // Dynamically reload .env on each request if available
+  try {
+    dotenv.config({ path: path.join(process.cwd(), '.env'), override: true });
+  } catch (e) {
+    // ignore in serverless environments
+  }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
   try {
-    const { messages } = req.body || {};
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        body = {};
+      }
+    }
+
+    const { messages } = body || {};
 
     if (!Array.isArray(messages)) {
       return res.status(400).json({ success: false, error: 'Invalid or missing messages array' });
