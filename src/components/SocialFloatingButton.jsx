@@ -19,39 +19,24 @@ const SocialFloatingButton = () => {
     fetchContactData();
   }, []);
 
-  let socials = [];
+  const gh = contactData?.github || contactData?.githubUrl || 'https://github.com/amerelfalwo';
+  const li = contactData?.linkedin || contactData?.linkedinUrl || 'https://www.linkedin.com/in/amir-elrefai/';
+  const wa = contactData?.phone ? `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}` : 'https://wa.me/201023524477';
+  const tg = contactData?.telegram || 'https://t.me/Amirelfalw';
+  const fb = contactData?.facebook;
+  const ig = contactData?.instagram;
+  const tw = contactData?.xTwitter || contactData?.twitter;
 
-  if (contactData) {
-    if (contactData.linkedin) {
-      socials.push({ label: 'LinkedIn', icon: <Linkedin size={22} />, href: contactData.linkedin, color: 'bg-[#0077B5]', hover: 'shadow-[0_0_20px_rgba(0,119,181,0.4)]' });
-    }
-    if (contactData.phone) {
-      socials.push({ label: 'WhatsApp', icon: <MessageCircle size={22} />, href: `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}`, color: 'bg-[#25D366]', hover: 'shadow-[0_0_20px_rgba(37,211,102,0.4)]' });
-    }
-    if (contactData.github) {
-      socials.push({ label: 'GitHub', icon: <Github size={22} />, href: contactData.github, color: 'bg-[#333]', hover: 'shadow-[0_0_20px_rgba(51,51,51,0.4)]' });
-    }
-    if (contactData.facebook) {
-      socials.push({ label: 'Facebook', icon: <Facebook size={22} />, href: contactData.facebook, color: 'bg-[#1877F2]', hover: 'shadow-[0_0_20px_rgba(24,119,242,0.4)]' });
-    }
-    if (contactData.instagram) {
-      socials.push({ label: 'Instagram', icon: <Instagram size={22} />, href: contactData.instagram, color: 'bg-[#E4405F]', hover: 'shadow-[0_0_20px_rgba(228,64,95,0.4)]' });
-    }
-    if (contactData.xTwitter) {
-      socials.push({ label: 'X (Twitter)', icon: <Twitter size={22} />, href: contactData.xTwitter, color: 'bg-[#1DA1F2]', hover: 'shadow-[0_0_20px_rgba(29,161,242,0.4)]' });
-    }
-    if (contactData.khamsat) {
-      socials.push({ label: 'Khamsat', icon: <Share2 size={22} />, href: contactData.khamsat, color: 'bg-[#f58220]', hover: 'shadow-[0_0_20px_rgba(245,130,32,0.4)]' });
-    }
-  } else {
-    // Fallback if no data is loaded yet or it fails
-    socials = [
-      { icon: <Linkedin size={22} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/amir-elrefai-658b16260/', color: 'bg-[#0077B5]', hover: 'shadow-[0_0_20px_rgba(0,119,181,0.4)]' },
-      { icon: <MessageCircle size={22} />, label: 'WhatsApp', href: 'https://wa.me/201023524477', color: 'bg-[#25D366]', hover: 'shadow-[0_0_20px_rgba(37,211,102,0.4)]' },
-      { icon: <Send size={22} />, label: 'Telegram', href: 'https://t.me/Amirelfalw', color: 'bg-[#0088cc]', hover: 'shadow-[0_0_20px_rgba(0,136,204,0.4)]' },
-      { icon: <Github size={22} />, label: 'GitHub', href: 'https://github.com/amerelfalwo', color: 'bg-[#333]', hover: 'shadow-[0_0_20px_rgba(51,51,51,0.4)]' },
-    ];
-  }
+  const socials = [
+    { icon: <Linkedin size={22} />, label: 'LinkedIn', href: li, color: 'bg-[#0077B5]', hover: 'shadow-[0_0_20px_rgba(0,119,181,0.4)]' },
+    { icon: <MessageCircle size={22} />, label: 'WhatsApp', href: wa, color: 'bg-[#25D366]', hover: 'shadow-[0_0_20px_rgba(37,211,102,0.4)]' },
+    { icon: <Send size={22} />, label: 'Telegram', href: tg, color: 'bg-[#0088cc]', hover: 'shadow-[0_0_20px_rgba(0,136,204,0.4)]' },
+    { icon: <Github size={22} />, label: 'GitHub', href: gh, color: 'bg-[#333]', hover: 'shadow-[0_0_20px_rgba(51,51,51,0.4)]' }
+  ];
+
+  if (fb) socials.push({ icon: <Facebook size={22} />, label: 'Facebook', href: fb, color: 'bg-[#1877F2]', hover: 'shadow-[0_0_20px_rgba(24,119,242,0.4)]' });
+  if (ig) socials.push({ icon: <Instagram size={22} />, label: 'Instagram', href: ig, color: 'bg-[#E4405F]', hover: 'shadow-[0_0_20px_rgba(228,64,95,0.4)]' });
+  if (tw) socials.push({ icon: <Twitter size={22} />, label: 'X (Twitter)', href: tw, color: 'bg-[#1DA1F2]', hover: 'shadow-[0_0_20px_rgba(29,161,242,0.4)]' });
 
   // Distribute angles evenly from 15 to -105 degrees based on the number of items
   const startAngle = 15;

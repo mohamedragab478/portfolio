@@ -70,6 +70,10 @@ function localApiPlugin() {
                 res.statusCode = code;
                 return this;
               },
+              write(chunk) {
+                res.write(chunk);
+                return this;
+              },
               json(data) {
                 this.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify(data));

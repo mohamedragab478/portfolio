@@ -70,15 +70,25 @@ const Contact = memo(() => {
   };
 
   const getSocialList = () => {
-    if (!contactData) return [];
-    
-    const s = [];
-    if (contactData.facebook) s.push({ name: "Facebook", icon: <Facebook size={20} />, href: contactData.facebook, color: "text-[#1877F2] border-[#1877F2]/30 hover:bg-[#1877F2]/10" });
-    if (contactData.instagram) s.push({ name: "Instagram", icon: <Instagram size={20} />, href: contactData.instagram, color: "text-[#E4405F] border-[#E4405F]/30 hover:bg-[#E4405F]/10" });
-    if (contactData.github) s.push({ name: "GitHub", icon: <Github size={20} />, href: contactData.github, color: "text-white border-white/30 hover:bg-white/10" });
-    if (contactData.linkedin) s.push({ name: "LinkedIn", icon: <Linkedin size={20} />, href: contactData.linkedin, color: "text-[#0A66C2] border-[#0A66C2]/30 hover:bg-[#0A66C2]/10" });
-    if (contactData.khamsat) s.push({ name: "Khamsat", icon: <Briefcase size={20} />, href: contactData.khamsat, color: "text-[#1dbf73] border-[#1dbf73]/30 hover:bg-[#1dbf73]/10" });
-    if (contactData.xTwitter) s.push({ name: "X", icon: <Twitter size={20} />, href: contactData.xTwitter, color: "text-[#06b6d4] border-[#06b6d4]/30 hover:bg-[#06b6d4]/10" });
+    const gh = contactData?.github || contactData?.githubUrl || contactData?.socialLinks?.github || 'https://github.com/amerelfalwo';
+    const li = contactData?.linkedin || contactData?.linkedinUrl || contactData?.socialLinks?.linkedin || 'https://www.linkedin.com/in/amir-elrefai/';
+    const wa = contactData?.phone ? `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}` : 'https://wa.me/201023524477';
+    const fb = contactData?.facebook || contactData?.socialLinks?.facebook;
+    const ig = contactData?.instagram || contactData?.socialLinks?.instagram;
+    const tw = contactData?.xTwitter || contactData?.twitter || contactData?.socialLinks?.twitter;
+    const kh = contactData?.khamsat;
+
+    const s = [
+      { name: "GitHub", icon: <Github size={20} />, href: gh, color: "text-white border-white/30 hover:bg-white/10" },
+      { name: "LinkedIn", icon: <Linkedin size={20} />, href: li, color: "text-[#0A66C2] border-[#0A66C2]/30 hover:bg-[#0A66C2]/10" },
+      { name: "WhatsApp", icon: <Phone size={20} />, href: wa, color: "text-[#25D366] border-[#25D366]/30 hover:bg-[#25D366]/10" }
+    ];
+
+    if (fb) s.push({ name: "Facebook", icon: <Facebook size={20} />, href: fb, color: "text-[#1877F2] border-[#1877F2]/30 hover:bg-[#1877F2]/10" });
+    if (ig) s.push({ name: "Instagram", icon: <Instagram size={20} />, href: ig, color: "text-[#E4405F] border-[#E4405F]/30 hover:bg-[#E4405F]/10" });
+    if (tw) s.push({ name: "X (Twitter)", icon: <Twitter size={20} />, href: tw, color: "text-[#06b6d4] border-[#06b6d4]/30 hover:bg-[#06b6d4]/10" });
+    if (kh) s.push({ name: "Khamsat", icon: <Briefcase size={20} />, href: kh, color: "text-[#1dbf73] border-[#1dbf73]/30 hover:bg-[#1dbf73]/10" });
+
     return s;
   };
 

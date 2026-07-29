@@ -4,7 +4,7 @@ import { m } from 'framer-motion';
 import { 
   Settings as SettingsIcon, Save, CheckCircle2, ShieldAlert, User, Briefcase, 
   FileText, Link2, Github, Linkedin, Twitter, Image as ImageIcon, Sparkles, Globe,
-  Brain, Award, Terminal, Cpu, Code, Zap, Layers, Plus, Trash2 
+  Brain, Award, Terminal, Cpu, Code, Zap, Layers, Plus, Trash2, Bot
 } from 'lucide-react';
 import { authFetch } from '../../lib/authFetch';
 import ImageUpload from '../../components/admin/ImageUpload';
@@ -36,6 +36,8 @@ const ManageSettings = () => {
   const [heroBadgeText, setHeroBadgeText] = useState('');
   const [bio, setBio] = useState('');
   const [resumeUrl, setResumeUrl] = useState('');
+  const [cvText, setCvText] = useState('');
+  const [chatbotKnowledge, setChatbotKnowledge] = useState('');
   const [profileImageUrl, setProfileImageUrl] = useState('');
   const [siteLogoUrl, setSiteLogoUrl] = useState('');
   const [logoText, setLogoText] = useState('');
@@ -59,6 +61,8 @@ const ManageSettings = () => {
       setHeroBadgeText(settings.heroBadgeText || 'AI COMMAND CENTER');
       setBio(settings.bio || '');
       setResumeUrl(settings.resumeUrl || settings.cvUrl || '');
+      setCvText(settings.cvText || '');
+      setChatbotKnowledge(settings.chatbotKnowledge || '');
       setProfileImageUrl(settings.profileImageUrl || settings.heroImage || '');
       setSiteLogoUrl(settings.siteLogoUrl || '');
       setLogoText(settings.logoText || 'AMIR.AURA');
@@ -115,6 +119,8 @@ const ManageSettings = () => {
       heroBadgeText: heroBadgeText || 'AI COMMAND CENTER',
       bio,
       resumeUrl,
+      cvText,
+      chatbotKnowledge,
       profileImageUrl,
       heroImage: profileImageUrl,
       siteLogoUrl,
@@ -144,7 +150,7 @@ const ManageSettings = () => {
         throw new Error(data.error || 'Failed to update settings.');
       }
 
-      setSuccessMsg('Portfolio & Hero Control Center updated successfully!');
+      setSuccessMsg('Portfolio & AI Chatbot Knowledge settings updated successfully!');
       await mutate();
     } catch (err) {
       console.error('Settings Update Error:', err);
@@ -168,7 +174,7 @@ const ManageSettings = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-slate-400 text-sm">Control Hero section avatar, typewriter words, site logo, tab title, and bio.</p>
+          <p className="text-slate-400 text-sm">Control Hero avatar, bio, CV details, AI chatbot knowledge base, and social links.</p>
         </div>
       </div>
 
@@ -485,6 +491,83 @@ const ManageSettings = () => {
           </div>
         </div>
 
+        {/* Section 6: AI Chatbot Assistant Knowledge Base & CV Content */}
+        <div className="space-y-6 pt-4 border-t border-slate-800/80">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-3">
+              <Bot className="text-cyan-400 w-5 h-5" />
+              <h3 className="text-sm font-bold text-white uppercase font-mono tracking-wider">
+                AI Chatbot Knowledge Base & CV Information
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (!cvText) {
+                  setCvText(`SUMMARY:
+Amir Elrefai is a passionate AI & Machine Learning Engineer specializing in Deep Learning, Computer Vision, and AI Systems.
+
+EXPERIENCE:
+- AI Engineer | Freelance / Projects (2023 - Present): Developed custom Computer Vision pipelines using YOLO v11 and OpenCV, built real-time AI agents using LangChain, and deployed full-stack web applications.
+- Lead AI Developer: Built high-accuracy neural network models for image classification, object detection, and feature extraction.
+
+EDUCATION:
+- B.Sc. in Computer Science | Mansoura University (2020 - 2024)
+
+TECHNICAL SKILLS:
+- Frameworks: PyTorch, TensorFlow, OpenCV, YOLO, LangChain, FastAPI, React, Node.js
+- Languages: Python, C++, SQL, JavaScript/TypeScript, C#
+- Infrastructure: Docker, Git, Linux (Ubuntu), Vector DB (Qdrant), MongoDB, PostgreSQL`);
+                }
+
+                if (!chatbotKnowledge) {
+                  setChatbotKnowledge(`CAREER PREFERENCES:
+- Open to Full-time, Remote, Onsite, or Relocation AI Engineering & Computer Vision roles worldwide.
+
+CONVERSATION INSTRUCTIONS:
+- Always highlight Amir's expertise in Computer Vision, Deep Learning, and AI Agents.
+- Be polite, encouraging, and invite visitors to connect with Amir via LinkedIn or GitHub.`);
+                }
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/30 text-purple-300 text-[10px] font-bold uppercase font-mono transition-all cursor-pointer"
+            >
+              <Sparkles size={13} /> Load Sample Template
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] ml-1 font-mono flex items-center gap-1.5">
+              <FileText size={13} className="text-purple-400" /> Full CV Content & Work Experience Details
+            </label>
+            <textarea 
+              rows={6} 
+              value={cvText} 
+              onChange={(e) => setCvText(e.target.value)} 
+              className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-3.5 px-4 text-white text-xs font-mono focus:border-purple-400 focus:outline-none transition-all leading-relaxed" 
+              placeholder="Paste or write full CV details here (Work History, AI Achievements, Key Projects, Tech Stack, Education, Certifications)..." 
+            />
+            <p className="text-[10px] text-slate-500 ml-1">
+              The AI Assistant queries this text to answer visitor questions about your CV, background, and career history.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] ml-1 font-mono flex items-center gap-1.5">
+              <Brain size={13} className="text-cyan-400" /> Custom Knowledge Base & AI Instructions
+            </label>
+            <textarea 
+              rows={6} 
+              value={chatbotKnowledge} 
+              onChange={(e) => setChatbotKnowledge(e.target.value)} 
+              className="w-full bg-slate-950 border border-slate-800 rounded-2xl py-3.5 px-4 text-white text-xs font-mono focus:border-cyan-400 focus:outline-none transition-all leading-relaxed" 
+              placeholder="Add extra background info, career objectives, salary expectations, preferred work modes (Remote/Onsite), or specific answers for the AI Assistant..." 
+            />
+            <p className="text-[10px] text-slate-500 ml-1">
+              Custom instructions and knowledge provided directly to the AI Assistant.
+            </p>
+          </div>
+        </div>
+
         {/* Submit */}
         <div className="pt-6 border-t border-slate-800 flex justify-end">
           <button
@@ -493,7 +576,7 @@ const ManageSettings = () => {
             className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-cyan-500 hover:opacity-95 text-white text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-purple-500/20 disabled:opacity-50 transition-all cursor-pointer"
           >
             <Save size={16} />
-            <span>{saving ? 'Saving Changes...' : 'Save Settings & Hero'}</span>
+            <span>{saving ? 'Saving Changes...' : 'Save Settings & Knowledge Base'}</span>
           </button>
         </div>
       </form>
@@ -502,3 +585,4 @@ const ManageSettings = () => {
 };
 
 export default ManageSettings;
+
