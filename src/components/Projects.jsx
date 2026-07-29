@@ -3,8 +3,7 @@ import {
   Code2, Database, Zap, Sparkles, Layers, Eye, BrainCircuit, ChevronDown, ChevronUp 
 } from 'lucide-react';
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { useProjects } from '../hooks/useData';
 import ProjectCube from './ProjectCube';
 
 const CATEGORY_MAP = {
@@ -45,7 +44,7 @@ const CategoryStack = memo(({ category, items, onSelect }) => {
               {isTop && (
                 <div className="flex flex-col h-full">
                   <div className="relative w-full h-48 shrink-0 overflow-hidden bg-slate-900/50">
-                    <img src={project.image} alt={project.title} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 opacity-80" />
+                    <img src={project.imageUrl || project.image} alt={project.title} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 opacity-80" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent" />
                   </div>
                   <div className="p-6 flex-1 flex flex-col bg-slate-900/20">
@@ -72,7 +71,7 @@ const CategoryStack = memo(({ category, items, onSelect }) => {
               {/* Background cards just show a solid color/gradient or image preview */}
               {!isTop && (
                  <div className="w-full h-full bg-slate-900/80 relative">
-                    <img src={project.image} alt="" className="w-full h-full object-cover opacity-15 grayscale mix-blend-overlay" />
+                    <img src={project.imageUrl || project.image} alt="" className="w-full h-full object-cover opacity-15 grayscale mix-blend-overlay" />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/90" />
                  </div>
               )}
@@ -90,22 +89,8 @@ const Projects = memo(() => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [showAll, setShowAll] = useState(false);
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "projects"));
-        setProjects(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+  const { projects, isLoading } = useProjects();
 
   const groupedProjects = useMemo(() => {
     const groups = {};
@@ -150,9 +135,17 @@ const Projects = memo(() => {
 
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <div className="w-10 h-10 border-[3px] border-purple-500/20 border-t-purple-400 rounded-full animate-spin" />
-              <p className="text-white/30 tracking-[0.3em] uppercase text-[10px] font-bold font-mono">Loading Projects</p>
+            <div key="projects-skeleton" className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16 animate-pulse">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="w-full h-[400px] rounded-3xl bg-slate-900/40 border border-slate-700/30 p-6 flex flex-col justify-between">
+                  <div className="w-full h-48 bg-white/5 rounded-2xl" />
+                  <div className="space-y-3 mt-4">
+                    <div className="h-4 w-1/3 bg-white/5 rounded-full" />
+                    <div className="h-6 w-3/4 bg-white/5 rounded-xl" />
+                    <div className="h-10 w-full bg-white/5 rounded-xl" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <m.div 

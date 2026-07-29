@@ -1,222 +1,158 @@
 import { m, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useMemo, memo } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { useState, useMemo, memo } from 'react';
+import { useSkills } from '../hooks/useData';
+import NeuralSkillsCore from './NeuralSkillsCore';
 import {
-  Zap, Brain, Eye, BarChart3, Code, Terminal,
-  Sparkles, Grid3X3, Layers,
+  Brain, Eye, Code, Terminal,
+  Sparkles, Grid3X3, Layers, Cpu, ShieldCheck
 } from 'lucide-react';
 
 /* ═══════════════════════════════════════════
-   CONFIG
+   CATEGORY CONFIG
    ═══════════════════════════════════════════ */
 
 const CATEGORIES = [
-  { id: 'all', label: 'All', icon: Grid3X3 },
+  { id: 'all', label: 'All Stack', icon: Grid3X3 },
   { id: 'deep_learning', label: 'Deep Learning', icon: Brain },
   { id: 'computer_vision', label: 'Computer Vision', icon: Eye },
-  { id: 'data_science', label: 'Data Science', icon: BarChart3 },
   { id: 'nlp_ai', label: 'NLP & Gen AI', icon: Sparkles },
   { id: 'development', label: 'Development', icon: Code },
   { id: 'devops', label: 'DevOps & Tools', icon: Terminal },
 ];
 
-const CATEGORY_COLORS = {
-  deep_learning: { border: 'border-purple-500/30', hoverBorder: 'group-hover:border-purple-500/50', bg: 'bg-purple-500/10', text: 'text-purple-300', dropShadow: 'drop-shadow-[0_0_12px_rgba(168,85,247,0.5)]', glowRGB: '168, 85, 247' },
-  computer_vision: { border: 'border-emerald-500/30', hoverBorder: 'group-hover:border-emerald-500/50', bg: 'bg-emerald-500/10', text: 'text-emerald-300', dropShadow: 'drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]', glowRGB: '16, 185, 129' },
-  data_science: { border: 'border-amber-500/30', hoverBorder: 'group-hover:border-amber-500/50', bg: 'bg-amber-500/10', text: 'text-amber-300', dropShadow: 'drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]', glowRGB: '245, 158, 11' },
-  nlp_ai: { border: 'border-pink-500/30', hoverBorder: 'group-hover:border-pink-500/50', bg: 'bg-pink-500/10', text: 'text-pink-300', dropShadow: 'drop-shadow-[0_0_12px_rgba(236,72,153,0.5)]', glowRGB: '236, 72, 153' },
-  development: { border: 'border-cyan-500/30', hoverBorder: 'group-hover:border-cyan-500/50', bg: 'bg-cyan-500/10', text: 'text-cyan-300', dropShadow: 'drop-shadow-[0_0_12px_rgba(6,182,212,0.5)]', glowRGB: '6, 182, 212' },
-  devops: { border: 'border-orange-500/30', hoverBorder: 'group-hover:border-orange-500/50', bg: 'bg-orange-500/10', text: 'text-orange-300', dropShadow: 'drop-shadow-[0_0_12px_rgba(249,115,22,0.5)]', glowRGB: '249, 115, 22' },
+/* Default Preset Technologies per Category */
+const PRESET_SKILLS = {
+  computer_vision: [
+    { name: 'OpenCV' },
+    { name: 'YOLO' },
+    { name: 'TensorFlow' },
+    { name: 'PyTorch' },
+    { name: 'ONNX' },
+    { name: 'MediaPipe' },
+  ],
+  nlp_ai: [
+    { name: 'LangChain' },
+    { name: 'ChromaDB' },
+    { name: 'Hugging Face' },
+    { name: 'LlamaIndex' },
+    { name: 'Pinecone' },
+    { name: 'OpenAI' },
+  ],
+  development: [
+    { name: 'FastAPI' },
+    { name: 'Next.js' },
+    { name: 'Docker' },
+    { name: 'PostgreSQL' },
+    { name: 'React' },
+    { name: 'Python' },
+    { name: 'C++' },
+  ],
+  deep_learning: [
+    { name: 'PyTorch' },
+    { name: 'TensorFlow' },
+    { name: 'Keras' },
+    { name: 'ONNX' },
+    { name: 'Python' },
+    { name: 'Scikit-Learn' },
+  ],
+  devops: [
+    { name: 'Docker' },
+    { name: 'Linux' },
+    { name: 'Git' },
+    { name: 'UV' },
+    { name: 'PostgreSQL' },
+    { name: 'MongoDB' },
+  ],
+  all: [
+    { name: 'PyTorch' },
+    { name: 'TensorFlow' },
+    { name: 'OpenCV' },
+    { name: 'YOLO' },
+    { name: 'LangChain' },
+    { name: 'ChromaDB' },
+    { name: 'LlamaIndex' },
+    { name: 'FastAPI' },
+    { name: 'Next.js' },
+    { name: 'Docker' },
+    { name: 'Python' },
+    { name: 'C++' },
+  ]
 };
-
-const FEATURED = ['pytorch', 'tensorflow', 'python', 'opencv', 'langchain', 'docker', 'react', 'yolo'];
 
 function categorizeSkill(name) {
   const n = name.toLowerCase();
-  if (['pytorch', 'tensorflow', 'keras', 'unet', 'vgg', 'resnet', 'inception', 'efficientnet', 'transformer', 'neural', 'cnn', 'rnn', 'lstm', 'gan'].some(k => n.includes(k))) return 'deep_learning';
-  if (['opencv', 'yolo', 'mediapipe', 'detectron', 'vision', 'image process', 'ssd', 'faster rcnn'].some(k => n.includes(k))) return 'computer_vision';
-  if (['numpy', 'pandas', 'scikit', 'sklearn', 'matplotlib', 'seaborn', 'plotly', 'jupyter', 'scipy', 'statsmodel', 'data'].some(k => n.includes(k))) return 'data_science';
-  if (['langchain', 'pinecone', 'gradio', 'hugging', 'openai', 'llm', 'rag', 'nlp', 'spacy', 'nltk', 'whisper', 'gemini', 'gpt', 'bert', 'llama', 'groq'].some(k => n.includes(k))) return 'nlp_ai';
-  if (['python', 'c++', 'react', 'fastapi', 'flask', 'firebase', 'vite', 'tailwind', 'javascript', 'html', 'css', 'node', 'next', 'mongo', 'sql', 'django', 'streamlit'].some(k => n.includes(k))) return 'development';
+  if (['pytorch', 'tensorflow', 'keras', 'unet', 'vgg', 'resnet', 'neural', 'cnn', 'gan'].some(k => n.includes(k))) return 'deep_learning';
+  if (['opencv', 'yolo', 'mediapipe', 'detectron', 'vision', 'image process', 'ssd'].some(k => n.includes(k))) return 'computer_vision';
+  if (['numpy', 'pandas', 'scikit', 'sklearn', 'matplotlib', 'data'].some(k => n.includes(k))) return 'deep_learning';
+  if (['langchain', 'pinecone', 'gradio', 'hugging', 'openai', 'llm', 'rag', 'nlp', 'llamaindex', 'chromadb'].some(k => n.includes(k))) return 'nlp_ai';
+  if (['python', 'c++', 'react', 'fastapi', 'flask', 'javascript', 'next', 'mongo', 'sql', 'postgres'].some(k => n.includes(k))) return 'development';
   return 'devops';
 }
 
-/* ═══════════════════════════════════════════
-   ANIMATION VARIANTS
-   ═══════════════════════════════════════════ */
-
 const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
-const gridContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.03, delayChildren: 0.02 },
-  },
-  exit: { opacity: 0, transition: { duration: 0.12 } },
-};
-
-const gridItem = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: tween },
-  exit: { opacity: 0, y: -6, transition: { duration: 0.1 } },
-};
-
-/* Check for touch device to skip expensive mouse-tracking */
-const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-
-
 /* ═══════════════════════════════════════════
-   SKILL CARD (bento item)
-   ═══════════════════════════════════════════ */
-
-const SkillCard = memo(({ skill, featured = false, index = 0 }) => {
-  const cat = skill._category || 'devops';
-  const colors = CATEGORY_COLORS[cat] || CATEGORY_COLORS.devops;
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = isTouchDevice ? undefined : (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  // Asymmetrical Bento spans
-  let spanClass = 'col-span-1 row-span-1';
-  if (featured) {
-    if (index % 3 === 0) spanClass = 'col-span-2 row-span-2';
-    else if (index % 2 === 0) spanClass = 'col-span-2 row-span-1';
-    else spanClass = 'col-span-1 row-span-2';
-  }
-
-  return (
-    <m.div
-      variants={gridItem}
-      whileHover={isTouchDevice ? undefined : { scale: 1.02 }}
-      transition={tween}
-      onMouseMove={handleMouseMove}
-      style={{ willChange: 'transform, opacity', transform: 'translate3d(0,0,0)' }}
-      className={`group relative flex flex-col items-center justify-center gap-4 ${featured ? 'p-6 md:p-8' : 'p-5 md:p-6'} rounded-3xl bg-slate-900/80 md:bg-slate-900/40 border border-slate-700/50 ${colors.hoverBorder} transition-colors duration-300 overflow-hidden cursor-default md:backdrop-blur-md ${spanClass}`}
-    >
-      {/* Spotlight */}
-      <div 
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{
-          background: `radial-gradient(circle 200px at ${mousePosition.x}px ${mousePosition.y}px, rgba(${colors.glowRGB}, 0.15), transparent 100%)`
-        }}
-      />
-
-      {/* Ambient gradient */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br from-slate-800/50 to-transparent" />
-
-      {/* Icon */}
-      <div className={`relative z-10 flex items-center justify-center ${featured ? 'p-4 md:p-5' : 'p-3 md:p-4'} rounded-2xl border ${colors.border} ${colors.bg} transition-transform duration-500 group-hover:scale-110`}>
-        <img
-          src={skill.icon}
-          alt={skill.name}
-          className={`object-contain transition-all duration-500 ${colors.dropShadow} ${featured ? 'w-12 h-12 md:w-16 md:h-16' : 'w-8 h-8 md:w-10 md:h-10'}`}
-          loading="lazy"
-          onError={(e) => { e.target.style.display = 'none'; }}
-        />
-      </div>
-
-      {/* Name */}
-      <span className={`relative z-10 font-bold text-slate-300 group-hover:text-white transition-colors text-center leading-tight ${featured ? 'text-lg md:text-xl' : 'text-sm md:text-base'}`}>
-        {skill.name}
-      </span>
-
-      {/* Category badge — featured cards only */}
-      {featured && (
-        <span className={`relative z-10 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full ${colors.bg} ${colors.text} border ${colors.border} shadow-sm mt-1`}>
-          {CATEGORIES.find(c => c.id === cat)?.label || cat}
-        </span>
-      )}
-    </m.div>
-  );
-});
-SkillCard.displayName = 'SkillCard';
-
-/* ═══════════════════════════════════════════
-   MAIN SKILLS COMPONENT
+   MINIMALIST PREMIUM SKILLS SECTION
+   - Apple Vision Pro & AI OS Dashboard Style
+   - Clean 2-Ring AI Core Visualization
+   - Zero flashy noise, Production Ready
    ═══════════════════════════════════════════ */
 
 const Skills = memo(() => {
-  const [skills, setSkills] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { skills: rawSkills, isLoading } = useSkills();
   const [activeCategory, setActiveCategory] = useState('all');
 
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const snap = await getDocs(collection(db, 'skills'));
-        const all = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        // Deduplicate
-        const unique = Array.from(new Map(all.map((s) => [s.name, s])).values());
-        // Attach resolved category
-        const enriched = unique.map((s) => ({
-          ...s,
-          _category: s.category || categorizeSkill(s.name),
-        }));
-        setSkills(enriched);
-      } catch (err) {
-        console.error('Error fetching skills:', err);
-      } finally {
-        setIsLoading(false);
-      }
+  const processedSkills = useMemo(() => {
+    if (!rawSkills || rawSkills.length === 0) return PRESET_SKILLS;
+
+    const map = {
+      all: [],
+      deep_learning: [],
+      computer_vision: [],
+      nlp_ai: [],
+      development: [],
+      devops: [],
     };
-    fetchSkills();
-  }, []);
 
-  /* Group by category */
-  const grouped = useMemo(() => {
-    const map = {};
-    skills.forEach((s) => {
-      const c = s._category;
-      if (!map[c]) map[c] = [];
-      map[c].push(s);
+    // Deduplicate
+    const unique = Array.from(new Map(rawSkills.map((s) => [s.name, s])).values());
+
+    unique.forEach((s) => {
+      const cat = s.category || categorizeSkill(s.name);
+      const skillObj = { ...s, _category: cat };
+      map.all.push(skillObj);
+      if (map[cat]) map[cat].push(skillObj);
     });
+
+    // Merge missing preset items to guarantee rich 2-ring orbits
+    Object.keys(PRESET_SKILLS).forEach((catKey) => {
+      const existingNames = new Set((map[catKey] || []).map((x) => x.name.toLowerCase()));
+      PRESET_SKILLS[catKey].forEach((preset) => {
+        if (!existingNames.has(preset.name.toLowerCase())) {
+          map[catKey].push(preset);
+        }
+      });
+    });
+
     return map;
-  }, [skills]);
+  }, [rawSkills]);
 
-  /* Available categories (non-empty) */
-  const availableCats = useMemo(
-    () => CATEGORIES.filter((c) => c.id === 'all' || (grouped[c.id] && grouped[c.id].length > 0)),
-    [grouped],
-  );
+  /* Total unique technologies count across all categories */
+  const totalCount = useMemo(() => {
+    return (processedSkills.all || PRESET_SKILLS.all).length || 21;
+  }, [processedSkills]);
 
-  /* Filtered list */
-  const filtered = useMemo(() => {
-    if (activeCategory === 'all') return skills;
-    return grouped[activeCategory] || [];
-  }, [activeCategory, skills, grouped]);
+  /* Filtered skills for current active category */
+  const activeSkills = useMemo(() => {
+    return processedSkills[activeCategory] || PRESET_SKILLS[activeCategory] || PRESET_SKILLS.all;
+  }, [activeCategory, processedSkills]);
 
-
-  /* Count for active */
-  const activeCount = activeCategory === 'all' ? skills.length : (grouped[activeCategory]?.length || 0);
+  const activeCategoryObj = useMemo(() => {
+    return CATEGORIES.find((c) => c.id === activeCategory) || CATEGORIES[0];
+  }, [activeCategory]);
 
   return (
-    <section id="skills" className="py-32 relative overflow-hidden">
-      {/* Background Polish Grid */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          maskImage: 'radial-gradient(circle at center, black 10%, transparent 80%)',
-          WebkitMaskImage: 'radial-gradient(circle at center, black 10%, transparent 80%)'
-        }}
-      />
-
-      {/* Ambient glow */}
-      <div className="absolute top-[30%] right-[-10%] w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[20%] left-[-10%] w-[350px] h-[350px] bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none" />
-
+    <section id="skills" className="py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
 
         {/* ── Section header ── */}
@@ -225,51 +161,52 @@ const Skills = memo(() => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '100px' }}
           transition={tween}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-        <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 mb-8 backdrop-blur-md">
-          <Zap className="w-4 h-4 text-cyan-400" />
-          <span className="text-xs font-bold tracking-[0.2em] uppercase text-cyan-300/80 font-mono">
-            Technical Arsenal
-          </span>
-        </div>
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 text-slate-100">
-          Powering the{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
-            Future
-          </span>
-        </h2>
-        <p className="text-slate-400 font-medium max-w-2xl mx-auto text-base md:text-xl leading-relaxed">
-          The meticulously curated stack I use to build scalable machine learning models and high-performance applications.
-        </p>
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-slate-800 bg-slate-900/60 mb-6 backdrop-blur-md">
+            <Cpu className="w-4 h-4 text-cyan-400" />
+            <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-300 font-mono">
+              AI CORE VISUALIZATION :: SYSTEM ACTIVE
+            </span>
+          </div>
+
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight mb-4 text-slate-100 uppercase">
+            Technical{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+              Arsenal
+            </span>
+          </h2>
+
+          <p className="text-slate-400 font-medium max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+            Minimalist, production-ready AI stack matrix powered by autonomous deep learning models and high-performance neural architecture.
+          </p>
         </m.div>
 
         {/* ── Category tabs ── */}
-        {!isLoading && skills.length > 0 && (
         <m.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ ...tween, delay: 0.05 }}
-          className="flex flex-wrap justify-center gap-3 md:gap-4 mb-14"
+          className="flex flex-wrap justify-center gap-2.5 md:gap-3.5 mb-10"
         >
-          {availableCats.map((cat) => {
+          {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.id;
             const Icon = cat.icon;
-            const count = cat.id === 'all' ? skills.length : (grouped[cat.id]?.length || 0);
+            const count = (processedSkills[cat.id] || PRESET_SKILLS[cat.id] || []).length;
 
             return (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`relative flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors duration-200 border md:backdrop-blur-md ${
+                className={`relative flex items-center gap-2.5 px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold transition-all duration-300 border backdrop-blur-md cursor-pointer ${
                   isActive
-                    ? 'bg-slate-800/80 border-cyan-500/50 text-cyan-100 shadow-[0_0_20px_rgba(34,211,238,0.2)]'
-                    : 'bg-slate-900/40 border-slate-700/50 text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:bg-slate-800/50'
+                    ? 'bg-slate-900/90 border-cyan-400/70 text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.2)] ring-1 ring-cyan-400/40'
+                    : 'bg-slate-900/40 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-800/50'
                 }`}
               >
                 <Icon size={16} className={isActive ? 'text-cyan-400' : 'text-slate-500'} />
-                <span className="tracking-wide">{cat.label}</span>
+                <span className="tracking-wide font-mono">{cat.label}</span>
                 <span className={`text-[10px] md:text-xs font-mono tabular-nums px-2 py-0.5 rounded-md ${isActive ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-800/50 text-slate-500'}`}>
                   {count}
                 </span>
@@ -277,50 +214,39 @@ const Skills = memo(() => {
             );
           })}
         </m.div>
-        )}
 
-        {/* ── Loading state ── */}
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <div className="w-10 h-10 border-[3px] border-purple-500/20 border-t-purple-400 rounded-full animate-spin" />
-            <p className="text-white/30 tracking-[0.3em] uppercase text-[10px] font-bold font-mono">Initializing Arsenal</p>
+        {/* ── 2-Ring Interactive AI Core Orbit ── */}
+        <AnimatePresence mode="wait">
+          <m.div
+            key={`neural-core-${activeCategory}`}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="w-full flex justify-center"
+          >
+            <NeuralSkillsCore 
+              skills={activeSkills} 
+              activeCategory={activeCategory} 
+              categoryLabel={activeCategoryObj.label}
+            />
+          </m.div>
+        </AnimatePresence>
+
+        {/* Professional AI System Readout Footer */}
+        <div className="flex justify-center mt-6">
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-900/60 border border-slate-800 backdrop-blur-md">
+            <ShieldCheck size={15} className="text-emerald-400" />
+            <span className="text-[11px] font-bold text-slate-300 tracking-widest uppercase font-mono">
+              AI CORE ACTIVE • {totalCount} TECHNOLOGIES • PRODUCTION READY
+            </span>
           </div>
-        )}
-
-        {/* ── Bento grid ── */}
-        {!isLoading && filtered.length > 0 && (
-          <AnimatePresence mode="wait">
-            <m.div
-              key={activeCategory}
-              variants={gridContainer}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 mb-10 grid-flow-dense"
-            >
-              {filtered.map((skill, i) => {
-                const isFeat = FEATURED.some((k) => skill.name.toLowerCase().includes(k));
-                return <SkillCard key={skill.id || skill.name} skill={skill} featured={isFeat} index={i} />;
-              })}
-            </m.div>
-          </AnimatePresence>
-        )}
-
-        {/* Active count badge */}
-        {!isLoading && filtered.length > 0 && (
-          <div className="flex justify-center mb-20">
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-900/40 border border-slate-700/50 backdrop-blur-md">
-              <Layers size={14} className="text-cyan-400/70" />
-              <span className="text-[11px] font-bold text-slate-400 tracking-widest uppercase font-mono">
-                {activeCount} Technologies Loaded
-              </span>
-            </div>
-          </div>
-        )}
+        </div>
 
       </div>
     </section>
   );
 });
 
+Skills.displayName = 'Skills';
 export default Skills;

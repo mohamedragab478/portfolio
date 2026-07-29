@@ -1,14 +1,13 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { signOut } from 'firebase/auth';
+import { logout } from '../api';
 import { LayoutDashboard, Settings, Users, FileText, Award, Inbox as InboxIcon, LogOut, Hexagon, Phone, User as UserIcon } from 'lucide-react';
 
 
 const AdminLayout = () => {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = () => {
+    logout();
     navigate('/admin/login');
   };
 

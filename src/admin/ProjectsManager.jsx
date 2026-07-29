@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getProjects, addProject, updateProject, deleteProject } from '../api';
 import { m, AnimatePresence } from 'framer-motion';
 import { Trash2, Edit2, Plus, RefreshCw, FolderPlus, Github, Code, Hash, AlignLeft, Globe, X, Database, CheckCircle2 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
@@ -42,8 +41,7 @@ const ProjectsManager = () => {
   const fetchProjects = async () => {
     setFetching(true);
     try {
-      const querySnapshot = await getDocs(collection(db, "projects"));
-      const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const projectsData = await getProjects();
       setProjects(projectsData);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -65,15 +63,14 @@ const ProjectsManager = () => {
     setLoading(true);
     const projectData = {
       title, category, description, techStack, keyAchievements, githubLink,
-      image: imageUrl || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80',
-      updatedAt: new Date().toISOString()
+      image: imageUrl || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80'
     };
 
     try {
       if (editingId) {
-        await updateDoc(doc(db, "projects", editingId), projectData);
+        await updateProject(editingId, projectData);
       } else {
-        await addDoc(collection(db, "projects"), { ...projectData, createdAt: new Date().toISOString() });
+        await addProject(projectData);
       }
       resetForm();
       fetchProjects();
@@ -112,7 +109,7 @@ const ProjectsManager = () => {
     if(!window.confirm("Are you sure you want to terminate this protocol?")) return;
     try {
       if(id === editingId) resetForm();
-      await deleteDoc(doc(db, "projects", id));
+      await deleteProject(id);
       fetchProjects();
     } catch (error) {
       console.error("Error deleting project:", error);
@@ -140,7 +137,7 @@ const ProjectsManager = () => {
     ];
     try {
       for (const proj of legacyProjects) {
-        await addDoc(collection(db, "projects"), { ...proj, createdAt: new Date().toISOString() });
+        await addProject(proj);
       }
       alert("Legacy systems imported and mapped successfully!");
       fetchProjects();
@@ -237,8 +234,15 @@ const ProjectsManager = () => {
         </div>
 
         <div className="space-y-3 relative z-10">
-          <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Globe className="w-3 h-3 text-[#d8b4fe]" /> Visual Asset URL</label>
-          <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="Paste Image Direct URL (e.g., from Imgur, Unsplash, any link)" />
+          <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><FolderPlus className="w-3 h-3 text-[#d8b4fe]" /> Visual Asset Image</label>
+          <input type="file" accept="image/*" onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => setImageUrl(reader.result);
+              reader.readAsDataURL(file);
+            }
+          }} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-[#7c3aed]/20 file:text-[#d8b4fe] hover:file:bg-[#7c3aed]/30" />
           {imageUrl && (
             <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded-xl">
               <p className="text-[8px] font-black uppercase text-white/30 tracking-widest mb-2">Cover Preview</p>
@@ -296,7 +300,7 @@ const ProjectsManager = () => {
           </div>
           <div className="space-y-3">
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Github className="w-3 h-3 text-[#d8b4fe]" /> Source Protocol URL</label>
-            <input type="url" value={githubLink} onChange={e => setGithubLink(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="https://github.com/..." />
+            <input type="text" value={githubLink} onChange={e => setGithubLink(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="https://github.com/..." />
           </div>
         </div>
 

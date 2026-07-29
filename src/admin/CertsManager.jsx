@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getCertifications, addCertification, updateCertification, deleteCertification } from '../api';
 import { m, AnimatePresence } from 'framer-motion';
-import { Award, RefreshCw, Trash2, ExternalLink, Briefcase, Plus, Edit2, FileText, Globe, Clock, CheckCircle2, X } from 'lucide-react';
+import { Award, RefreshCw, Trash2, ExternalLink, Briefcase, Plus, Edit2, FileText, Globe, Clock, CheckCircle2, X, Image as ImageIcon } from 'lucide-react';
 
 const CertsManager = () => {
   const [certs, setCerts] = useState([]);
@@ -15,6 +14,7 @@ const CertsManager = () => {
   const [issuer, setIssuer] = useState('');
   const [date, setDate] = useState('');
   const [verificationUrl, setVerificationUrl] = useState('');
+  const [issuerLogoUrl, setIssuerLogoUrl] = useState('');
   const [skillsListed, setSkillsListed] = useState([]);
   const [isVerified, setIsVerified] = useState(true);
 
@@ -24,8 +24,8 @@ const CertsManager = () => {
   const fetchCerts = async () => {
     setFetching(true);
     try {
-      const snap = await getDocs(collection(db, "certifications"));
-      setCerts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const data = await getCertifications();
+      setCerts(data);
     } catch (error) {
       console.error("Error fetching certs:", error);
     } finally {
@@ -37,7 +37,7 @@ const CertsManager = () => {
 
   const resetForm = () => {
     setEditingId(null); setTitle(''); setIssuer(''); setDate('');
-    setVerificationUrl(''); setSkillsListed([]); setIsVerified(true);
+    setVerificationUrl(''); setIssuerLogoUrl(''); setSkillsListed([]); setIsVerified(true);
   };
 
   const handleSave = async (e) => {
@@ -49,6 +49,7 @@ const CertsManager = () => {
       issuer,
       date,
       verificationUrl,
+      issuerLogoUrl,
       skills: skillsListed,
       isVerified,
       updatedAt: new Date().toISOString()
@@ -56,9 +57,9 @@ const CertsManager = () => {
 
     try {
       if (editingId) {
-        await updateDoc(doc(db, "certifications", editingId), payload);
+        await updateCertification(editingId, payload);
       } else {
-        await addDoc(collection(db, "certifications"), { ...payload, createdAt: new Date().toISOString() });
+        await addCertification({ ...payload, createdAt: new Date().toISOString() });
       }
 
       resetForm();
@@ -76,6 +77,7 @@ const CertsManager = () => {
     setIssuer(cert.issuer || '');
     setDate(cert.date || cert.duration || '');
     setVerificationUrl(cert.verificationUrl || '');
+    setIssuerLogoUrl(cert.issuerLogoUrl || cert.issuerLogo || '');
     setSkillsListed(cert.skills || []);
     setIsVerified(cert.isVerified !== false); // Default to true if undefined
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -85,7 +87,7 @@ const CertsManager = () => {
     if(!window.confirm("Revoke this certification?")) return;
     try {
       if (editingId === id) resetForm();
-      await deleteDoc(doc(db, "certifications", id));
+      await deleteCertification(id);
       fetchCerts();
     } catch (error) {
       console.error("Error deleting cert:", error);
@@ -124,13 +126,42 @@ const CertsManager = () => {
           </div>
 
           <div className="space-y-3">
+            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><ImageIcon className="w-3 h-3 text-[#d8b4fe]" /> Issuer Logo (Optional)</label>
+            <input type="file" accept="image/*" onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => setIssuerLogoUrl(reader.result);
+                reader.readAsDataURL(file);
+              }
+            }} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-[#7c3aed]/20 file:text-[#d8b4fe] hover:file:bg-[#7c3aed]/30" />
+            {issuerLogoUrl && (
+              <div className="mt-2 inline-flex items-center gap-3 p-2 bg-white/5 border border-white/10 rounded-xl">
+                <img src={issuerLogoUrl} alt="Logo Preview" className="w-8 h-8 object-contain rounded-lg" />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Clock className="w-3 h-3 text-[#d8b4fe]" /> Date Earned / Valid Until</label>
             <input type="text" value={date} onChange={e => setDate(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="e.g. Sept 2023 - Present" />
           </div>
 
           <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase text-accent/80 tracking-[0.2em] ml-2 flex items-center gap-2"><ExternalLink className="w-3 h-3" /> Certificate URL</label>
-            <input type="text" value={verificationUrl} onChange={e => setVerificationUrl(e.target.value)} required className="w-full bg-background border border-green-500/30 rounded-xl py-4 px-5 text-green-100 focus:outline-none focus:border-green-500/60 transition-all text-sm font-medium placeholder:text-green-100/20" placeholder="https://coursera.org/verify/..." />
+            <label className="text-[10px] font-black uppercase text-accent/80 tracking-[0.2em] ml-2 flex items-center gap-2"><ImageIcon className="w-3 h-3" /> Certificate Image</label>
+            <input type="file" id="certImageUpload" accept="image/*" onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => setVerificationUrl(reader.result);
+                reader.readAsDataURL(file);
+              }
+            }} className="w-full bg-background border border-green-500/30 rounded-xl py-4 px-5 text-green-100 focus:outline-none focus:border-green-500/60 transition-all text-sm font-medium placeholder:text-green-100/20 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-green-500/20 file:text-green-400 hover:file:bg-green-500/30" />
+            {verificationUrl && (
+              <div className="mt-2 inline-flex items-center gap-3 p-2 bg-white/5 border border-white/10 rounded-xl">
+                <img src={verificationUrl} alt="Certificate Preview" className="h-16 object-contain rounded-lg" />
+              </div>
+            )}
           </div>
 
           <div className="space-y-3 relative z-20 md:col-span-2">
@@ -235,7 +266,7 @@ const CertsManager = () => {
                  {cert.issuer && <p className="text-[10px] font-bold uppercase tracking-widest text-[#d8b4fe] mb-6 border-b border-white/10 pb-4 w-full">{cert.issuer}</p>}
                  
                  <a href={cert.verificationUrl} target="_blank" rel="noreferrer" className="mt-auto flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 hover:text-[#030014] hover:bg-emerald-400 text-[10px] font-black tracking-widest uppercase rounded-lg border border-emerald-500/30 transition-all">
-                   Verify <ExternalLink size={12} />
+                   View <ImageIcon size={12} />
                  </a>
                </div>
              ))}

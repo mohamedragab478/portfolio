@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
+import { getTrainings, addTraining, updateTraining, deleteTraining } from '../api';
 import { m, AnimatePresence } from 'framer-motion';
 import { Trash2, Edit2, Plus, RefreshCw, FileText, Code, CheckCircle2, CircleDashed, Globe, Briefcase, Clock, Search, X } from 'lucide-react';
 
@@ -23,8 +22,8 @@ const TrainingManager = () => {
   const fetchTrainings = async () => {
     setFetching(true);
     try {
-      const snap = await getDocs(collection(db, "trainings"));
-      setTrainings(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const data = await getTrainings();
+      setTrainings(data);
     } catch (error) {
       console.error("Error fetching trainings:", error);
     } finally {
@@ -58,9 +57,9 @@ const TrainingManager = () => {
 
     try {
       if (editingId) {
-        await updateDoc(doc(db, "trainings", editingId), payload);
+        await updateTraining(editingId, payload);
       } else {
-        await addDoc(collection(db, "trainings"), { ...payload, createdAt: new Date().toISOString() });
+        await addTraining({ ...payload, createdAt: new Date().toISOString() });
       }
 
       resetForm();
@@ -88,7 +87,7 @@ const TrainingManager = () => {
     if (!window.confirm("Permanently delete this training record?")) return;
     try {
       if (editingId === id) resetForm();
-      await deleteDoc(doc(db, "trainings", id));
+      await deleteTraining(id);
       fetchTrainings();
     } catch (error) {
       console.error("Error deleting training:", error);

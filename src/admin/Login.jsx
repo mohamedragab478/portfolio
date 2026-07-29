@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { login } from '../api';
 import { m } from 'framer-motion';
 import { Lock, Mail, ArrowRight, ShieldAlert, Hexagon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -18,12 +17,12 @@ const Login = () => {
     setError(null);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await login(email, password);
       console.log("Login Success");
       navigate('/admin');
     } catch (err) {
-      console.error("Firebase Login Error:", err.code, err.message, err);
-      setError(err.code || err.message || 'Authentication failed.');
+      console.error("Login Error:", err.message);
+      setError(err.message || 'Authentication failed.');
     } finally {
       setLoading(false);
     }

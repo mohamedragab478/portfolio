@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getServices, addService, updateService, deleteService } from '../api';
 import { Settings, Plus, RefreshCw, Trash2, Hexagon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
@@ -22,8 +21,8 @@ const ServicesManager = () => {
   const fetchServices = async () => {
     setFetching(true);
     try {
-      const snap = await getDocs(collection(db, "services"));
-      setServices(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const data = await getServices();
+      setServices(data);
     } catch (error) {
       console.error("Error fetching services:", error);
     } finally {
@@ -38,10 +37,10 @@ const ServicesManager = () => {
     setLoading(true);
     try {
       if (editingId) {
-        await updateDoc(doc(db, "services", editingId), { ...formData, updatedAt: new Date().toISOString() });
+        await updateService(editingId, formData);
         setEditingId(null);
       } else {
-        await addDoc(collection(db, "services"), { ...formData, createdAt: new Date().toISOString() });
+        await addService(formData);
       }
       setFormData({ iconName: '', iconUrl: '', title: '', description: '' });
       fetchServices();
@@ -55,7 +54,7 @@ const ServicesManager = () => {
   const handleDelete = async (id) => {
     if(!window.confirm("Delete this service module?")) return;
     try {
-      await deleteDoc(doc(db, "services", id));
+      await deleteService(id);
       fetchServices();
     } catch (error) {
       console.error("Error deleting service:", error);
@@ -112,10 +111,17 @@ const ServicesManager = () => {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Custom Icon URL (Optional)</label>
-            <input type="text" value={formData.iconUrl || ''} 
-              onChange={e => setFormData({...formData, iconUrl: e.target.value})} 
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="Paste any image URL (overrides Lucide icon)" />
+            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Custom Icon (Optional)</label>
+            <input type="file" accept="image/*" 
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => setFormData({...formData, iconUrl: reader.result});
+                  reader.readAsDataURL(file);
+                }
+              }} 
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-[#7c3aed]/20 file:text-[#d8b4fe] hover:file:bg-[#7c3aed]/30" />
             {formData.iconUrl && (
               <div className="mt-2 inline-flex items-center gap-3 p-2 bg-white/5 border border-white/10 rounded-xl">
                 <img src={formData.iconUrl} alt="Icon Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-8 h-8 object-contain rounded-lg" onError={(e) => { e.target.src=''; }} />

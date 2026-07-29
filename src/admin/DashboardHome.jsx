@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { getProjects, getMessages } from '../api';
 import { LayoutDashboard, Activity, Database, Zap, MessageSquare, Globe, ArrowUpRight, Loader2 } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 
@@ -18,16 +17,16 @@ const DashboardHome = () => {
     const fetchStats = async () => {
       try {
         // 1. Fetch Projects Count
-        const projectsSnap = await getDocs(collection(db, "projects"));
+        const projects = await getProjects() || [];
         
-        // 2. Fetch Unread Messages Count
-        const messagesQuery = query(collection(db, "messages"), where("read", "==", false));
-        const unreadSnap = await getDocs(messagesQuery);
+        // 2. Fetch Messages
+        const messages = await getMessages() || [];
         
-        // 3. Fetch Recent Messages
-        const recentQuery = query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(3));
-        const recentSnap = await getDocs(recentQuery);
-        const recent = recentSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // 3. Filter unread and recent messages
+        const unreadCount = messages.filter(m => !m.read).length;
+        const recent = [...messages]
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 3);
 
         // 4. Fetch GA4 Analytics via our internal API
         let analyticsData = null;
@@ -50,8 +49,8 @@ const DashboardHome = () => {
         }
 
         setStats({
-          projects: projectsSnap.size,
-          unreadMessages: unreadSnap.size,
+          projects: projects.length,
+          unreadMessages: unreadCount,
           recentMessages: recent,
           analytics: analyticsData,
           loading: false

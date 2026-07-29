@@ -1,15 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Menu, X, Zap, Briefcase, Layers, Award, Code } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Menu, X, Zap, Briefcase, Award, Code, User } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
-import { db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { useSettings } from '../hooks/useData';
 
 const spring = { type: 'spring', stiffness: 200, damping: 20 };
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [siteLogoUrl, setSiteLogoUrl] = useState('');
+  const { settings } = useSettings();
+
+  const logoText = useMemo(() => {
+    const raw = settings?.logoText || 'AMIR.AURA';
+    return raw.toUpperCase();
+  }, [settings?.logoText]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -17,29 +21,25 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const snap = await getDoc(doc(db, 'site_config', 'hero'));
-        if (snap.exists() && snap.data().siteLogoUrl) {
-          const logoUrl = snap.data().siteLogoUrl;
-          setSiteLogoUrl(logoUrl);
-          const favicon = document.querySelector("link[rel='icon']");
-          if (favicon) favicon.href = logoUrl;
-        }
-      } catch (err) {
-        console.warn('Could not fetch site logo:', err);
-      }
-    };
-    fetchLogo();
-  }, []);
-
   const navLinks = [
-    { name: 'Services', href: '#services', icon: <Layers size={13} /> },
+    { name: 'About', href: '#about', icon: <User size={13} /> },
     { name: 'Skills', href: '#skills', icon: <Code size={13} /> },
     { name: 'Projects', href: '#projects', icon: <Briefcase size={13} /> },
     { name: 'Credentials', href: '#education', icon: <Award size={13} /> },
   ];
+
+  const siteLogoUrl = settings?.siteLogoUrl || '';
+  const siteTitle = settings?.siteTitle || '';
+
+  useEffect(() => {
+    if (siteTitle) {
+      document.title = siteTitle;
+    }
+    if (siteLogoUrl) {
+      const favicon = document.querySelector("link[rel='icon']");
+      if (favicon) favicon.href = siteLogoUrl;
+    }
+  }, [siteTitle, siteLogoUrl]);
 
   return (
     <nav className="fixed w-full z-50 flex justify-center pt-5 transition-all duration-500">
@@ -55,20 +55,19 @@ const Navbar = () => {
       >
         {/* Logo */}
         <div className="flex-1">
-          <a href="#" className="flex items-center gap-2 group w-fit">
+          <a href="#" className="flex items-center gap-2.5 group w-fit">
             {siteLogoUrl ? (
               <img
                 src={siteLogoUrl}
                 alt="Logo"
-                referrerPolicy="no-referrer"
-                className="h-9 md:h-10 w-auto object-contain rounded"
+                className="h-8 w-8 object-contain rounded-lg"
                 onError={(e) => { e.target.style.display = 'none'; }}
               />
             ) : (
               <Zap className="w-7 h-7 md:w-8 md:h-8 text-purple-400" />
             )}
             <span className="text-xl md:text-2xl font-black tracking-widest uppercase text-white">
-              AMIR<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">.AURA</span>
+              {logoText}
             </span>
           </a>
         </div>

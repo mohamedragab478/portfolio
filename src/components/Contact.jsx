@@ -1,9 +1,8 @@
 import { useState, useEffect, memo } from 'react';
 import { m } from 'framer-motion';
 import emailjs from '@emailjs/browser';
-import { Send, MessageSquare, Phone, Github, Linkedin, Mail, ArrowUpRight, Zap, Briefcase, Facebook, Instagram } from 'lucide-react';
-import { db } from '../firebase';
-import { doc, getDoc, collection, addDoc } from 'firebase/firestore';
+import { Send, MessageSquare, Phone, Github, Linkedin, Mail, ArrowUpRight, Zap, Briefcase, Facebook, Instagram, Twitter } from 'lucide-react';
+import { getContactRelay, addMessage } from '../api';
 
 const Contact = memo(() => {
   const [formData, setFormData] = useState({
@@ -20,9 +19,9 @@ const Contact = memo(() => {
   useEffect(() => {
     const fetchContactInfo = async () => {
       try {
-        const snap = await getDoc(doc(db, 'portfolioConfig', 'contactRelay'));
-        if (snap.exists()) {
-          setContactData(snap.data());
+        const data = await getContactRelay();
+        if (data) {
+          setContactData(data);
         }
       } catch (err) {
         console.error("Error fetching contact config:", err);
@@ -52,8 +51,8 @@ const Contact = memo(() => {
 
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
-      // 2. Save directly to Firestore for Inbox Manager
-      await addDoc(collection(db, 'messages'), {
+      // 2. Save using API for Inbox Manager
+      await addMessage({
          name: formData.name,
          email: formData.email,
          subject: formData.subject,
@@ -79,7 +78,7 @@ const Contact = memo(() => {
     if (contactData.github) s.push({ name: "GitHub", icon: <Github size={20} />, href: contactData.github, color: "text-white border-white/30 hover:bg-white/10" });
     if (contactData.linkedin) s.push({ name: "LinkedIn", icon: <Linkedin size={20} />, href: contactData.linkedin, color: "text-[#0A66C2] border-[#0A66C2]/30 hover:bg-[#0A66C2]/10" });
     if (contactData.khamsat) s.push({ name: "Khamsat", icon: <Briefcase size={20} />, href: contactData.khamsat, color: "text-[#1dbf73] border-[#1dbf73]/30 hover:bg-[#1dbf73]/10" });
-    if (contactData.xTwitter) s.push({ name: "X", icon: <MessageSquare size={20} />, href: contactData.xTwitter, color: "text-[#06b6d4] border-[#06b6d4]/30 hover:bg-[#06b6d4]/10" });
+    if (contactData.xTwitter) s.push({ name: "X", icon: <Twitter size={20} />, href: contactData.xTwitter, color: "text-[#06b6d4] border-[#06b6d4]/30 hover:bg-[#06b6d4]/10" });
     return s;
   };
 

@@ -1,6 +1,5 @@
 import { useState, useEffect, memo } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { getServices } from '../api';
 import { m, useMotionTemplate, useMotionValue } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 
@@ -78,8 +77,8 @@ const Services = memo(() => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'services'));
-        setServices(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const data = await getServices() || [];
+        setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error);
       } finally {
@@ -91,8 +90,6 @@ const Services = memo(() => {
 
   return (
     <section id="services" className="py-32 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <m.div
           initial={{ opacity: 0, y: 24 }}

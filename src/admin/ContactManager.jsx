@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { Mail, Phone, RefreshCw, Save, Github, Linkedin, Facebook, Instagram, Share2 } from 'lucide-react';
+import { getContactRelay, saveContactRelay } from '../api';
+import { Mail, Phone, RefreshCw, Save, Github, Linkedin, Facebook, Instagram, Share2, Twitter } from 'lucide-react';
 
 const ContactManager = () => {
   const [loading, setLoading] = useState(false);
@@ -19,9 +18,8 @@ const ContactManager = () => {
   const fetchContactData = async () => {
     setFetching(true);
     try {
-      const docSnap = await getDoc(doc(db, 'portfolioConfig', 'contactRelay'));
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+      const data = await getContactRelay();
+      if (data) {
         if (data.email) setEmail(data.email);
         if (data.phone) setPhone(data.phone);
         if (data.facebook) setFacebook(data.facebook);
@@ -46,7 +44,7 @@ const ContactManager = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await setDoc(doc(db, 'portfolioConfig', 'contactRelay'), {
+      await saveContactRelay({
         email,
         phone,
         facebook,
@@ -56,7 +54,7 @@ const ContactManager = () => {
         khamsat,
         xTwitter,
         updatedAt: new Date().toISOString()
-      }, { merge: true });
+      });
       alert("Contact Configuration Saved!");
     } catch (error) {
       console.error("Error saving contact config", error);
@@ -64,6 +62,7 @@ const ContactManager = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="animate-in fade-in duration-500 max-w-5xl mx-auto space-y-8">
@@ -110,27 +109,27 @@ const ContactManager = () => {
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="space-y-3">
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Github className="w-3 h-3 text-[#d8b4fe]" /> GitHub</label>
-               <input type="url" value={github} onChange={e => setGithub(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
+               <input type="text" value={github} onChange={e => setGithub(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
              </div>
              <div className="space-y-3">
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Linkedin className="w-3 h-3 text-[#d8b4fe]" /> LinkedIn</label>
-               <input type="url" value={linkedin} onChange={e => setLinkedin(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
+               <input type="text" value={linkedin} onChange={e => setLinkedin(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
              </div>
              <div className="space-y-3">
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Facebook className="w-3 h-3 text-[#d8b4fe]" /> Facebook</label>
-               <input type="url" value={facebook} onChange={e => setFacebook(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
+               <input type="text" value={facebook} onChange={e => setFacebook(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
              </div>
              <div className="space-y-3">
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Instagram className="w-3 h-3 text-[#d8b4fe]" /> Instagram</label>
-               <input type="url" value={instagram} onChange={e => setInstagram(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
+               <input type="text" value={instagram} onChange={e => setInstagram(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
              </div>
              <div className="space-y-3">
                <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Share2 className="w-3 h-3 text-[#d8b4fe]" /> Khamsat</label>
-               <input type="url" value={khamsat} onChange={e => setKhamsat(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
+               <input type="text" value={khamsat} onChange={e => setKhamsat(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
              </div>
              <div className="space-y-3">
-               <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Share2 className="w-3 h-3 text-[#d8b4fe]" /> X (Twitter)</label>
-               <input type="url" value={xTwitter} onChange={e => setXTwitter(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
+               <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Twitter className="w-3 h-3 text-[#d8b4fe]" /> X (Twitter)</label>
+               <input type="text" value={xTwitter} onChange={e => setXTwitter(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all font-bold placeholder:text-muted/40" />
              </div>
            </div>
         </div>

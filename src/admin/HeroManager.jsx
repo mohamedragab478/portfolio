@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { getHeroConfig, saveHeroConfig } from '../api';
 import { Hexagon, Save, RefreshCw } from 'lucide-react';
 
 const HeroManager = () => {
@@ -14,6 +13,7 @@ const HeroManager = () => {
     githubUrl: '',
     profileImageUrl: '',
     siteLogoUrl: '',
+    typewriterWords: [],
     heroStats: []
   });
 
@@ -39,9 +39,9 @@ const HeroManager = () => {
   const fetchConfig = async () => {
     setFetching(true);
     try {
-      const docSnap = await getDoc(doc(db, "site_config", "hero"));
-      if (docSnap.exists()) {
-        setFormData(docSnap.data());
+      const data = await getHeroConfig();
+      if (data && Object.keys(data).length > 0) {
+        setFormData(data);
       }
     } catch (error) {
       console.error("Error fetching hero config:", error);
@@ -58,7 +58,7 @@ const HeroManager = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await setDoc(doc(db, "site_config", "hero"), formData, { merge: true });
+      await saveHeroConfig(formData);
       alert("Hero configuration saved successfully!");
     } catch (error) {
       console.error("Error saving hero config:", error);
@@ -116,8 +116,15 @@ const HeroManager = () => {
         </div>
 
         <div className="space-y-3 relative z-10">
-          <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Profile Image URL</label>
-          <input type="text" name="profileImageUrl" value={formData.profileImageUrl || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold" placeholder="https://i.imgur.com/... or any direct image link" />
+          <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Profile Image</label>
+          <input type="file" accept="image/*" onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => setFormData({ ...formData, profileImageUrl: reader.result });
+              reader.readAsDataURL(file);
+            }
+          }} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-[#7c3aed]/20 file:text-[#d8b4fe] hover:file:bg-[#7c3aed]/30" />
           {formData.profileImageUrl && (
             <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded-xl">
               <p className="text-[8px] font-black uppercase text-white/30 tracking-widest mb-2">Preview</p>
@@ -128,14 +135,60 @@ const HeroManager = () => {
         </div>
 
         <div className="space-y-3 relative z-10">
-          <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Site Logo URL / Favicon Link</label>
-          <input type="text" name="siteLogoUrl" value={formData.siteLogoUrl || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="https://..." />
+          <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Site Logo / Favicon</label>
+          <input type="file" accept="image/*" onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = () => setFormData({ ...formData, siteLogoUrl: reader.result });
+              reader.readAsDataURL(file);
+            }
+          }} className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-[#7c3aed]/20 file:text-[#d8b4fe] hover:file:bg-[#7c3aed]/30" />
           {formData.siteLogoUrl && (
             <div className="mt-3 p-3 bg-white/5 border border-white/10 rounded-xl inline-flex items-center gap-3">
               <img src={formData.siteLogoUrl} alt="Logo Preview" referrerPolicy="no-referrer" crossOrigin="anonymous" className="w-10 h-10 object-contain rounded-lg" onError={(e) => { e.target.src=''; }} />
               <span className="text-[8px] font-black uppercase text-white/30 tracking-widest">Logo Preview</span>
             </div>
           )}
+        </div>
+
+        {/* Typewriter Words Section */}
+        <div className="space-y-4 relative z-10 border-t border-[#7c3aed]/20 pt-6">
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2">Typewriter Titles</label>
+            <button type="button" onClick={() => setFormData({ ...formData, typewriterWords: [...(formData.typewriterWords || []), ''] })} className="text-[10px] px-3 py-1.5 bg-[#7c3aed]/20 text-[#d8b4fe] rounded-lg hover:bg-[#7c3aed]/40 uppercase font-black transition-all">
+              + Add Title
+            </button>
+          </div>
+          <p className="text-[9px] text-white/30 ml-2 -mt-2">These titles rotate in the hero typewriter animation</p>
+          <div className="space-y-3">
+            {(formData.typewriterWords || []).map((word, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <input
+                  type="text"
+                  placeholder={`Title ${idx + 1} (e.g. AI & ML Engineer)`}
+                  value={word}
+                  onChange={(e) => {
+                    const newWords = [...(formData.typewriterWords || [])];
+                    newWords[idx] = e.target.value;
+                    setFormData({ ...formData, typewriterWords: newWords });
+                  }}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newWords = [...(formData.typewriterWords || [])];
+                    newWords.splice(idx, 1);
+                    setFormData({ ...formData, typewriterWords: newWords });
+                  }}
+                  className="text-red-400 hover:text-red-300 p-2 font-bold uppercase text-[10px] transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Stats Section */}

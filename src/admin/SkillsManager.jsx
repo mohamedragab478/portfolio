@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getSkills, addSkill, updateSkill, deleteSkill } from '../api';
 import { Trash2, Edit2, Plus, RefreshCw, Layers, Database, Image as ImageIcon, Hash, Code } from 'lucide-react';
 import { skillIcons } from '../utils/skillIcons';
 import { m, AnimatePresence } from 'framer-motion';
@@ -22,9 +21,8 @@ const SkillsManager = () => {
   const fetchSkills = async () => {
     setFetching(true);
     try {
-      const querySnapshot = await getDocs(collection(db, "skills"));
-      const skillsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setSkills(skillsData.sort((a,b) => (a.row || '1').localeCompare(b.row || '1')));
+      const data = await getSkills();
+      setSkills(data.sort((a,b) => (a.row || '1').localeCompare(b.row || '1')));
     } catch (error) {
       console.error("Error fetching skills:", error);
     } finally {
@@ -46,15 +44,14 @@ const SkillsManager = () => {
       name, 
       iconUrl: resolvedIcon,
       icon: resolvedIcon, // Legacy compatibility
-      row: row || '1',
-      updatedAt: new Date().toISOString()
+      row: row || '1'
     };
 
     try {
       if (editingId) {
-        await updateDoc(doc(db, "skills", editingId), payload);
+        await updateSkill(editingId, payload);
       } else {
-        await addDoc(collection(db, "skills"), { ...payload, createdAt: new Date().toISOString() });
+        await addSkill(payload);
       }
       resetForm();
       fetchSkills();
@@ -77,7 +74,7 @@ const SkillsManager = () => {
     if(!window.confirm("Remove this technology from your arsenal?")) return;
     try {
       if(id === editingId) resetForm();
-      await deleteDoc(doc(db, "skills", id));
+      await deleteSkill(id);
       fetchSkills();
     } catch (error) {
       console.error("Error deleting skill:", error);
@@ -89,24 +86,24 @@ const SkillsManager = () => {
     setLoading(true);
     
     const row1 = [
-      { name: "PyTorch", icon: skillIcons["PyTorch"], row: "1" },
-      { name: "TensorFlow", icon: skillIcons["TensorFlow"], row: "1" },
-      { name: "OpenCV", icon: skillIcons["OpenCV"], row: "1" },
-      { name: "YOLO", icon: skillIcons["YOLO"], row: "1" },
-      { name: "LangChain", icon: skillIcons["LangChain"], row: "1" }
+      { name: "PyTorch", iconUrl: skillIcons["PyTorch"], icon: skillIcons["PyTorch"], row: "1" },
+      { name: "TensorFlow", iconUrl: skillIcons["TensorFlow"], icon: skillIcons["TensorFlow"], row: "1" },
+      { name: "OpenCV", iconUrl: skillIcons["OpenCV"], icon: skillIcons["OpenCV"], row: "1" },
+      { name: "YOLO", iconUrl: skillIcons["YOLO"], icon: skillIcons["YOLO"], row: "1" },
+      { name: "LangChain", iconUrl: skillIcons["LangChain"], icon: skillIcons["LangChain"], row: "1" }
     ];
     
     const row2 = [
-      { name: "Python", icon: skillIcons["Python"], row: "2" },
-      { name: "C++", icon: skillIcons["C++"], row: "2" },
-      { name: "FastAPI", icon: skillIcons["FastAPI"], row: "2" },
-      { name: "Docker", icon: skillIcons["Docker"], row: "2" },
-      { name: "Git", icon: skillIcons["Git"], row: "2" }
+      { name: "Python", iconUrl: skillIcons["Python"], icon: skillIcons["Python"], row: "2" },
+      { name: "C++", iconUrl: skillIcons["C++"], icon: skillIcons["C++"], row: "2" },
+      { name: "FastAPI", iconUrl: skillIcons["FastAPI"], icon: skillIcons["FastAPI"], row: "2" },
+      { name: "Docker", iconUrl: skillIcons["Docker"], icon: skillIcons["Docker"], row: "2" },
+      { name: "Git", iconUrl: skillIcons["Git"], icon: skillIcons["Git"], row: "2" }
     ];
 
     try {
       for (const skill of [...row1, ...row2]) {
-        await addDoc(collection(db, "skills"), { ...skill, createdAt: new Date().toISOString() });
+        await addSkill(skill);
       }
       alert("Legacy skills seeded gracefully!");
       fetchSkills();
@@ -168,8 +165,15 @@ const SkillsManager = () => {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><ImageIcon className="w-3 h-3 text-[#d8b4fe]" /> Devicon URL</label>
-            <input type="text" value={iconUrl} onChange={e => setIconUrl(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40" placeholder="https://raw...svg" />
+            <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><ImageIcon className="w-3 h-3 text-[#d8b4fe]" /> Skill Logo</label>
+            <input type="file" accept="image/*" onChange={e => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => setIconUrl(reader.result);
+                reader.readAsDataURL(file);
+              }
+            }} className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#d8b4fe] focus:bg-[#7c3aed]/10 transition-all text-sm font-bold placeholder:text-muted/40 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-[#7c3aed]/20 file:text-[#d8b4fe] hover:file:bg-[#7c3aed]/30" />
           </div>
           <div className="space-y-3">
             <label className="text-[10px] font-black uppercase text-white/50 tracking-[0.2em] ml-2 flex items-center gap-2"><Layers className="w-3 h-3 text-[#d8b4fe]" /> Marquee Row Target</label>

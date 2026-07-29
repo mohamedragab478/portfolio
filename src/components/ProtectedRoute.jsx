@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
+import { isAuthenticated } from '../api';
 
 const ProtectedRoute = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [authed, setAuthed] = useState(null); // null = checking
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    setAuthed(isAuthenticated());
   }, []);
 
-  if (loading) {
+  if (authed === null) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-background">
         <div className="w-10 h-10 border-4 border-[#7c3aed]/30 border-t-[#d8b4fe] rounded-full animate-spin" />
@@ -23,7 +17,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!user) {
+  if (!authed) {
     return <Navigate to="/admin/login" replace />;
   }
 

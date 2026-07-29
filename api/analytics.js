@@ -1,9 +1,9 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import { setCors, handlePreflight } from './_middleware.js';
 
 export default async function handler(req, res) {
-  // 1. CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  setCors(res);
+  if (handlePreflight(req, res)) return;
 
   try {
     // 2. Fetch raw environment variables

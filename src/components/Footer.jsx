@@ -1,19 +1,28 @@
 import { Zap } from 'lucide-react';
+import { useMemo } from 'react';
+import { useSettings } from '../hooks/useData';
 
 const Footer = () => {
-  return (
-    <footer className="relative py-20 border-t border-purple-500/10 overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none" />
+  const { settings } = useSettings();
 
+  const logoText = useMemo(() => {
+    const raw = settings?.logoText || 'Amir.Aura';
+    return raw;
+  }, [settings?.logoText]);
+
+  const jobTitle = settings?.jobTitle || 'AI Architecture & Engineering';
+
+  return (
+    <footer className="relative py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center gap-10">
           {/* Branding */}
           <div className="text-center md:text-left">
             <h2 className="text-2xl font-black tracking-tight uppercase mb-2 text-white">
-              Amir<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">.Aura</span>
+              {logoText}
             </h2>
             <p className="text-purple-300/30 text-[10px] font-bold uppercase tracking-[0.4em] font-mono">
-              AI Architecture & Engineering
+              {jobTitle}
             </p>
           </div>
 
@@ -26,7 +35,7 @@ const Footer = () => {
               <Zap className="w-3 h-3 text-purple-400/40" />
             </p>
             <p className="text-white/15 text-[10px] uppercase font-bold tracking-[0.3em] font-mono">
-              © {new Date().getFullYear()} Amir Elrefai. All Space Reserved.
+              © {new Date().getFullYear()} {settings?.fullName || 'Amir Elrefai'}. All Rights Reserved.
             </p>
           </div>
         </div>

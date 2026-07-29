@@ -3,6 +3,7 @@ import { m, AnimatePresence } from 'framer-motion';
 import { 
   X, ChevronLeft, ChevronRight, ExternalLink, Github, CheckCircle2 
 } from 'lucide-react';
+import { getToolIconUrl } from '../utils/getToolIcon';
 
 const skillIcons = {
   "PyTorch": "https://raw.githubusercontent.com/devicons/devicon/master/icons/pytorch/pytorch-original.svg",
@@ -140,21 +141,24 @@ const ProjectCube = ({ projects, category, onClose }) => {
                    {/* Image Section */}
                    <div className="relative w-full h-[40%] md:h-[45%] shrink-0 overflow-hidden bg-slate-950 flex items-center justify-center border-b border-slate-700/50">
                      <img 
-                       src={project.image || '/api/placeholder/800/600'} 
+                       src={project.imageUrl || project.image || '/api/placeholder/800/600'} 
                        alt={project.title}
                        className="w-full h-full object-contain transition-transform duration-1000 hover:scale-105"
                      />
                      
                      {/* Tech Tags Overlay */}
                      <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2">
-                       {project.techStack?.map((tag) => (
-                         <span key={tag} className="px-3 py-1.5 rounded-lg bg-slate-900/80 md:backdrop-blur-md border border-slate-700/50 text-[10px] font-bold text-white tracking-widest uppercase flex items-center gap-1.5 shadow-sm">
-                           {skillIcons[tag] && (
-                             <img src={skillIcons[tag]} alt="" className="w-3 h-3 object-contain" />
-                           )}
-                           {tag}
-                         </span>
-                       ))}
+                       {(project.tags || project.techStack || []).map((tag) => {
+                         const iconUrl = skillIcons[tag] || getToolIconUrl(tag);
+                         return (
+                           <span key={tag} className="px-3 py-1.5 rounded-lg bg-slate-900/80 md:backdrop-blur-md border border-slate-700/50 text-[10px] font-bold text-white tracking-widest uppercase flex items-center gap-1.5 shadow-sm">
+                             {iconUrl && (
+                               <img src={iconUrl} alt={tag} className="w-3.5 h-3.5 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
+                             )}
+                             {tag}
+                           </span>
+                         );
+                       })}
                      </div>
                    </div>
 

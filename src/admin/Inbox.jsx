@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { getMessages, deleteMessage } from '../api';
 import { Inbox as InboxIcon, RefreshCw, Trash2, MailOpen } from 'lucide-react';
 
 const Inbox = () => {
@@ -10,8 +9,8 @@ const Inbox = () => {
   const fetchMessages = async () => {
     setFetching(true);
     try {
-      const snap = await getDocs(collection(db, "messages"));
-      setMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      const data = await getMessages();
+      setMessages(data.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)));
     } catch (error) {
       console.error("Error fetching messages:", error);
     } finally {
@@ -24,7 +23,7 @@ const Inbox = () => {
   const handleDelete = async (id) => {
     if(!window.confirm("Delete this transmission?")) return;
     try {
-      await deleteDoc(doc(db, "messages", id));
+      await deleteMessage(id);
       fetchMessages();
     } catch (error) {
       console.error("Error deleting msg:", error);

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { getEducationDegree, saveEducationDegree } from '../api';
 import { GraduationCap, RefreshCw, Save, MapPin, Calendar, BookOpen, FileText } from 'lucide-react';
 
 const EducationManager = () => {
@@ -16,9 +15,8 @@ const EducationManager = () => {
   const fetchEducationData = async () => {
     setFetching(true);
     try {
-      const docSnap = await getDoc(doc(db, 'portfolioConfig', 'educationDegree'));
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+      const data = await getEducationDegree();
+      if (data) {
         if (data.degree) setDegree(data.degree);
         if (data.university) setUniversity(data.university);
         if (data.location) setLocation(data.location);
@@ -40,14 +38,13 @@ const EducationManager = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await setDoc(doc(db, 'portfolioConfig', 'educationDegree'), {
+      await saveEducationDegree({
         degree,
         university,
         location,
         period,
-        description,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
+        description
+      });
       alert("Education Degree Config Saved!");
     } catch (error) {
       console.error("Error saving education config", error);
