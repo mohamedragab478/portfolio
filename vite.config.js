@@ -111,6 +111,7 @@ export default defineConfig({
     host: true, // Listen on all local IPs
   },
   build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {
