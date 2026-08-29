@@ -3,6 +3,7 @@ import { m } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { Send, MessageSquare, Phone, Github, Linkedin, Mail, ArrowUpRight, Zap, Briefcase, Facebook, Instagram, Twitter } from 'lucide-react';
 import { getContactRelay, addMessage } from '../api';
+import { portfolioData } from '../data/portfolioData';
 
 const Contact = memo(() => {
   const [formData, setFormData] = useState({
@@ -70,9 +71,9 @@ const Contact = memo(() => {
   };
 
   const getSocialList = () => {
-    const gh = contactData?.github || contactData?.githubUrl || contactData?.socialLinks?.github || 'https://github.com/amerelfalwo';
-    const li = contactData?.linkedin || contactData?.linkedinUrl || contactData?.socialLinks?.linkedin || 'https://www.linkedin.com/in/amir-elrefai/';
-    const wa = contactData?.phone ? `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}` : 'https://wa.me/201023524477';
+    const gh = contactData?.github || contactData?.githubUrl || contactData?.socialLinks?.github || portfolioData.contactInfo.github;
+    const li = contactData?.linkedin || contactData?.linkedinUrl || contactData?.socialLinks?.linkedin || portfolioData.contactInfo.linkedin;
+    const wa = contactData?.phone ? `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}` : `https://wa.me/${portfolioData.contactInfo.phone.replace(/[^0-9]/g, '')}`;
     const fb = contactData?.facebook || contactData?.socialLinks?.facebook;
     const ig = contactData?.instagram || contactData?.socialLinks?.instagram;
     const tw = contactData?.xTwitter || contactData?.twitter || contactData?.socialLinks?.twitter;
@@ -130,25 +131,25 @@ const Contact = memo(() => {
                    </div>
                  ) : (
                    <>
-                      <a href={`mailto:${contactData?.email || 'amer003100@gmail.com'}`} className="group/item flex items-center gap-6 p-4 rounded-2xl hover:bg-purple-500/5 transition-all border border-transparent hover:border-purple-500/15">
-                         <div className="w-13 h-13 p-3 bg-purple-500/10 rounded-xl flex items-center justify-center group-hover/item:bg-purple-500/15 transition-all duration-300 border border-purple-500/10">
-                           <Mail className="text-purple-300 w-5 h-5" />
-                         </div>
-                         <div>
-                           <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest mb-1 font-mono">Email Protocol</p>
-                           <p className="text-base font-bold text-white/70">{contactData?.email || 'amer003100@gmail.com'}</p>
-                         </div>
-                      </a>
+                       <a href={`mailto:${contactData?.email || portfolioData.contactInfo.email}`} className="group/item flex items-center gap-6 p-4 rounded-2xl hover:bg-purple-500/5 transition-all border border-transparent hover:border-purple-500/15">
+                          <div className="w-13 h-13 p-3 bg-purple-500/10 rounded-xl flex items-center justify-center group-hover/item:bg-purple-500/15 transition-all duration-300 border border-purple-500/10">
+                            <Mail className="text-purple-300 w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest mb-1 font-mono">Email Protocol</p>
+                            <p className="text-base font-bold text-white/70">{contactData?.email || portfolioData.contactInfo.email}</p>
+                          </div>
+                       </a>
 
-                      <div className="group/item flex items-center gap-6 p-4 rounded-2xl hover:bg-purple-500/5 transition-all border border-transparent hover:border-purple-500/15">
-                         <div className="w-13 h-13 p-3 bg-cyan-500/10 rounded-xl flex items-center justify-center group-hover/item:bg-cyan-500/15 transition-all duration-300 border border-cyan-500/10">
-                           <Phone className="text-cyan-300 w-5 h-5" />
-                         </div>
-                         <div>
-                           <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest mb-1 font-mono">Direct Relay</p>
-                           <p className="text-base font-bold text-white/70">{contactData?.phone || '+20 102 352 4477'}</p>
-                         </div>
-                      </div>
+                       <div className="group/item flex items-center gap-6 p-4 rounded-2xl hover:bg-purple-500/5 transition-all border border-transparent hover:border-purple-500/15">
+                          <div className="w-13 h-13 p-3 bg-cyan-500/10 rounded-xl flex items-center justify-center group-hover/item:bg-cyan-500/15 transition-all duration-300 border border-cyan-500/10">
+                            <Phone className="text-cyan-300 w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase font-bold text-white/25 tracking-widest mb-1 font-mono">Direct Relay</p>
+                            <p className="text-base font-bold text-white/70">{contactData?.phone || portfolioData.contactInfo.phone}</p>
+                          </div>
+                       </div>
                    </>
                  )}
                </div>

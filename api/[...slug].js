@@ -28,17 +28,18 @@ export default async function handler(req, res) {
 
   const pathname = url.pathname.replace(/^\/api\/?/, '');
   const cleanPath = pathname.split('?')[0].replace(/\/$/, '');
+  const v = Date.now();
 
-  if (cleanPath === 'chat') return chatHandler(req, res);
-  if (cleanPath === 'settings') return settingsHandler(req, res);
-  if (cleanPath === 'projects') return projectsHandler(req, res);
-  if (cleanPath === 'skills') return skillsHandler(req, res);
-  if (cleanPath === 'certificates') return certificatesHandler(req, res);
-  if (cleanPath === 'config') return configHandler(req, res);
-  if (cleanPath === 'analytics') return analyticsHandler(req, res);
-  if (cleanPath === 'auth' || cleanPath.startsWith('auth/')) return authHandler(req, res);
-  if (cleanPath === 'verify-training') return verifyTrainingHandler(req, res);
+  if (cleanPath === 'chat') return (await import(`./_handlers/chat.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'settings') return (await import(`./_handlers/settings.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'projects') return (await import(`./_handlers/projects.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'skills') return (await import(`./_handlers/skills.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'certificates') return (await import(`./_handlers/certificates.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'config') return (await import(`./_handlers/config.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'analytics') return (await import(`./_handlers/analytics.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'auth' || cleanPath.startsWith('auth/')) return (await import(`./_handlers/auth.js?v=${v}`)).default(req, res);
+  if (cleanPath === 'verify-training') return (await import(`./_handlers/verify-training.js?v=${v}`)).default(req, res);
   
   // Default collection / CRUD handler
-  return collectionHandler(req, res);
+  return (await import(`./_handlers/collection.js?v=${v}`)).default(req, res);
 }

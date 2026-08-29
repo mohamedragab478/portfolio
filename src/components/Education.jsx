@@ -2,16 +2,11 @@ import { useState, useMemo, memo } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import { GraduationCap, MapPin, ShieldCheck, CheckCircle2, X, Sparkles, Maximize2 } from 'lucide-react';
 import { useCertificates, useEducationDegree } from '../hooks/useData';
+import { portfolioData } from '../data/portfolioData';
 
 const tween = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
-const DEFAULT_EDUCATION = {
-  degree: "B.Sc. Computer Science",
-  university: "Mansoura University",
-  location: "Mansoura, Egypt",
-  period: "2020 — 2024",
-  description: "Specialized in Artificial Intelligence and High-Performance Software Engineering. Graduated with a focus on neural architectures and deep learning frameworks."
-};
+const DEFAULT_EDUCATION = portfolioData.educationDegree;
 
 const Education = memo(() => {
   const { certificates: fetchedCerts, isLoading } = useCertificates();
@@ -76,11 +71,11 @@ const Education = memo(() => {
                 <div className="flex-1 w-full z-10">
                    <div className="flex flex-wrap items-center gap-3 mb-4">
                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-4 py-1.5 rounded-full font-mono">
-                          {education.period}
+                          {education.period || education.year}
                        </span>
                       <span className="w-1.5 h-1.5 rounded-full bg-slate-700 hidden sm:block" />
                        <span className="text-[10px] font-bold tracking-widest uppercase text-slate-400 flex items-center gap-1.5 font-mono">
-                          <MapPin className="w-3 h-3 text-purple-400" /> {education.location}
+                          <MapPin className="w-3 h-3 text-purple-400" /> {education.location || education.grade || 'Egypt'}
                        </span>
                    </div>
                    
@@ -88,10 +83,10 @@ const Education = memo(() => {
                       {education.degree}
                    </h3>
                     <h4 className="text-sm md:text-md font-bold text-purple-400/80 uppercase tracking-widest mb-6">
-                      {education.university}
+                      {education.university || education.institution}
                    </h4>
                    <p className="text-slate-400 leading-relaxed max-w-2xl text-sm font-medium group-hover:text-slate-300 transition-colors">
-                      {education.description}
+                      {education.description || education.details}
                    </p>
                 </div>
 

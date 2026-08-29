@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Github, Linkedin, Send, X, Share2, Facebook, Instagram, Twitter } from 'lucide-react';
 import { getContactRelay } from '../api';
+import { portfolioData } from '../data/portfolioData';
 
 const SocialFloatingButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,10 +20,10 @@ const SocialFloatingButton = () => {
     fetchContactData();
   }, []);
 
-  const gh = contactData?.github || contactData?.githubUrl || 'https://github.com/amerelfalwo';
-  const li = contactData?.linkedin || contactData?.linkedinUrl || 'https://www.linkedin.com/in/amir-elrefai/';
-  const wa = contactData?.phone ? `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}` : 'https://wa.me/201023524477';
-  const tg = contactData?.telegram || 'https://t.me/Amirelfalw';
+  const gh = contactData?.github || contactData?.githubUrl || portfolioData.contactInfo.github;
+  const li = contactData?.linkedin || contactData?.linkedinUrl || portfolioData.contactInfo.linkedin;
+  const wa = contactData?.phone ? `https://wa.me/${contactData.phone.replace(/[^0-9]/g, '')}` : portfolioData.personalInfo.whatsappUrl;
+  const tg = contactData?.telegram || `https://t.me/mohamedragab478`;
   const fb = contactData?.facebook;
   const ig = contactData?.instagram;
   const tw = contactData?.xTwitter || contactData?.twitter;

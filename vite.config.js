@@ -40,6 +40,7 @@ function localApiPlugin() {
             const { default: handler } = await import(moduleUrl);
             
             const mockReq = {
+              url: req.url,
               method: req.method,
               headers: req.headers,
               query: parsedUrl.query,

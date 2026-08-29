@@ -27,10 +27,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, password } = req.body;
+    const identifier = (req.body.email || req.body.username || '').toLowerCase().trim();
+    const password = req.body.password;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required.' });
+    if (!identifier || !password) {
+      return res.status(400).json({ error: 'Username/Email and password are required.' });
     }
 
     await connectDb();
@@ -47,8 +48,12 @@ export default async function handler(req, res) {
       console.log(`Admin user seeded: ${ADMIN_EMAIL}`);
     }
 
-    // Find user (select +password since schema toJSON strips it)
-    const user = await AdminUser.findOne({ email: email.toLowerCase().trim() }).select('+password');
+    // Find user by email or fallback to first admin
+    let user = await AdminUser.findOne({ email: identifier }).select('+password');
+    if (!user && (identifier === 'admin' || identifier === (process.env.ADMIN_USERNAME || 'admin').toLowerCase())) {
+      user = await AdminUser.findOne({ role: 'admin' }).select('+password');
+    }
+
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials.' });
     }
@@ -67,6 +72,7 @@ export default async function handler(req, res) {
     );
 
     return res.status(200).json({
+      success: true,
       token,
       user: { email: user.email, role: user.role }
     });
